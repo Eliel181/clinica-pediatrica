@@ -9,7 +9,13 @@ export const routes: Routes = [
         component: PublicLayoutComponent,
         children: [
         {
-            path: 'login', loadComponent: () => import('./features/auth/login-user/login-user.component').then(m => m.LoginUserComponent)
+            path: 'portal-interno', loadComponent: () => import('./features/auth/login-user/login-user.component').then(m => m.LoginUserComponent)
+        },
+        {
+            path: 'register', loadComponent: () => import('./features/auth/register-user/register-user.component').then(m => m.RegisterUserComponent)
+        },
+        {
+            path: 'portal-cliente', loadComponent: () => import('./features/auth/login-client/login-client.component').then(m => m.LoginClientComponent)
         },
         {
             path: 'register', loadComponent: () => import('./features/auth/register-user/register-user.component').then(m => m.RegisterUserComponent)

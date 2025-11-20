@@ -1,0 +1,38 @@
+<div
+  *ngIf="show"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
+>
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-xl w-80 shadow-xl">
+    <h2 class="text-xl font-bold mb-2"
+        [ngClass]="{
+          'text-green-600': type==='success',
+          'text-red-600': type==='error',
+          'text-yellow-500': type==='warning',
+          'text-blue-600': type==='info'
+        }">
+      {{ title }}
+    </h2>
+
+    <p class="mb-4 text-gray-700 dark:text-gray-300">{{ message }}</p>
+
+    <div class="flex justify-end gap-2">
+      <button
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        (click)="onCancel()">
+        Cancelar
+      </button>
+
+      <button
+        class="px-4 py-2 rounded text-white"
+        [ngClass]="{
+          'bg-green-600 hover:bg-green-700': type==='success',
+          'bg-red-600 hover:bg-red-700': type==='error',
+          'bg-yellow-500 hover:bg-yellow-600': type==='warning',
+          'bg-blue-600 hover:bg-blue-700': type==='info'
+        }"
+        (click)="onConfirm()">
+        Aceptar
+      </button>
+    </div>
+  </div>
+</div>

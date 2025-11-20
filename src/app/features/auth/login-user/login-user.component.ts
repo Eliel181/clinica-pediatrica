@@ -12,11 +12,15 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 })
 export class LoginUserComponent {
   options: AnimationOptions = {
-    path: '/src/assets/animations/medicine.json'
+    path: '/assets/animations/medicine.json'
   };
 
+  public passwordVisible = false;
+
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
+  }
 
   animationCreated(animationItem: AnimationItem): void {
-    console.log(animationItem);
   }
 }
