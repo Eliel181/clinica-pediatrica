@@ -1,11 +1,7 @@
 
 <router-outlet />
 
-<custom-alert
-  [show]="alert.show()"
-  [title]="alert.title()"
-  [message]="alert.message()"
-  [type]="alert.type()"
+<app-custom-alert [show]="alert.show()" [title]="alert.title()" [message]="alert.message()" [type]="alert.type()"
   (confirm)="alert.confirm()"
   (cancel)="alert.cancel()">
-</custom-alert>
+</app-custom-alert>

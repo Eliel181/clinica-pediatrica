@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { AnimationItem } from 'lottie-web';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-login-client',
@@ -11,9 +12,15 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie';
   styleUrl: './login-client.component.css'
 })
 export class LoginClientComponent {
+  private alert: AlertService = inject(AlertService);
+
   options: AnimationOptions = {
     path: '/assets/animations/pediatria.json'
   };
+
+  animationCreated(animationItem: AnimationItem): void {
+    console.log(animationItem);
+  }
 
   public passwordVisible = false;
 
@@ -21,7 +28,16 @@ export class LoginClientComponent {
     this.passwordVisible = !this.passwordVisible;
   }
 
-  animationCreated(animationItem: AnimationItem): void {
-    console.log(animationItem);
+  async borrarCurso() {
+    const result = await this.alert.open({
+      title: 'Eliminar curso',
+      message: '¿Seguro que deseas eliminar este curso?',
+      type: 'success'
+    });
+
+    if (result) {
+      // ejecutar lógica
+    }
   }
+
 }

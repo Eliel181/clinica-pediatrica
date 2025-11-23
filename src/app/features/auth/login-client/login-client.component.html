@@ -30,7 +30,7 @@
       </div>
 
       <!-- Form -->
-      <form class="space-y-6">
+      <form class="space-y-6" onsubmit="borrarCurso()">
 
         <!-- Email field -->
         <div>
@@ -86,7 +86,7 @@
       </div>
 
       <!-- Google login button -->
-      <button
+      <button (click)="borrarCurso()"
         class="w-full h-12 border-2 border-foreground text-foreground font-semibold rounded-lg flex items-center justify-center gap-3 hover:bg-slate-50 cursor-pointer">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
