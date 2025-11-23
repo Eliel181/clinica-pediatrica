@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 
 import { AnimationItem } from 'lottie-web';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
-import { AlertService } from '../../../services/alert.service';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-login-user',
@@ -13,7 +13,7 @@ import { AlertService } from '../../../services/alert.service';
 })
 export class LoginUserComponent {
 
-  private alert:AlertService = inject(AlertService);
+  private alert: AlertService = inject(AlertService);
 
   options: AnimationOptions = {
     path: '/assets/animations/medicine.json'

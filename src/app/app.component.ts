@@ -3,16 +3,16 @@ import { RouterOutlet } from '@angular/router';
 
 import { Router, Event, NavigationEnd } from '@angular/router';
 import { CustomAlertComponent } from './shared/custom-alert/custom-alert.component';
-import { AlertService } from './services/alert.service';
+import { AlertService } from './core/services/alert.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [CustomAlertComponent,RouterOutlet],
+  imports: [CustomAlertComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   private router: Router = inject(Router);
   public alert: AlertService = inject(AlertService);
   title = 'clinica-pediatrica';

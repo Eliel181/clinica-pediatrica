@@ -2,7 +2,7 @@
   <div class="bg-white p-6 rounded-xl w-80 shadow-xl">
     <h2 class="text-xl text-center font-bold mb-2" [ngClass]="{
           'text-[#2bd993]': type==='success',
-          'text-red-600': type==='error',
+          'text-[#ff6347]': type==='error',
           'text-yellow-500': type==='warning',
           'text-blue-600': type==='info'
         }">
@@ -22,7 +22,7 @@
 
       <button class="px-4 py-2 rounded text-white pointer-cursor" [ngClass]="{
           'bg-[#2bd993] hover:bg-green-700': type==='success',
-          'bg-red-600 hover:bg-red-700': type==='error',
+          'bg-[#ff6347] hover:bg-red-700': type==='error',
           'bg-yellow-500 hover:bg-yellow-600': type==='warning',
           'bg-blue-600 hover:bg-blue-700': type==='info'
         }" (click)="onConfirm()">
