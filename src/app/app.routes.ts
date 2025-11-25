@@ -16,10 +16,10 @@ export const routes: Routes = [
             },
             {
                 path: 'registro-cliente', loadComponent: () => import('./features/auth/register-client/register-client.component').then(m => m.RegisterClientComponent)
-            }
-            //   {
-            //     path: 'verificar-email', loadComponent: () => import('./features/auth/verificar-email/verificar-email.component').then(m => m.VerificarEmailComponent)
-            //   },
+            },
+            {
+                path: 'verificar-email', loadComponent: () => import('./features/auth/verificar-email/verificar-email.component').then(m => m.VerificarEmailComponent)
+            },
             //   {
             //     path: 'reset-password', loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
             //   },

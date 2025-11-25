@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { FirestoreService } from './firestore.service';
 import { Router } from '@angular/router';
 import { Cliente } from '../interfaces/cliente.model';
@@ -14,6 +14,7 @@ export class ClienteService {
   private firestoreService: FirestoreService = inject(FirestoreService);
   private router: Router = inject(Router);
   private firestore: Firestore = inject(Firestore);
+  currentClient: WritableSignal<Cliente | null | undefined> = signal(undefined);
 
   // Metodo para el Registro
   async register({ email, password, apellido, nombre, documento }: any) {
@@ -57,7 +58,46 @@ export class ClienteService {
     const data = querySnapshot.docs[0].data();
     const email = data["email"];
 
+
     // 2. Hacemos login normal usando email/contraseña
-    return signInWithEmailAndPassword(this.auth, email, password);
+    const clientCredential = await signInWithEmailAndPassword(this.auth, email, password);
+    const cliente = clientCredential.user;
+
+    //verificamos que el cliente este verificado
+    const appClient = await this.firestoreService.getDocument<Cliente>('clientes', cliente!.uid);
+
+    if (!appClient) {
+      throw new Error('No se encontraron datos del cliente en la base de datos.');
+    }
+
+    //si el cliente no esta verificado, lo marcamos como verificado
+    if (cliente.emailVerified && appClient.emailVerified !== true) {
+      await this.firestoreService.updateDocument('clientes', cliente.uid, { emailVerified: true });
+    }
+
+    const clientWithVerificationStatus: Cliente = {
+      ...appClient!,
+      emailVerified: cliente.emailVerified
+    };
+    this.currentClient.set(clientWithVerificationStatus || null);
+  }
+
+  // Metodo para enviar un email de confirmacion
+  async sendEmailVerification(): Promise<void> {
+    const firebaseUser = this.auth.currentUser;
+
+    if (!firebaseUser) {
+      throw new Error('No hay cliente autenticado');
+    }
+    if (firebaseUser.emailVerified) {
+      throw new Error('No hay cliente autenticado');
+    }
+    try {
+      await sendEmailVerification(firebaseUser);
+      //console.log(`Correo de verificación enviado a: ${firebaseUser.email}`);
+    } catch (error) {
+      //console.error('Error al enviar verificación:', error);
+      throw new Error('No se pudo enviar el correo de verificación');
+    }
   }
 }

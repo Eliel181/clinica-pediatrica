@@ -6,7 +6,7 @@
     </h1>
   </div>
   <div
-    class="lg:flex hidden w-1/2 bg-gradient-to-b from-slate-300 to-slate-200 flex-col items-center justify-between p-8">
+    class="lg:flex hidden w-1/2 bg-linear-to-b from-slate-300 to-slate-200 flex-col items-center justify-between p-8">
 
     <!-- Illustration - Generated colorful characters -->
     <div class="flex-1 flex items-center justify-center">
@@ -73,7 +73,7 @@
 
         <!-- Login button -->
         <button type="submit" [disabled]="loginForm.invalid || isLoading"
-          class="inline-block w-full text-center  px-6 py-2 text-white transition-all rounded-md shadow-xl bg-gradient-to-r from-teal-600 to-teal-500 hover:bg-gradient-to-b shadow-teal-100 hover:-tranneutral-y-px cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed">
+          class="inline-block w-full text-center  px-6 py-2 text-white transition-all rounded-md shadow-xl bg-linear-to-r from-teal-600 to-teal-500 hover:bg-linear-to-b shadow-teal-100 hover:-tranneutral-y-px cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed">
           <span *ngIf="isLoading">Cargando...</span>
           <span *ngIf="!isLoading">Ingresar</span>
         </button>

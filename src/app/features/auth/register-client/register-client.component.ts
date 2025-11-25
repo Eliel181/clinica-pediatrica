@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClienteService } from '../../../core/services/cliente.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-client',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register-client.component.html',
   styleUrl: './register-client.component.css'
 })
@@ -47,7 +47,14 @@ export class RegisterClientComponent {
     this.isLoading = true;
     this.clienteService.register(this.registerForm.value).then(() => {
       this.isLoading = false;
-      console.log(this.registerForm.value)
+      const email = this.registerForm.value.email;
+      this.clienteService.sendEmailVerification();
+
+      sessionStorage.setItem('pendingVerificationEmail', email);
+
+      this.router.navigate(['/verificar-email'], {
+        state: { email: email }
+      });
     }).catch((error) => {
       console.error('Error al registrar el cliente:', error);
       this.isLoading = false;
