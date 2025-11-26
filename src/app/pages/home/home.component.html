@@ -1,0 +1,116 @@
+<section
+    class="min-h-screen bg-gradient-to-br from-[#f0f9ff] via-white to-[#00b8a5]/30 flex items-center justify-center px-4 py-20">
+    <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+        <!-- Left Content -->
+        <div class="flex flex-col justify-center space-y-8">
+            <div class="space-y-4">
+                <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                    La salud de tus hijos es nuestra
+                    <span class="text-[#00b8a5]"> prioridad</span>
+                </h1>
+                <p class="text-xl text-gray-600 leading-relaxed max-w-lg">
+                    Contamos con especialistas pediatras dedicados a brindar la mejor atención médica para el bienestar
+                    integral de los niños.
+                </p>
+            </div>
+
+            <div class="flex gap-4 flex-wrap">
+                <button
+                    class="bg-[#00b8a5] hover:bg-[#00b8a5]/80 text-white px-8 py-4 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl">
+                    Agendar Consulta
+                </button>
+                <button
+                    class="border-2 border-[#87ceeb] text-[#1a3a3a] hover:bg-[#87ceeb]/10 px-8 py-4 rounded-lg font-semibold transition-all">
+                    Conocer Más
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200">
+                <div>
+                    <p class="text-3xl font-bold text-[#5c5ad4]">500+</p>
+                    <p class="text-sm text-gray-600">Pacientes Atendidos</p>
+                </div>
+                <div>
+                    <p class="text-3xl font-bold text-[#87ceeb]">15+</p>
+                    <p class="text-sm text-gray-600">Años de Experiencia</p>
+                </div>
+                <div>
+                    <p class="text-3xl font-bold text-[#1a3a3a]">24/7</p>
+                    <p class="text-sm text-gray-600">Atención Disponible</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Illustration -->
+        <div class="flex justify-center items-center">
+            <div class="relative w-full max-w-md h-96">
+                <!-- Background shapes -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-[#00b8a5]/30 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-40 h-40 bg-[#00b8a5]/30 rounded-full blur-3xl"></div>
+
+                <!-- Illustration -->
+                <div class="relative z-10 h-full flex items-center justify-center">
+                    <div class="bg-white/50 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-gray-100">
+                        <ng-lottie [options]="options" width="300px" (animationCreated)="animationCreated($event)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="bg-white py-20 px-4">
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-4xl font-bold text-center mb-16 text-gray-900">¿Por qué elegir nuestra clínica?</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="p-8 bg-[#f0f9ff] rounded-2xl border border-[#87ceeb]/20 hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 bg-[#87ceeb] rounded-lg flex items-center justify-center mb-4">
+                    <span class="text-white text-xl">👨‍⚕️</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Médicos Especializados</h3>
+                <p class="text-gray-600">
+                    Equipo de pediatras con certificación internacional y años de experiencia.
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="p-8 bg-[#fce7f3] rounded-2xl border border-[#ff6b9d]/20 hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 bg-[#ff6b9d] rounded-lg flex items-center justify-center mb-4">
+                    <span class="text-white text-xl">🏥</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Tecnología Moderna</h3>
+                <p class="text-gray-600">Equipamiento de última generación para diagnósticos precisos y seguros.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="p-8 bg-[#f0fdf4] rounded-2xl border border-[#86efac]/20 hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 bg-[#86efac] rounded-lg flex items-center justify-center mb-4">
+                    <span class="text-white text-xl">❤️</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Atención con Amor</h3>
+                <p class="text-gray-600">
+                    Creamos un ambiente cálido y acogedor para que los niños se sientan cómodos.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="bg-gradient-to-r from-[#1a3a3a] to-[#2d5a5a] py-16 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl font-bold text-white mb-4">¿Listo para cuidar la salud de tu hijo?</h2>
+        <p class="text-[#87ceeb] text-lg mb-8">
+            Contáctanos hoy y agenda una consulta con nuestros especialistas.
+        </p>
+        <button
+            class="bg-[#00b8a5] hover:bg-[#00b8a5]/80 text-white px-10 py-4 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl text-lg">
+            Agendar Ahora
+        </button>
+    </div>
+</section>

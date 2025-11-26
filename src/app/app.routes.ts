@@ -20,9 +20,12 @@ export const routes: Routes = [
             {
                 path: 'verificar-email', loadComponent: () => import('./features/auth/verificar-email/verificar-email.component').then(m => m.VerificarEmailComponent)
             },
-            //   {
-            //     path: 'reset-password', loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
-            //   },
+            {
+                path: 'reset-password', loadComponent: () => import('./features/auth/reset-passsword/reset-passsword.component').then(m => m.ResetPassswordComponent)
+            },
+            {
+                path: 'inicio', loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
+            }
         ]
     },
 ];

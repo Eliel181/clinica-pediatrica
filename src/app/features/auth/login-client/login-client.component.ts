@@ -57,7 +57,7 @@ export class LoginClientComponent {
 
     try {
       await this.clienteService.loginConDni(documento, password);
-      this.router.navigate(['/portal-cliente/home']); // Adjust route as needed
+      this.router.navigate(['/']); // Adjust route as needed
       this.alert.open({
         title: 'Inicio de sesión exitoso',
         message: 'Bienvenido al portal de clientes',

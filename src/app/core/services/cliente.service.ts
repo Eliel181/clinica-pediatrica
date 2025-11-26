@@ -79,6 +79,7 @@ export class ClienteService {
       ...appClient!,
       emailVerified: cliente.emailVerified
     };
+
     this.currentClient.set(clientWithVerificationStatus || null);
   }
 
