@@ -53,7 +53,7 @@ export class AuthService {
 
 
   // Metodo para el Registro
-  async register({ email, password, telefono, apellido, nombre }: any) {
+  async register({ email, password, telefono, apellido, nombre, documento, genero, fechaNacimiento, fechaAlta, domicilio, turno, horasTrabajo, rol }: any) {
     try {
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       const firebaseUser = userCredential.user;
@@ -64,7 +64,17 @@ export class AuthService {
         telefono,
         apellido,
         nombre,
-        rol: 'Empleado',
+        documento,
+        genero,
+        fechaNacimiento,
+        fechaAlta,
+        domicilio,
+        turno,
+        horasTrabajo,
+        Estado: 'Activo',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        rol: rol,
         emailVerified: firebaseUser.emailVerified
       };
 
@@ -73,7 +83,6 @@ export class AuthService {
       return firebaseUser;
 
     } catch (error) {
-      console.error('Error: en el register() ', error);
       alert('No se pudo completar el registro, es posble que el correo este en uso');
       throw error;
     }
@@ -91,9 +100,7 @@ export class AuthService {
     }
     try {
       await sendEmailVerification(firebaseUser);
-      console.log(`Correo de verificación enviado a: ${firebaseUser.email}`);
     } catch (error) {
-      console.error('Error al enviar verificación:', error);
       throw new Error('No se pudo enviar el correo de verificación');
     }
   }
@@ -137,62 +144,70 @@ export class AuthService {
     }
   }
 
-  async loginWithGoogle() {
-    // this.isLoading.set(true);
-    try {
-      // debugger
-      const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(this.auth, provider);
-      const { user } = userCredential;
+  // async loginWithGoogle() {
+  //   // this.isLoading.set(true);
+  //   try {
+  //     // debugger
+  //     const provider = new GoogleAuthProvider();
+  //     const userCredential = await signInWithPopup(this.auth, provider);
+  //     const { user } = userCredential;
 
-      const displayName = user.displayName || "";
+  //     const displayName = user.displayName || "";
 
-      const partes = displayName.trim().split(" ");
-      let nombre = "";
-      let apellido = "";
+  //     const partes = displayName.trim().split(" ");
+  //     let nombre = "";
+  //     let apellido = "";
 
-      if (partes.length > 1) {
-        nombre = partes[0];
-        apellido = partes[partes.length - 1]; // último elemento
-      } else {
-        nombre = displayName; // si solo hay un nombre
-      }
+  //     if (partes.length > 1) {
+  //       nombre = partes[0];
+  //       apellido = partes[partes.length - 1]; // último elemento
+  //     } else {
+  //       nombre = displayName; // si solo hay un nombre
+  //     }
 
-      let appUser = await this.firestoreService.getDocumentById<Usuario>('usuarios', user.uid)
+  //     let appUser = await this.firestoreService.getDocumentById<Usuario>('usuarios', user.uid)
 
-      //si me trae información significa que el usuario ya esta logueado
-      if (!appUser) {
-        console.log(`Usuario con UID:${user.uid} no encontrado, Creando doc nuevo...`);
-        const newUser: Usuario = {
-          uid: user.uid,
-          email: user.email!,
-          telefono: '',
-          apellido: apellido,
-          nombre: nombre,
-          rol: 'Empleado',
-          imagenBase64: user.photoURL || '',
-          emailVerified: user.emailVerified
-        };
+  //     //si me trae información significa que el usuario ya esta logueado
+  //     if (!appUser) {
+  //       console.log(`Usuario con UID:${user.uid} no encontrado, Creando doc nuevo...`);
+  //       const newUser: Usuario = {
+  //         uid: user.uid,
+  //         email: user.email!,
+  //         telefono: '',
+  //         apellido: apellido,
+  //         nombre: nombre,
+  //         documento: '',
+  //         genero: '',
+  //         fechaNacimiento: '',
+  //         domicilio: '',
+  //         Estado: 'Activo',
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //         rol: 'Empleado',
+  //         firstLogin: true,
+  //         imagenBase64: user.photoURL || '',
+  //         emailVerified: user.emailVerified
+  //       };
 
-        await this.firestoreService.setDocument('usuarios', user.uid, newUser);
-        appUser = newUser;
-      }
+  //       await this.firestoreService.setDocument('usuarios', user.uid, newUser);
+  //       appUser = newUser;
+  //     }
 
-      this.currentUser.set({
-        ...appUser,
-        emailVerified: user.emailVerified
-      });
+  //     this.currentUser.set({
+  //       ...appUser,
+  //       emailVerified: user.emailVerified
+  //     });
 
-      await this.firestoreService.updateDocument('usuarios', user.uid, {
-        online: true,
-        lastSeen: new Date()
-      });
+  //     await this.firestoreService.updateDocument('usuarios', user.uid, {
+  //       online: true,
+  //       lastSeen: new Date()
+  //     });
 
-      this.router.navigate(['/administracion']);
-    } catch (error) {
-      console.error('Error en login con google', error);
-    }
-  }
+  //     this.router.navigate(['/administracion']);
+  //   } catch (error) {
+  //     console.error('Error en login con google', error);
+  //   }
+  // }
 
   // Metodo para el LogOut
   async logOut() {

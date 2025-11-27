@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
+import { PrivateLayoutComponent } from './layout/private-layout/private-layout.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '', pathMatch: 'full' },
@@ -28,4 +29,19 @@ export const routes: Routes = [
             }
         ]
     },
+    {
+        path: 'administracion',
+        component: PrivateLayoutComponent,
+        children: [
+            {
+                path: 'gestion-usuarios', loadComponent: () => import('./features/users/user-list/user-list.component').then(m => m.UserListComponent)
+            },
+            {
+                path: 'gestion-usuarios/form-user/:id', loadComponent: () => import('./features/users/user-managment/user-managment.component').then(m => m.UserManagmentComponent)
+            },
+            {
+                path: 'gestion-usuarios/form-user', loadComponent: () => import('./features/users/user-managment/user-managment.component').then(m => m.UserManagmentComponent)
+            }
+        ]
+    }
 ];
