@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [CustomAlertComponent, RouterOutlet],
+  imports: [RouterOutlet, CustomAlertComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

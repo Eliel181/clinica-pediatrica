@@ -5,9 +5,11 @@ import { FirestoreService } from '../../../core/services/firestore.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { Usuario } from '../../../core/interfaces/usuario.model';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-user-managment',
+  standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './user-managment.component.html',
   styleUrl: './user-managment.component.css'
@@ -15,6 +17,7 @@ import { Usuario } from '../../../core/interfaces/usuario.model';
 export class UserManagmentComponent implements OnInit {
 
   private firestoreService: FirestoreService = inject(FirestoreService);
+  private alertService: AlertService = inject(AlertService);
   public authService: AuthService = inject(AuthService);
   private fb: FormBuilder = inject(FormBuilder);
   route = inject(ActivatedRoute);
@@ -23,6 +26,7 @@ export class UserManagmentComponent implements OnInit {
 
   usuarioData: Usuario | null = null;
   isSubmitting = signal<boolean>(false);
+
 
   imagenBase64Preview: WritableSignal<string | null> = signal(null);
 
@@ -47,6 +51,7 @@ export class UserManagmentComponent implements OnInit {
     // Componente solo para creación
   }
 
+
   async registrarUsuario() {
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
@@ -61,12 +66,19 @@ export class UserManagmentComponent implements OnInit {
         ...formValue,
         fechaAlta: new Date()
       });
-      alert('Usuario registrado con éxito');
+      this.alertService.open({
+        title: 'Exito',
+        message: 'Usuario registrado con exito',
+        type: 'success',
+      })
       this.router.navigate(['/administracion/gestion-usuarios']);
-
+      this.authService.sendEmailVerification();
     } catch (error: any) {
-      console.error('Error al guardar usuario:', error);
-      alert('Error al guardar usuario: ' + error.message);
+      this.alertService.open({
+        title: 'Error',
+        message: 'Error al registrar usuario',
+        type: 'error',
+      })
     } finally {
       this.isSubmitting.set(false);
     }
