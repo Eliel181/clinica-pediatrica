@@ -77,6 +77,13 @@ export class UserListComponent implements OnInit {
         this.usuariosOriginales.set(data || []);
         this.isLoading.set(false);
         this.paginaActual.set(1);
+
+        // // Reinicializar Preline después de que los datos se carguen
+        // setTimeout(() => {
+        //   if (typeof window !== 'undefined' && window.HSStaticMethods) {
+        //     window.HSStaticMethods.autoInit();
+        //   }
+        // }, 100);
       },
       err => {
         this.isLoading.set(false);

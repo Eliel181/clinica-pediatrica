@@ -3,4 +3,3 @@
 
 @import "preline/variants.css";
 @source "../node_modules/preline/dist/*.js";
-@custom-variant dark (&:where(.dark, .dark *));

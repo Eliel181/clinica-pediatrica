@@ -130,22 +130,22 @@
                         <td class="px-4 py-3 whitespace-nowrap">
                             @if (usuario.rol === 'Admin') {
                             <span
-                                class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-medium bg-[#f0e7fa] text-[#8e44ad] dark:bg-purple-900/50 dark:text-purple-400 shadow-sm">
+                                class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-medium bg-[#f0e7fa] text-[#8e44ad] shadow-sm">
                                 {{usuario.rol}}
                             </span>
                             } @else if (usuario.rol === 'Recepcionista') {
                             <span
-                                class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-medium bg-[#e7f0fa] text-[#3498db] dark:bg-blue-900/50 dark:text-blue-400 shadow-sm">
+                                class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-medium bg-[#e7f0fa] text-[#3498db] shadow-sm">
                                 {{usuario.rol}}
                             </span>
                             } @else if (usuario.rol === 'Pediatra') {
                             <span
-                                class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-medium bg-[#fae7e7] text-[#e74c3c] dark:bg-red-900/50 dark:text-red-400 shadow-sm">
+                                class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-medium bg-[#fae7e7] text-[#e74c3c] shadow-sm">
                                 {{usuario.rol}}
                             </span>
                             } @else {
                             <span
-                                class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-medium bg-[#e7faed] text-[#2ecc71] dark:bg-green-900/50 dark:text-green-400 shadow-sm">
+                                class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-medium bg-[#e7faed] text-[#2ecc71] shadow-sm">
                                 {{usuario.rol}}
                             </span>
                             }
