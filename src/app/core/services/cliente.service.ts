@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { FirestoreService } from './firestore.service';
 import { Router } from '@angular/router';
 import { Cliente } from '../interfaces/cliente.model';
@@ -100,5 +100,18 @@ export class ClienteService {
       //console.error('Error al enviar verificación:', error);
       throw new Error('No se pudo enviar el correo de verificación');
     }
+  }
+
+  async logOut() {
+    // const client = this.currentClient();
+    // if (client) {
+    //   await this.firestoreService.updateDocument('clientes', client.id!, {
+    //     online: false,
+    //     lastSeen: new Date()
+    //   });
+    // }
+    await signOut(this.auth);
+    this.currentClient.set(null);
+    this.router.navigate(['/portal-cliente']);
   }
 }
