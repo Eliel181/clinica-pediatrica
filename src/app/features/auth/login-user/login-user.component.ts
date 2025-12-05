@@ -46,11 +46,11 @@ export class LoginUserComponent {
 
     try {
       await this.authService.login(this.loginForm.value);
-      this.alert.open({
-        title: 'Inicio de sesión exitoso',
-        message: 'Bienvenido al sistema',
-        type: 'success'
-      });
+      // this.alert.open({
+      //   title: 'Inicio de sesión exitoso',
+      //   message: 'Bienvenido al sistema',
+      //   type: 'success'
+      // });
       this.router.navigate(['/administracion/gestion-usuarios']);
     } catch (error: any) {
       this.alert.open({

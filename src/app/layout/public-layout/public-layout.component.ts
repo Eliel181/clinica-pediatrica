@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { AfterViewChecked, Component } from '@angular/core';
 import { RouterModule, RouterOutlet } from "@angular/router";
+
+declare const HSStaticMethods: any;
 
 @Component({
   selector: 'app-public-layout',
@@ -7,6 +9,8 @@ import { RouterModule, RouterOutlet } from "@angular/router";
   templateUrl: './public-layout.component.html',
   styleUrl: './public-layout.component.css'
 })
-export class PublicLayoutComponent {
-
+export class PublicLayoutComponent implements AfterViewChecked {
+  ngAfterViewChecked() {
+    HSStaticMethods.autoInit();
+  }
 }

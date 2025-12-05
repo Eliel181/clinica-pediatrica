@@ -1,7 +1,9 @@
-
+@if (!isAuthLoading()) {
+<app-spinner-overlay />
+} @else {
 <router-outlet />
+}
 
 <app-custom-alert [show]="alert.show()" [title]="alert.title()" [message]="alert.message()" [type]="alert.type()"
-  (confirm)="alert.confirm()"
-  (cancel)="alert.cancel()">
+  (confirm)="alert.confirm()" (cancel)="alert.cancel()">
 </app-custom-alert>

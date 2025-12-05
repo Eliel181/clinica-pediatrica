@@ -1,0 +1,336 @@
+<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    <!-- Card Section -->
+    <div class="bg-white rounded-xl p-4 sm:p-7 shadow-[0_2px_6px_rgba(0,0,0,0.20)]">
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 ">
+                Gestión de Clínica
+            </h2>
+            <p class="text-sm text-gray-600 ">
+                Administra la información general, imágenes y horarios de tu clínica.
+            </p>
+        </div>
+
+        <form>
+            <!-- Flex Container -->
+            <div class="flex flex-col gap-6">
+
+                <!-- Section: Basic Info -->
+                <div class="w-full">
+                    <h3 class="text-lg font-semibold text-gray-800  border-b pb-2 mb-4">
+                        Información Básica
+                    </h3>
+                </div>
+
+                <!-- Nombre -->
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-6">
+                    <div class="sm:w-1/4">
+                        <label for="nombre-clinica" class="inline-block text-sm text-gray-800 mt-2.5 ">
+                            Nombre de la Clínica
+                        </label>
+                    </div>
+                    <div class="sm:w-3/4">
+                        <input id="nombre-clinica" type="text"
+                            class="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none "
+                            placeholder="Ej. Clínica Pediátrica">
+                    </div>
+                </div>
+
+                <!-- Direccion -->
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-6">
+                    <div class="sm:w-1/4">
+                        <label for="direccion-clinica" class="inline-block text-sm text-gray-800 mt-2.5 ">
+                            Dirección
+                        </label>
+                    </div>
+                    <div class="sm:w-3/4">
+                        <input id="direccion-clinica" type="text"
+                            class="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none "
+                            placeholder="Ej. Av. Siempre Viva 123">
+                    </div>
+                </div>
+
+                <!-- Telefono -->
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-6">
+                    <div class="sm:w-1/4">
+                        <label for="telefono-clinica" class="inline-block text-sm text-gray-800 mt-2.5 ">
+                            Teléfono
+                        </label>
+                    </div>
+                    <div class="sm:w-3/4">
+                        <input id="telefono-clinica" type="tel"
+                            class="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none "
+                            placeholder="Ej. +54 11 1234 5678">
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-6">
+                    <div class="sm:w-1/4">
+                        <label for="email-clinica" class="inline-block text-sm text-gray-800 mt-2.5 ">
+                            Email
+                        </label>
+                    </div>
+                    <div class="sm:w-3/4">
+                        <input id="email-clinica" type="email"
+                            class="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none "
+                            placeholder="contacto@clinica.com">
+                    </div>
+                </div>
+
+                <!-- Horario Atencion -->
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-6">
+                    <div class="sm:w-1/4">
+                        <label for="horario-clinica" class="inline-block text-sm text-gray-800 mt-2.5 ">
+                            Horario de Atención
+                        </label>
+                    </div>
+                    <div class="sm:w-3/4">
+                        <input id="horario-clinica" type="text"
+                            class="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none "
+                            placeholder="Ej. Lun-Vie 9:00 - 18:00">
+                    </div>
+                </div>
+
+                <!-- Section: Images -->
+                <div class="w-full mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800  border-b pb-2 mb-4">
+                        Imágenes
+                    </h3>
+                </div>
+
+                <!-- Logo -->
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-6">
+                    <div class="sm:w-1/4">
+                        <label class="inline-block text-sm text-gray-800 mt-2.5 ">
+                            Logo
+                        </label>
+                    </div>
+                    <div class="sm:w-3/4">
+                        <div class="flex items-center gap-5">
+                            <img class="inline-block size-16 rounded-full ring-2 ring-white dark:ring-gray-800"
+                                src="https://placehold.co/100" alt="Logo Image">
+                            <div class="flex gap-x-2">
+                                <button type="button"
+                                    class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none  ">
+                                    <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="17 8 12 3 7 8" />
+                                        <line x1="12" x2="12" y1="3" y2="15" />
+                                    </svg>
+                                    Subir Logo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imagen Principal -->
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-6">
+                    <div class="sm:w-1/4">
+                        <label class="inline-block text-sm text-gray-800 mt-2.5 ">
+                            Imagen Principal
+                        </label>
+                    </div>
+                    <div class="sm:w-3/4">
+                        <div class="flex items-center gap-5">
+                            <div class="w-32 h-20 bg-gray-100 rounded-lg overflow-hidden dark:bg-gray-800">
+                                <img class="w-full h-full object-cover" src="https://placehold.co/300x200"
+                                    alt="Main Image">
+                            </div>
+                            <button type="button"
+                                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none  ">
+                                <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" x2="12" y1="3" y2="15" />
+                                </svg>
+                                Subir Principal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imagen Secundaria -->
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-6">
+                    <div class="sm:w-1/4">
+                        <label class="inline-block text-sm text-gray-800 mt-2.5 ">
+                            Imagen Secundaria
+                        </label>
+                    </div>
+                    <div class="sm:w-3/4">
+                        <div class="flex items-center gap-5">
+                            <div class="w-32 h-20 bg-gray-100 rounded-lg overflow-hidden dark:bg-gray-800">
+                                <img class="w-full h-full object-cover" src="https://placehold.co/300x200"
+                                    alt="Secondary Image">
+                            </div>
+                            <button type="button"
+                                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none  ">
+                                <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" x2="12" y1="3" y2="15" />
+                                </svg>
+                                Subir Secundaria
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Section: Services -->
+                <div class="w-full mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800  border-b pb-2 mb-4">
+                        Servicios
+                    </h3>
+                </div>
+
+                <div class="w-full">
+                    <div class="flex flex-col gap-4">
+                        <!-- Add Service Input -->
+                        <div class="flex gap-2">
+                            <input type="text"
+                                class="py-2 px-3 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-teal-500 focus:ring-teal-500 disabled:opacity-50 disabled:pointer-events-none "
+                                placeholder="Nuevo servicio...">
+                            <button type="button"
+                                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 disabled:pointer-events-none">
+                                <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" x2="12" y1="5" y2="19" />
+                                    <line x1="5" x2="19" y1="12" y2="12" />
+                                </svg>
+                                Agregar
+                            </button>
+                        </div>
+
+                        <!-- Services List -->
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-teal-800 ">
+                                Pediatría General
+                                <button type="button"
+                                    class="flex-shrink-0 size-4 inline-flex items-center justify-center rounded-full hover:bg-blue-200 focus:outline-none focus:bg-blue-200 focus:text-blue-500 dark:hover:bg-blue-900">
+                                    <svg class="flex-shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M18 6 6 18" />
+                                        <path d="m6 6 12 12" />
+                                    </svg>
+                                </button>
+                            </span>
+                            <span
+                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-teal-800 ">
+                                Vacunación
+                                <button type="button"
+                                    class="flex-shrink-0 size-4 inline-flex items-center justify-center rounded-full hover:bg-blue-200 focus:outline-none focus:bg-blue-200 focus:text-blue-500 dark:hover:bg-blue-900">
+                                    <svg class="flex-shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M18 6 6 18" />
+                                        <path d="m6 6 12 12" />
+                                    </svg>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Non-working Days -->
+                <div class="w-full mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800  border-b pb-2 mb-4">
+                        Días No Laborables
+                    </h3>
+                </div>
+
+                <div class="w-full">
+                    <!-- Add Day Form -->
+                    <div class="grid sm:grid-cols-12 gap-2 mb-4">
+                        <div class="sm:col-span-4">
+                            <input type="date"
+                                class="py-2 px-3 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none ">
+                        </div>
+                        <div class="sm:col-span-6">
+                            <input type="text" placeholder="Motivo (ej. Feriado Nacional)"
+                                class="py-2 px-3 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none ">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <button type="button"
+                                class="w-full py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 disabled:pointer-events-none">
+                                Agregar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Days Table -->
+                    <div class="flex flex-col">
+                        <div class="-m-1.5 overflow-x-auto">
+                            <div class="p-1.5 min-w-full inline-block align-middle">
+                                <div class="border rounded-lg overflow-hidden ">
+                                    <table class="min-w-full divide-y divide-gray-200 ">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                                    Fecha</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                                    Motivo</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                                    Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-200 ">
+                                            <tr>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 ">
+                                                    25/12/2024</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">
+                                                    Navidad</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                                    <button type="button"
+                                                        class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400">Eliminar</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 ">
+                                                    01/01/2025</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">
+                                                    Año Nuevo</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                                    <button type="button"
+                                                        class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400">Eliminar</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End Flex Container -->
+
+            <div class="mt-8 flex justify-end gap-x-2">
+                <button type="button"
+                    class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none  ">
+                    Cancelar
+                </button>
+                <button type="button"
+                    class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 disabled:pointer-events-none">
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+    <!-- End Card Section -->
+</div>
