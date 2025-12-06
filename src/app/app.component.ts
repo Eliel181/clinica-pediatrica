@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   public alert: AlertService = inject(AlertService);
   title = 'clinica-pediatrica';
 
-  isAuthLoading: Signal<boolean> = this.authService.isAuthStatusLoaded || this.clientService.currentClient() !== null;
+  isAuthLoading: Signal<boolean> = this.authService.isAuthStatusLoaded;
 
   ngOnInit() {
     this.router.events.subscribe((event: Event) => {

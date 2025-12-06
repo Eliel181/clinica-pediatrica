@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut, onAuthStateChanged } from '@angular/fire/auth';
 import { FirestoreService } from './firestore.service';
 import { Router } from '@angular/router';
 import { Cliente } from '../interfaces/cliente.model';
@@ -15,6 +15,32 @@ export class ClienteService {
   private router: Router = inject(Router);
   private firestore: Firestore = inject(Firestore);
   currentClient: WritableSignal<Cliente | null | undefined> = signal(undefined);
+
+  constructor() {
+    onAuthStateChanged(this.auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // Obtenemos el cliente de Firestore
+        const client = await this.firestoreService.getDocument<Cliente>('clientes', firebaseUser.uid);
+
+        // Si existe el cliente, actualizamos el signal
+        if (client) {
+          const clientWithVerificationStatus: Cliente = {
+            ...client,
+            emailVerified: firebaseUser.emailVerified
+          };
+          this.currentClient.set(clientWithVerificationStatus);
+        } else {
+          // Si no es un cliente (podria ser un usuario administrativo), no seteamos currentClient
+          // O podriamos setearlo a null si queremos asegurar que no haya datos basura
+          // this.currentClient.set(null); 
+          // (Dejamos undefined o null segun la logica deseada, aqui asumimos que si no es cliente no interferimos o null)
+          this.currentClient.set(null);
+        }
+      } else {
+        this.currentClient.set(null);
+      }
+    });
+  }
 
   // Metodo para el Registro
   async register({ email, password, apellido, nombre, documento }: any) {

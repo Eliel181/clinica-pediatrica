@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, inject, Signal } from '@angular/core';
+import { AfterViewChecked, Component, computed, inject, Signal } from '@angular/core';
 import { RouterModule, RouterOutlet } from "@angular/router";
 import { Cliente } from '../../core/interfaces/cliente.model';
 import { ClienteService } from '../../core/services/cliente.service';
@@ -19,6 +19,14 @@ export class PublicLayoutComponent implements AfterViewChecked {
   currentClient: Signal<Cliente | null | undefined> = this.clientService.currentClient;
 
   private currentClientObservable = toObservable(this.currentClient);
+
+  clientInitials = computed(() => {
+    const client = this.currentClient();
+    if (!client) return '';
+    const nameInitial = client.nombre ? client.nombre.charAt(0).toUpperCase() : '';
+    const surnameInitial = client.apellido ? client.apellido.charAt(0).toUpperCase() : '';
+    return `${nameInitial}${surnameInitial}`;
+  });
 
   logOut(): void {
     // Podemos agregar una confirmacion con .then

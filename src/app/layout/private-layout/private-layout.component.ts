@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, inject, Signal } from '@angular/core';
+import { AfterViewChecked, Component, computed, inject, Signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Usuario } from '../../core/interfaces/usuario.model';
 import { AuthService } from '../../core/services/auth.service';
@@ -17,6 +17,14 @@ export class PrivateLayoutComponent implements AfterViewChecked {
   currentUser: Signal<Usuario | null | undefined> = this.authService.currentUser;
 
   private currentUserObservable = toObservable(this.currentUser);
+
+  userInitials = computed(() => {
+    const user = this.currentUser();
+    if (!user) return '';
+    const nameInitial = user.nombre ? user.nombre.charAt(0).toUpperCase() : '';
+    const surnameInitial = user.apellido ? user.apellido.charAt(0).toUpperCase() : '';
+    return `${nameInitial}${surnameInitial}`;
+  });
 
   logOut(): void {
     // Podemos agregar una confirmacion con .then
