@@ -3,6 +3,7 @@ import { RouterModule, RouterOutlet } from "@angular/router";
 import { Cliente } from '../../core/interfaces/cliente.model';
 import { ClienteService } from '../../core/services/cliente.service';
 import { toObservable } from '@angular/core/rxjs-interop';
+//import { environment } from '../../../environments/environment.development';
 
 declare const HSStaticMethods: any;
 
@@ -28,8 +29,16 @@ export class PublicLayoutComponent implements AfterViewChecked {
     return `${nameInitial}${surnameInitial}`;
   });
 
+  // const resend = new Resend(environment.resend.apiKey);
+
+  // resend.emails.send({
+  //   from: 'onboarding@resend.dev',
+  //   to: 'baleroeliel@gmail.com',
+  //   subject: 'Hello World',
+  //   html: '<p>Congrats on sending your <strong>Primer Correo</strong>!</p>'
+  // });
+
   logOut(): void {
-    // Podemos agregar una confirmacion con .then
     this.clientService.logOut();
   }
 

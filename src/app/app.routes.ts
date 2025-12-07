@@ -44,6 +44,9 @@ export const routes: Routes = [
             },
             {
                 path: 'gestion-clinica', loadComponent: () => import('./features/clinic/clinic-managment/clinic-managment.component').then(m => m.ClinicManagmentComponent)
+            },
+            {
+                path: 'gestion-servicios', loadComponent: () => import('./features/servicios-personalizados/servicios-managment/servicios-managment.component').then(m => m.ServiciosManagmentComponent)
             }
         ]
     }
