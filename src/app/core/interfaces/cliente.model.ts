@@ -1,4 +1,3 @@
-export type ParentescoCliente = 'Padre' | 'Madre' | 'Tutor Legal';
 
 export interface Cliente {
     id?: string;
@@ -10,7 +9,6 @@ export interface Cliente {
     direccion?: string;
     fechaNacimiento?: Date;
     genero?: string;
-    parentesco?: ParentescoCliente;
     imagenBase64?: string;
 
     emailVerified?: boolean;

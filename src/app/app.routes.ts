@@ -46,6 +46,9 @@ export const routes: Routes = [
                 path: 'gestion-usuarios/form-user', loadComponent: () => import('./features/users/user-managment/user-managment.component').then(m => m.UserManagmentComponent)
             },
             {
+                path: 'gestion-usuarios/edit-user/:id', loadComponent: () => import('./features/users/edit-user/edit-user.component').then(m => m.EditUserComponent)
+            },
+            {
                 path: 'gestion-clinica', loadComponent: () => import('./features/clinic/clinic-managment/clinic-managment.component').then(m => m.ClinicManagmentComponent)
             },
             {

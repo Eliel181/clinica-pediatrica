@@ -1,3 +1,5 @@
+export type ParentescoCliente = 'Hijo' | 'Nieto';
+
 export interface Paciente {
     id: string;
     nombre: string;
@@ -5,6 +7,7 @@ export interface Paciente {
     fechaNacimiento: string; // ISO
     dni: string;
     sexo: 'Masculino' | 'Femenino' | 'Otro';
+    parentesco?: ParentescoCliente;
 
     responsableId: string;   // ID del cliente (tutor legal)
     coberturaId?: string;    // obra social / prepaga

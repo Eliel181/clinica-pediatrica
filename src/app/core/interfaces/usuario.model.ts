@@ -18,6 +18,7 @@ export interface Usuario {
     rol: RolUsuario;
     imagenBase64?: string;
     emailVerified?: boolean;
+    servicioId?: string; //Id del servicio al que pertenece el usuario
 
     firstLogin?: boolean;
     online?: boolean;
@@ -25,6 +26,6 @@ export interface Usuario {
 
     createdAt?: Date;
     updatedAt?: Date;
-    whoCreated?: string;
+    whoCreated?: string; //Nombre y Apellido del usuario que lo creo
 }
 
