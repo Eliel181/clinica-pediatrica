@@ -28,5 +28,5 @@ export interface Servicio {
 
     activo: boolean;                 // para habilitar/deshabilitar
 
-    creadoEl: string;                // ISO
+    createdAt: Date;                // ISO
 }

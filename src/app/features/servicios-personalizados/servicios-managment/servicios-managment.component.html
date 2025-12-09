@@ -1,1 +1,301 @@
-<p>servicios-managment works!</p>
+<!-- Header -->
+<div class="max-w-8xl px-1 py-10 sm:px-2 lg:px-4 mx-auto font_outfit">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <div>
+            <h2 class="text-xl font-bold text-gray-800 ">
+                Gestión de Servicios
+            </h2>
+            <p class="text-sm text-gray-500 ">
+                Administra los servicios médicos y administrativos de la clínica.
+            </p>
+        </div>
+
+        <div>
+            <button type="button" (click)="openModalForCreate('')"
+                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-400 text-white hover:bg-teal-700 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:ring-1 focus:ring-teal-600">
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="M12 5v14" />
+                </svg>
+                Agregar Servicio
+            </button>
+        </div>
+    </div>
+</div>
+<!-- End Header -->
+
+<!-- Table Section -->
+<div class="flex flex-col">
+    <div class="-m-1.5 overflow-x-auto">
+        <div class="p-1.5 min-w-full inline-block align-middle">
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden ">
+                <!-- Header -->
+                <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 ">
+                            Servicios
+                        </h2>
+                        <p class="text-sm text-gray-600 dark:text-neutral-400">
+                            Lista de servicios disponibles.
+                        </p>
+                    </div>
+
+                    <div class="inline-flex gap-x-2">
+                        <!-- Botones de filtro o acciones adicionales podrian ir aqui -->
+                    </div>
+                </div>
+                <!-- End Header -->
+
+                <!-- Table -->
+                <table class="min-w-full divide-y divide-gray-200 ">
+                    <thead class="bg-gray-50 ">
+                        <tr>
+                            <th scope="col" class="ps-6 py-3 text-start">
+                                <label for="hs-at-with-checkboxes-main" class="flex">
+                                    <input type="checkbox"
+                                        class="shrink-0 border-gray-300 rounded text-teal-600 focus:ring-teal-600 disabled:opacity-50 disabled:pointer-events-none  ">
+                                    <span class="sr-only">Checkbox</span>
+                                </label>
+                            </th>
+
+                            <th scope="col" class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 ">
+                                        Servicio
+                                    </span>
+                                </div>
+                            </th>
+
+                            <th scope="col" class="px-6 py-3 text-start">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 ">
+                                        Categoría
+                                    </span>
+                                </div>
+                            </th>
+
+                            <th scope="col" class="px-6 py-3 text-start">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 ">
+                                        Duración
+                                    </span>
+                                </div>
+                            </th>
+
+                            <th scope="col" class="px-6 py-3 text-start">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 ">
+                                        Precio
+                                    </span>
+                                </div>
+                            </th>
+
+                            <th scope="col" class="px-6 py-3 text-start">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 ">
+                                        Estado
+                                    </span>
+                                </div>
+                            </th>
+
+                            <th scope="col" class="px-6 py-3 text-end"></th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200 ">
+                        @for (servicio of servicios(); track servicio.id) {
+                        <tr>
+                            <td class="size-px whitespace-nowrap">
+                                <div class="ps-6 py-3">
+                                    <label for="hs-at-with-checkboxes-{{servicio.id}}" class="flex">
+                                        <input type="checkbox"
+                                            class="shrink-0 border-gray-300 rounded text-teal-600 focus:ring-teal-600 disabled:opacity-50 disabled:pointer-events-none  "
+                                            id="hs-at-with-checkboxes-{{servicio.id}}">
+                                        <span class="sr-only">Checkbox</span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="size-px whitespace-nowrap">
+                                <div class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                                    <div class="flex items-center gap-x-3">
+                                        <div class="grow">
+                                            <span
+                                                class="block text-sm font-semibold text-gray-800 ">{{servicio.nombre}}</span>
+                                            <span class="block text-sm text-gray-500 ">{{servicio.descripcion}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="h-px w-72 whitespace-nowrap">
+                                <div class="px-6 py-3">
+                                    <span
+                                        class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800">
+                                        {{servicio.categoria}}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="size-px whitespace-nowrap">
+                                <div class="px-6 py-3">
+                                    <span
+                                        class="text-sm text-gray-600 dark:text-neutral-400">{{servicio.duracionMinutos}}
+                                        min</span>
+                                </div>
+                            </td>
+                            <td class="size-px whitespace-nowrap">
+                                <div class="px-6 py-3">
+                                    <span class="text-sm font-semibold text-gray-800 ">${{servicio.precio}}</span>
+                                </div>
+                            </td>
+                            <td class="size-px whitespace-nowrap">
+                                <div class="px-6 py-3">
+                                    @if(servicio.activo) {
+                                    <span
+                                        class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full ">
+                                        <svg class="size-2.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                        </svg>
+                                        Activo
+                                    </span>
+                                    } @else {
+                                    <span
+                                        class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-red-100 text-red-800 rounded-full ">
+                                        <svg class="size-2.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" viewBox="0 0 16 16">
+                                            <path
+                                                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                        </svg>
+                                        Inactivo
+                                    </span>
+                                    }
+                                </div>
+                            </td>
+                            <td class="size-px whitespace-nowrap">
+                                <div class="px-6 py-1.5">
+                                    <button type="button" (click)="openModalForEdit(servicio.id!)"
+                                        class="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline font-medium ">
+                                        Editar
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <!-- End Table -->
+
+                <!-- Footer -->
+                <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+                    <div>
+                        <p class="text-sm text-gray-600">
+                            <span class="font-semibold text-gray-800 ">{{servicios().length}}</span>
+                            resultados
+                        </p>
+                    </div>
+
+                    <div>
+                        <div class="inline-flex gap-x-2">
+                            <button type="button"
+                                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent">
+                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m15 18-6-6 6-6" />
+                                </svg>
+                                Prev
+                            </button>
+
+                            <button type="button"
+                                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent">
+                                Next
+                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m9 18 6-6-6-6" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Footer -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Table Section -->
+
+<!-- Modal -->
+<!-- Modal Unificado (Crear/Editar) -->
+@if (isModalVisible) {
+<div class="fixed inset-0 bg-gray-900/30 backdrop-blur-sm z-100 flex items-center justify-center p-4"
+    (click)="closeModal()">
+    <div (click)="$event.stopPropagation()"
+        class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[95vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <form [formGroup]="servicioForm" (ngSubmit)="onSubmit()" class="p-8">
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold text-center text-gray-800">
+                    {{ isEditMode ? 'Editar Servicio' : 'Agregar Nuevo Servicio' }}
+                </h2>
+                <p class="text-sm text-center text-gray-500 mt-1">
+                    Completa la información del servicio.
+                </p>
+            </div>
+
+            <!-- Form fields -->
+            <div class="space-y-4">
+                <div>
+                    <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                    <input id="nombre" formControlName="nombre" type="text"
+                        class="py-2 px-4 block w-full text-gray-700 border-gray-200 rounded-lg text-sm focus:border-teal-500 focus:ring-teal-500 disabled:opacity-50 disabled:pointer-events-none shadow-sm border">
+                </div>
+
+                <div>
+                    <label for="categoria" class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
+                    <select id="categoria" formControlName="categoria"
+                        class="py-2 px-4 block w-full text-gray-700 border-gray-200 rounded-lg text-sm focus:border-teal-500 focus:ring-teal-500 disabled:opacity-50 disabled:pointer-events-none shadow-sm border bg-white">
+                        <option value="" disabled selected>Seleccione una categoría</option>
+                        @for (cat of categorias; track cat) {
+                        <option [value]="cat">{{cat}}</option>
+                        }
+                    </select>
+                </div>
+
+                <div>
+                    <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                    <textarea id="descripcion" formControlName="descripcion" rows="3"
+                        class="py-2 px-4 block w-full text-gray-700 border-gray-200 rounded-lg text-sm focus:border-teal-500 focus:ring-teal-500 disabled:opacity-50 disabled:pointer-events-none shadow-sm border"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="duracionMinutos" class="block text-sm font-medium text-gray-700 mb-2">Duración
+                            (min)</label>
+                        <input id="duracionMinutos" formControlName="duracionMinutos" type="number"
+                            class="py-2 px-4 block w-full text-gray-700 border-gray-200 rounded-lg text-sm focus:border-teal-500 focus:ring-teal-500 disabled:opacity-50 disabled:pointer-events-none shadow-sm border">
+                    </div>
+                    <div>
+                        <label for="precio" class="block text-sm font-medium text-gray-700 mb-2">Precio</label>
+                        <input id="precio" formControlName="precio" type="number"
+                            class="py-2 px-4 block w-full text-gray-700 border-gray-200 rounded-lg text-sm focus:border-teal-500 focus:ring-teal-500 disabled:opacity-50 disabled:pointer-events-none shadow-sm border">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 pt-8 border-t border-gray-100 flex justify-end gap-3">
+                <button type="button" (click)="closeModal()"
+                    class="py-2 px-5 inline-flex items-center gap-x-2 text-sm font-medium rounded-xl bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-800 transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none shadow-sm border border-gray-200">
+                    Cancelar
+                </button>
+                <button type="submit" [disabled]="servicioForm.invalid"
+                    class="py-2 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-semibold rounded-xl bg-teal-400 text-white transform hover:scale-[1.02] active:scale-95 transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none shadow-sm hover:shadow-md hover:bg-teal-700">
+                    {{ isEditMode ? 'Guardar Cambios' : 'Guardar Servicio' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+}
+<!-- End Modal -->
