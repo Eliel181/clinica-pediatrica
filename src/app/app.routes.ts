@@ -26,6 +26,9 @@ export const routes: Routes = [
             },
             {
                 path: 'inicio', loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
+            },
+            {
+                path: 'perfil-cliente', loadComponent: () => import('./features/auth/profile-cliente/profile-cliente.component').then(m => m.ProfileClienteComponent)
             }
         ]
     },
@@ -47,6 +50,9 @@ export const routes: Routes = [
             },
             {
                 path: 'gestion-servicios', loadComponent: () => import('./features/servicios-personalizados/servicios-managment/servicios-managment.component').then(m => m.ServiciosManagmentComponent)
+            },
+            {
+                path: 'perfil-usuario', loadComponent: () => import('./features/auth/profile-user/profile-user.component').then(m => m.ProfileUserComponent)
             }
         ]
     }

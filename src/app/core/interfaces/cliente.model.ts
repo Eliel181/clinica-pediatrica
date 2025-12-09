@@ -14,4 +14,5 @@ export interface Cliente {
     imagenBase64?: string;
 
     emailVerified?: boolean;
+    completoDatos: boolean; //si el cliente no completa los datos, este campo permanecera en false
 }

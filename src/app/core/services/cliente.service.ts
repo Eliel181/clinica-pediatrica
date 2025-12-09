@@ -54,7 +54,8 @@ export class ClienteService {
         apellido,
         nombre,
         documento,
-        emailVerified: firebaseUser.emailVerified
+        emailVerified: firebaseUser.emailVerified,
+        completoDatos: false
       };
 
       await this.firestoreService.setDocument('clientes', firebaseUser.uid, newCliente);
