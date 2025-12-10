@@ -30,6 +30,7 @@ export class EditUserComponent implements OnInit {
   // Para pediatras
   servicios = signal<Servicio[]>([]);
   categoriasServicio: string[] = ['Consulta', 'Control', 'Vacuna', 'Estudio', 'Laboratorio', 'Especialidad', 'Administrativo', 'Otro'];
+  diasSemana: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
   constructor() {
     this.userForm = this.fb.group({
@@ -39,7 +40,8 @@ export class EditUserComponent implements OnInit {
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]], // Email usually not editable directly
       telefono: ['', Validators.required],
       rol: ['', Validators.required],
-      servicioId: [''] // Only for Pediatra
+      servicioId: [''], // Only for Pediatra
+      diasAtencion: [[]] // Only for Pediatra
     });
   }
 
@@ -58,6 +60,7 @@ export class EditUserComponent implements OnInit {
         message: 'No se pudo cargar la información del usuario.',
         type: 'error'
       });
+      console.error(error);
       this.router.navigate(['/administracion/gestion-usuarios']);
     }
   }
@@ -75,7 +78,8 @@ export class EditUserComponent implements OnInit {
         email: user.email,
         telefono: user.telefono,
         rol: user.rol,
-        servicioId: user.servicioId || ''
+        servicioId: user.servicioId || '',
+        diasAtencion: user.diasAtencion || []
       });
 
       // If user is Pediatra, load services
@@ -99,6 +103,20 @@ export class EditUserComponent implements OnInit {
     return this.servicios().filter(s => s.categoria === categoria);
   }
 
+  onDiaChange(dia: string, event: any) {
+    const diasControl = this.userForm.get('diasAtencion');
+    if (event.target.checked) {
+      diasControl?.setValue([...(diasControl.value || []), dia]);
+    } else {
+      diasControl?.setValue((diasControl.value || []).filter((d: string) => d !== dia));
+    }
+  }
+
+  isDiaSelected(dia: string): boolean {
+    const dias = this.userForm.get('diasAtencion')?.value || [];
+    return dias.includes(dia);
+  }
+
   async onSubmit() {
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
@@ -120,8 +138,10 @@ export class EditUserComponent implements OnInit {
 
       if (updateData.rol === 'Pediatra') {
         updateData.servicioId = formValue.servicioId;
+        updateData.diasAtencion = formValue.diasAtencion;
       } else {
         updateData.servicioId = '';
+        updateData.diasAtencion = [];
       }
 
       await this.firestoreService.updateDocument('usuarios', this.userId, updateData);
