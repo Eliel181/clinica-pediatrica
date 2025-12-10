@@ -19,6 +19,7 @@ export interface Usuario {
     imagenBase64?: string;
     emailVerified?: boolean;
     servicioId?: string; //Id del servicio al que pertenece el usuario
+    diasAtencion?: string[]; //Dias de atencion
 
     firstLogin?: boolean;
     online?: boolean;

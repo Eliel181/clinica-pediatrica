@@ -29,6 +29,9 @@ export const routes: Routes = [
             },
             {
                 path: 'perfil-cliente', loadComponent: () => import('./features/auth/profile-cliente/profile-cliente.component').then(m => m.ProfileClienteComponent)
+            },
+            {
+                path: 'solicitar-turno', loadComponent: () => import('./features/turnos/solicitar-turno/solicitar-turno.component').then(m => m.SolicitarTurnoComponent)
             }
         ]
     },

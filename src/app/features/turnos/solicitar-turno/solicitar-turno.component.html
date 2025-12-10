@@ -1,0 +1,308 @@
+<div class="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+    <div class="max-w-6xl mx-auto space-y-8">
+
+        <!-- Header -->
+        <div class="text-center space-y-2">
+            <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Reservar Turno</h1>
+            <p class="text-slate-500 text-lg">Completa los pasos para agendar tu consulta</p>
+        </div>
+
+        <!-- Horizontal Stepper -->
+        <div class="relative px-4">
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 -z-10 rounded-full"></div>
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-teal-500 transition-all duration-500 -z-10 rounded-full"
+                [style.width.%]="(currentStep() - 1) / (steps.length - 1) * 100"></div>
+
+            <div class="flex justify-between w-full">
+                <div *ngFor="let step of steps" class="flex flex-col items-center group cursor-default">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 z-10 bg-white"
+                        [ngClass]="{
+                   'border-teal-500 bg-teal-500 text-white shadow-[0_0_0_4px_rgba(20,184,166,0.2)]': currentStep() === step.number,
+                   'border-teal-500 text-teal-600 bg-teal-50': currentStep() > step.number,
+                   'border-slate-300 text-slate-400': currentStep() < step.number
+                 }">
+                        <span *ngIf="currentStep() <= step.number" class="text-xs sm:text-sm font-bold">{{ step.number
+                            }}</span>
+                        <svg *ngIf="currentStep() > step.number" class="w-4 h-4 sm:w-5 sm:h-5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                    </div>
+                    <span
+                        class="mt-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider transition-colors duration-300 hidden sm:block"
+                        [ngClass]="{
+                    'text-teal-600': currentStep() >= step.number,
+                    'text-slate-400': currentStep() < step.number
+                  }">
+                        {{ step.title }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Card -->
+        <div
+            class="bg-white/80 backdrop-blur-xl rounded-3xl border border-white/20 shadow-xl overflow-hidden min-h-[500px] flex flex-col relative text-slate-800">
+
+            <!-- Step 1: Paciente -->
+            <div *ngIf="currentStep() === 1" class="p-8 sm:p-10 flex-grow animate-fadeIn">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">¿Para quién es el turno?</h2>
+                <p class="text-slate-500 mb-8">Selecciona el paciente que asistirá a la consulta</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <button *ngFor="let paciente of pacientes()" (click)="selectPaciente(paciente)"
+                        class="relative p-6 rounded-2xl border text-left transition-all duration-200 group bg-white hover:border-teal-300 hover:shadow-lg hover:-translate-y-1 block w-full"
+                        [ngClass]="selectedPaciente()?.id === paciente.id ? 'border-teal-500 bg-teal-50 ring-1 ring-teal-500' : 'border-slate-200'">
+
+                        <div class="flex items-center space-x-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-bold text-xl">
+                                {{ paciente.nombre.charAt(0) }}
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800">{{ paciente.nombre }} {{ paciente.apellido
+                                    }}</h3>
+                                <p class="text-sm text-slate-500">{{ paciente.parentesco || 'Familiar' }} • {{
+                                    calculateAge(paciente.fechaNacimiento) }} años</p>
+                            </div>
+                        </div>
+
+                        <div class="absolute inset-0 border-2 border-teal-500 rounded-2xl opacity-0 scale-95 transition-all duration-200 pointer-events-none"
+                            [ngClass]="{'opacity-100 scale-100': selectedPaciente()?.id === paciente.id}"></div>
+                    </button>
+                </div>
+
+                <div *ngIf="pacientes().length === 0" class="text-center py-10">
+                    <p class="text-slate-500">No tienes pacientes registrados.</p>
+                    <a routerLink="/perfil-cliente"
+                        class="text-teal-600 font-semibold hover:text-teal-700 mt-2 inline-block">Agregar un
+                        paciente</a>
+                </div>
+            </div>
+
+            <!-- Step 2: Categoría -->
+            <div *ngIf="currentStep() === 2" class="p-8 sm:p-10 flex-grow animate-fadeIn">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Selecciona la Categoría</h2>
+                <p class="text-slate-500 mb-8">¿Qué tipo de servicio necesitas?</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button *ngFor="let cat of categorias()" (click)="selectCategoria(cat)"
+                        class="p-6 rounded-2xl border text-left transition-all duration-200 group relative overflow-hidden h-full flex flex-col justify-center items-center text-center space-y-3"
+                        [ngClass]="selectedCategoria()?.id === cat.id
+                      ? 'border-teal-500 bg-teal-50 ring-1 ring-teal-500'
+                      : 'border-slate-200 hover:border-teal-300 hover:shadow-lg bg-white'">
+
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-teal-700 transition-colors">{{
+                            cat.nombre }}</h3>
+
+                        <div class="absolute inset-0 border-2 border-teal-500 rounded-2xl opacity-0 scale-95 transition-all duration-200 pointer-events-none"
+                            [ngClass]="{'opacity-100 scale-100': selectedCategoria()?.id === cat.id}"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Servicio -->
+            <div *ngIf="currentStep() === 3" class="p-8 sm:p-10 flex-grow animate-fadeIn">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Selecciona el Servicio</h2>
+                <p class="text-slate-500 mb-8">Servicios disponibles para <span class="font-semibold text-teal-600">{{
+                        selectedCategoria()?.nombre }}</span></p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button *ngFor="let serv of availableServices()" (click)="selectServicio(serv)"
+                        class="p-5 rounded-2xl border text-left transition-all duration-200 flex justify-between items-center group hover:shadow-md bg-white"
+                        [ngClass]="selectedServicio()?.id === serv.id ? 'border-teal-500 bg-teal-50 ring-1 ring-teal-500' : 'border-slate-200 hover:border-teal-300'">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-lg">{{ serv.nombre }}</h3>
+                            <div class="flex items-center space-x-3 mt-1">
+                                <span
+                                    class="bg-teal-50 text-teal-700 text-xs px-2 py-1 rounded-md font-medium border border-teal-100">
+                                    {{ serv.precio | currency:'USD':'symbol':'1.0-0' }}
+                                </span>
+                                <span class="text-sm text-slate-500 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    {{ serv.duracionMinutos || 30 }} min
+                                </span>
+                            </div>
+                        </div>
+                        <div
+                            class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-teal-500 group-hover:border-teal-500 transition-colors">
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                                </path>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+
+                <div *ngIf="availableServices().length === 0" class="text-center py-10">
+                    <p class="text-slate-500">No hay servicios disponibles en esta categoría.</p>
+                </div>
+            </div>
+
+            <!-- Step 4: Profesional -->
+            <div *ngIf="currentStep() === 4" class="p-8 sm:p-10 flex-grow animate-fadeIn">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Elige un Profesional</h2>
+                <p class="text-slate-500 mb-8">Especialistas en <span class="font-semibold text-teal-600">{{
+                        selectedServicio()?.nombre }}</span></p>
+
+                <div *ngIf="availableProfesionales().length > 0; else noProfesionales"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div *ngFor="let prof of availableProfesionales()" (click)="selectProfesional(prof)"
+                        class="relative p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex items-center space-x-4 group bg-white"
+                        [ngClass]="selectedProfesional()?.uid === prof.uid
+                   ? 'border-teal-500 bg-teal-50 ring-1 ring-teal-500 shadow-md'
+                   : 'border-slate-200 hover:border-teal-300 hover:shadow-lg'">
+
+                        <img [src]="prof.imagenBase64 || 'https://ui-avatars.com/api/?name=' + prof.nombre + '+' + prof.apellido + '&background=random'"
+                            class="w-16 h-16 rounded-full object-cover ring-2 ring-white shadow-sm" alt="Avatar">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-lg">{{ prof.nombre }} {{ prof.apellido }}</h3>
+                            <span
+                                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-teal-100 text-teal-800">
+                                Disponible
+                            </span>
+                        </div>
+
+                        <div class="absolute top-4 right-4 text-teal-600 opacity-0 transition-opacity duration-200"
+                            [ngClass]="{'opacity-100': selectedProfesional()?.uid === prof.uid}">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <ng-template #noProfesionales>
+                    <div class="text-center py-16 bg-slate-50 rounded-3xl border border-dashed border-slate-300">
+                        <div
+                            class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-slate-900">No hay profesionales disponibles</h3>
+                        <p class="text-slate-500 mt-1 max-w-sm mx-auto">Lo sentimos, actualmente no contamos con
+                            profesionales asignados a este servicio.</p>
+                        <div class="mt-6">
+                            <button (click)="currentStep.set(2)" class="text-teal-600 hover:text-teal-700 font-medium">
+                                ← Elegir otro servicio
+                            </button>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+
+            <!-- Step 5: Fecha y Hora -->
+            <div *ngIf="currentStep() === 5" class="p-8 sm:p-10 flex-grow animate-fadeIn">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Selecciona un turno</h2>
+                <p class="text-slate-500 mb-8">Elige la hora que más te convenga con <span
+                        class="font-semibold text-teal-600">{{ selectedProfesional()?.nombre }} {{
+                        selectedProfesional()?.apellido }}</span></p>
+
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <!-- Calendar Strip -->
+                    <div class="lg:w-1/4 space-y-3">
+                        <h3 class="font-semibold text-slate-700">Próximos Días</h3>
+                        <div class="space-y-2">
+                            <button *ngFor="let f of fechas"
+                                class="w-full text-left px-4 py-3 rounded-xl border transition-all flex justify-between items-center"
+                                [ngClass]="selectedFecha() === f ? 'bg-teal-600 text-white border-teal-600 shadow-md' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'"
+                                (click)="selectedFecha.set(f)">
+                                <span>{{ f }}</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Time Slots -->
+                    <div class="lg:w-3/4">
+                        <h3 class="font-semibold text-slate-700 mb-4">Horarios Disponibles para {{ selectedFecha() }}
+                        </h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <button *ngFor="let h of horas" (click)="selectHora(h)"
+                                class="py-3 px-4 rounded-xl border text-center transition-all duration-200 font-medium"
+                                [ngClass]="selectedHora() === h 
+                           ? 'bg-teal-600 text-white border-teal-600 shadow-[0_4px_14px_0_rgba(20,184,166,0.39)] transform scale-105' 
+                           : 'bg-white text-slate-600 border-slate-200 hover:border-teal-400 hover:text-teal-600'">
+                                {{ h }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Confirmación -->
+            <div *ngIf="currentStep() === 6"
+                class="p-8 sm:p-10 flex-grow animate-fadeIn flex flex-col items-center justify-center text-center">
+                <div class="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mb-6 text-teal-600">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">¡Casi listo!</h2>
+                <p class="text-slate-500 mb-8 max-w-md">Por favor verifica los detalles de tu turno antes de confirmar.
+                </p>
+
+                <div
+                    class="bg-slate-50 rounded-2xl p-6 w-full max-w-md border border-slate-200 text-left space-y-4 shadow-sm text-sm sm:text-base">
+                    <div class="flex justify-between border-b border-slate-200 pb-3">
+                        <span class="text-slate-500">Paciente</span>
+                        <span class="font-semibold text-slate-800 text-right">{{ selectedPaciente()?.nombre }}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-3">
+                        <span class="text-slate-500">Servicio</span>
+                        <div class="text-right">
+                            <span class="font-semibold text-slate-800 block">{{ selectedServicio()?.nombre }}</span>
+                            <span class="text-xs text-slate-400 block">{{ selectedCategoria()?.nombre }}</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-3">
+                        <span class="text-slate-500">Profesional</span>
+                        <span class="font-semibold text-slate-800 text-right">{{ selectedProfesional()?.nombre }} {{
+                            selectedProfesional()?.apellido }}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-3">
+                        <span class="text-slate-500">Fecha</span>
+                        <span class="font-semibold text-slate-800 text-right">{{ selectedFecha() }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Hora</span>
+                        <span class="font-semibold text-slate-800 text-right">{{ selectedHora() }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Navigation -->
+            <div class="bg-white px-8 py-5 border-t border-slate-100 flex justify-between items-center z-10">
+                <button (click)="prevStep()" [disabled]="currentStep() === 1"
+                    class="px-6 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    Anterior
+                </button>
+
+                <button (click)="nextStep()"
+                    class="px-8 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 text-white font-bold shadow-[0_4px_14px_0_rgba(20,184,166,0.39)] hover:shadow-[0_6px_20px_rgba(20,184,166,0.23)] hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    [disabled]="(currentStep() === 1 && !selectedPaciente()) || 
+                              (currentStep() === 2 && !selectedCategoria()) || 
+                              (currentStep() === 3 && !selectedServicio()) || 
+                              (currentStep() === 4 && (!selectedProfesional() || availableProfesionales().length === 0)) ||
+                              (currentStep() === 5 && !selectedHora())">
+                    {{ currentStep() === 6 ? 'Confirmar Turno' : 'Siguiente' }}
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
