@@ -242,14 +242,39 @@
                     <div class="lg:w-3/4">
                         <h3 class="font-semibold text-slate-700 mb-4">Horarios Disponibles para {{ selectedFecha() }}
                         </h3>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            <button *ngFor="let h of horasDisponibles()" (click)="selectHora(h)"
-                                class="py-3 px-4 rounded-xl border text-center transition-all duration-200 font-medium"
-                                [ngClass]="selectedHora() === h 
-                           ? 'bg-teal-600 text-white border-teal-600 shadow-[0_4px_14px_0_rgba(20,184,166,0.39)] transform scale-105' 
-                           : 'bg-white text-slate-600 border-slate-200 hover:border-teal-400 hover:text-teal-600'">
-                                {{ h }}
+
+                        <!-- Spinner -->
+                        <div *ngIf="loadingHorarios()" class="flex justify-center py-10">
+                            <svg class="animate-spin h-8 w-8 text-teal-600" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                        </div>
+
+                        <!-- Slots -->
+                        <div *ngIf="!loadingHorarios()" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <button *ngFor="let h of horasDisponibles()"
+                                (click)="!horasOcupadas().includes(h) && selectHora(h)"
+                                [disabled]="horasOcupadas().includes(h)"
+                                class="py-3 px-4 rounded-xl border text-center transition-all duration-200 font-medium relative"
+                                [ngClass]="{
+                                    'bg-teal-600 text-white border-teal-600 shadow-[0_4px_14px_0_rgba(20,184,166,0.39)] transform scale-105': selectedHora() === h && !horasOcupadas().includes(h),
+                                    'bg-white text-slate-600 border-slate-200 hover:border-teal-400 hover:text-teal-600 cursor-pointer': selectedHora() !== h && !horasOcupadas().includes(h),
+                                    'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed opacity-60': horasOcupadas().includes(h)
+                                }">
+                                <span [ngClass]="{'line-through': horasOcupadas().includes(h)}">{{ h }}</span>
+                                <span *ngIf="horasOcupadas().includes(h)" class="block text-xs mt-1">Ocupado</span>
                             </button>
+                        </div>
+
+                        <div *ngIf="!loadingHorarios() && horasDisponibles().length === 0"
+                            class="text-center py-6 text-slate-500">
+                            No hay horarios disponibles para esta fecha.
                         </div>
                     </div>
                 </div>
@@ -280,6 +305,11 @@
                             <span class="font-semibold text-slate-800 block">{{ selectedServicio()?.nombre }}</span>
                             <span class="text-xs text-slate-400 block">{{ selectedCategoria()?.nombre }}</span>
                         </div>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-3">
+                        <span class="text-slate-500">Precio</span>
+                        <span class="font-semibold text-slate-800 text-right">{{ selectedServicio()?.precio |
+                            currency:'USD':'symbol':'1.0-0' }}</span>
                     </div>
                     <div class="flex justify-between border-b border-slate-200 pb-3">
                         <span class="text-slate-500">Profesional</span>

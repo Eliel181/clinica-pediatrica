@@ -3,11 +3,14 @@ import { Component, signal, computed, inject, EffectRef, effect } from '@angular
 import { ClienteService } from '../../../core/services/cliente.service';
 import { PacienteService } from '../../../core/services/paciente.service';
 import { Paciente } from '../../../core/interfaces/paciente.model';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ServicioService } from '../../../core/services/servicio.service';
 import { Servicio } from '../../../core/interfaces/servicio.model';
 import { Usuario } from '../../../core/interfaces/usuario.model';
 import { UsuarioService } from '../../../core/services/usuario.service';
+import { TurnoService } from '../../../core/services/turno.service';
+import { Turno } from '../../../core/interfaces/turno.model';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
     selector: 'app-solicitar-turno',
@@ -21,6 +24,9 @@ export class SolicitarTurnoComponent {
     private pacienteService = inject(PacienteService);
     private servicioService = inject(ServicioService);
     private usuarioService = inject(UsuarioService);
+    private turnoService = inject(TurnoService);
+    private alertService = inject(AlertService);
+    private router = inject(Router);
 
     currentStep = signal(1);
 
@@ -98,6 +104,81 @@ export class SolicitarTurnoComponent {
                 this.profesionales.set([]);
             }
         });
+
+        // Effect to load available slots when date changes
+        effect(() => {
+            const fecha = this.selectedFecha();
+            const profesional = this.selectedProfesional();
+            const servicio = this.selectedServicio();
+
+            if (fecha && profesional && servicio) {
+                this.loadHorarios(fecha, profesional, servicio);
+            }
+        }, { allowSignalWrites: true });
+    }
+
+    async loadHorarios(fechaStr: string, profesional: any, servicio: any) {
+        this.loadingHorarios.set(true);
+        this.horasDisponibles.set([]); // Clear while loading
+        this.horasOcupadas.set([]); // Clear occupied list
+
+        console.log('Loading horarios for:', { fechaStr, profesional, servicio });
+
+        try {
+            // 1. Generate all potential slots
+            const duracion = servicio.duracionMinutos || 30;
+            let startHour = 8;
+            let endHour = 17;
+
+            // Check profesional's shift
+            if (profesional.turno === 'Mañana') {
+                startHour = 7;
+                endHour = 12;
+            } else if (profesional.turno === 'Tarde') {
+                startHour = 13;
+                endHour = 18;
+            }
+            // If no turno is defined, use default 8-17
+
+            console.log('Shift hours:', { startHour, endHour, turno: profesional.turno });
+
+            const allSlots = this.calculateSlots(duracion, startHour, endHour);
+            console.log('Generated slots:', allSlots);
+
+            // 2. Fetch occupied slots from DB
+            const turnosOcupados = await this.turnoService.getTurnosByProfesionalAndFecha(profesional.uid, fechaStr);
+            const horasOcupadasList = turnosOcupados.map(t => t.horaString);
+
+            console.log('Occupied slots:', horasOcupadasList);
+
+            // 3. Set all slots and mark occupied ones
+            this.horasDisponibles.set(allSlots);
+            this.horasOcupadas.set(horasOcupadasList);
+
+        } catch (error) {
+            console.error('Error loading slots:', error);
+            this.horasDisponibles.set([]);
+            this.horasOcupadas.set([]);
+        } finally {
+            this.loadingHorarios.set(false);
+        }
+    }
+
+    calculateSlots(duracionMinutos: number, startHour: number, endHour: number): string[] {
+        const slots: string[] = [];
+        let currentMinutes = startHour * 60;
+        const endMinutes = endHour * 60;
+
+        while (currentMinutes < endMinutes) {
+            const h = Math.floor(currentMinutes / 60);
+            const m = currentMinutes % 60;
+            const hStr = h < 10 ? `0${h}` : `${h}`;
+            const mStr = m < 10 ? `0${m}` : `${m}`;
+            const ampm = h < 12 ? 'AM' : 'PM';
+            slots.push(`${hStr}:${mStr} ${ampm}`);
+            currentMinutes += duracionMinutos;
+        }
+        return slots;
     }
 
 
@@ -149,6 +230,7 @@ export class SolicitarTurnoComponent {
 
         // Sort by date
         todasLasFechas.sort((a, b) => a.getTime() - b.getTime());
+        this.rawFechas = todasLasFechas;
 
         // Format for display
         const fechasFormateadas = todasLasFechas.map(f => {
@@ -165,7 +247,10 @@ export class SolicitarTurnoComponent {
     }
 
     fechas = signal<string[]>([]);
+    rawFechas: Date[] = [];
     horasDisponibles = signal<string[]>([]);
+    horasOcupadas = signal<string[]>([]); // Track occupied slots
+    loadingHorarios = signal<boolean>(false);
 
     // State
     selectedPaciente = signal<Paciente | null>(null);
@@ -205,6 +290,75 @@ export class SolicitarTurnoComponent {
     nextStep() {
         if (this.currentStep() < 6) {
             this.currentStep.update(v => v + 1);
+        } else if (this.currentStep() === 6) {
+            this.confirmarTurno();
+        }
+    }
+
+    async confirmarTurno() {
+        const paciente = this.selectedPaciente();
+        const servicio = this.selectedServicio();
+        const profesional = this.selectedProfesional();
+        const fechaStr = this.selectedFecha();
+        const horaStr = this.selectedHora();
+        const responsable = this.clienteService.currentClient();
+
+        if (!paciente || !servicio || !profesional || !fechaStr || !horaStr || !responsable) {
+            this.alertService.open({
+                title: 'Error',
+                message: 'Faltan datos para confirmar el turno.',
+                type: 'error'
+            });
+            return;
+        }
+
+        // Find the actual Date object
+        const fechaIndex = this.fechas().indexOf(fechaStr);
+        let fechaObj: Date;
+        if (fechaIndex !== -1 && this.rawFechas[fechaIndex]) {
+            fechaObj = new Date(this.rawFechas[fechaIndex]); // Clone
+
+            // Format is "HH:mm AM/PM" (where HH is already 24h based in generator logic)
+            // e.g., "14:20 PM" or "09:00 AM"
+            const timeParts = horaStr.split(' ')[0].split(':');
+            const hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+
+            fechaObj.setHours(hours, minutes, 0, 0);
+        } else {
+            this.alertService.open({ title: 'Error', message: 'Error con la fecha seleccionada.', type: 'error' });
+            return;
+        }
+
+        const nuevoTurno: Partial<Turno> = {
+            pacienteId: paciente.id,
+            responsableId: responsable.id!,
+            profesionalId: profesional.uid,
+            fecha: fechaObj,
+            hora: horaStr,
+            fechaString: fechaStr,
+            horaString: horaStr,
+            motivo: 'Consulta - ' + servicio.nombre,
+            estado: 'Pendiente',
+            precioPagado: servicio.precio || 0,
+            createdAt: new Date()
+        };
+
+        try {
+            await this.turnoService.crearTurno(nuevoTurno);
+            await this.alertService.open({
+                title: '¡Turno Reservado!',
+                message: `Tu turno para ${servicio.nombre} ha sido reservado correctamente.`,
+                type: 'success'
+            });
+            this.router.navigate(['/home']);
+        } catch (error) {
+            console.error(error);
+            await this.alertService.open({
+                title: 'Error',
+                message: 'Hubo un problema al reservar el turno. Inténtalo de nuevo.',
+                type: 'error'
+            });
         }
     }
 
