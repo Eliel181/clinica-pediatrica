@@ -41,7 +41,10 @@ export class EditUserComponent implements OnInit {
       telefono: ['', Validators.required],
       rol: ['', Validators.required],
       servicioId: [''], // Only for Pediatra
-      diasAtencion: [[]] // Only for Pediatra
+      diasAtencion: [[]], // Only for Pediatra
+      horasTrabajo: [''],
+      turno: [''],
+      matricula: ['']
     });
   }
 
@@ -79,7 +82,10 @@ export class EditUserComponent implements OnInit {
         telefono: user.telefono,
         rol: user.rol,
         servicioId: user.servicioId || '',
-        diasAtencion: user.diasAtencion || []
+        diasAtencion: user.diasAtencion || [],
+        horasTrabajo: user.horasTrabajo || '',
+        turno: user.turno || '',
+        matricula: user.matricula || ''
       });
 
       // If user is Pediatra, load services
@@ -142,6 +148,16 @@ export class EditUserComponent implements OnInit {
       } else {
         updateData.servicioId = '';
         updateData.diasAtencion = [];
+      }
+
+      if ((updateData.rol as string) !== 'Usuario') {
+        updateData.horasTrabajo = formValue.horasTrabajo;
+        updateData.turno = formValue.turno;
+        updateData.matricula = formValue.matricula;
+      } else {
+        updateData.horasTrabajo = '';
+        updateData.turno = '';
+        updateData.matricula = '';
       }
 
       await this.firestoreService.updateDocument('usuarios', this.userId, updateData);

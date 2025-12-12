@@ -37,6 +37,7 @@ export class SolicitarTurnoComponent {
     pacientes = signal<Paciente[]>([]);
     servicios = signal<Servicio[]>([]);
     profesionales = signal<Usuario[]>([]);
+    loadingProfesionales = signal<boolean>(false);
 
     // Computed Categories
     categorias = computed(() => {
@@ -48,6 +49,19 @@ export class SolicitarTurnoComponent {
             icon: this.getCategoryIcon(cat)
         }));
     });
+
+    diasMapping: Record<string, number> = {
+        "domingo": 0,
+        "lunes": 1,
+        "martes": 2,
+        "miércoles": 3,
+        "miercoles": 3, // por si viene sin tilde
+        "jueves": 4,
+        "viernes": 5,
+        "sábado": 6,
+        "sabado": 6
+    };
+
 
     constructor() {
         // Load Patients
@@ -69,8 +83,16 @@ export class SolicitarTurnoComponent {
         effect(() => {
             const service = this.selectedServicio();
             if (service && service.id) {
-                this.usuarioService.getPediatrasByServicio(service.id).subscribe(data => {
-                    this.profesionales.set(data);
+                this.loadingProfesionales.set(true);
+                this.usuarioService.getPediatrasByServicio(service.id).subscribe({
+                    next: (data) => {
+                        this.profesionales.set(data);
+                        this.loadingProfesionales.set(false);
+                    },
+                    error: () => {
+                        this.profesionales.set([]);
+                        this.loadingProfesionales.set(false);
+                    }
                 });
             } else {
                 this.profesionales.set([]);
@@ -78,19 +100,79 @@ export class SolicitarTurnoComponent {
         });
     }
 
-    fechas = ['Lun 11', 'Mar 12', 'Mie 13', 'Jue 14', 'Vie 15'];
-    horas = [
-        '08:00 AM', '08:30 AM', '09:00 AM',
-        '09:30 AM', '10:00 AM', '10:30 AM',
-        '14:00 PM', '14:30 PM'
-    ];
+
+
+    // Helper methods for dates
+    obtenerProximaFecha(diaNombre: string): Date {
+        const hoy = new Date();
+        const diaActual = hoy.getDay();
+
+        const diaBuscado = this.diasMapping[diaNombre.toLowerCase()];
+        if (diaBuscado === undefined) return new Date(); // Fallback
+
+        let diferencia = diaBuscado - diaActual;
+
+        // If today is the day or past, move to next week
+        if (diferencia <= 0) {
+            diferencia += 7;
+        }
+
+        const fecha = new Date();
+        fecha.setDate(hoy.getDate() + diferencia);
+
+        return fecha;
+    }
+
+    obtenerFechasSiguientes(diaNombre: string, cantidad: number): Date[] {
+        const fechas: Date[] = [];
+        let fecha = this.obtenerProximaFecha(diaNombre);
+
+        for (let i = 0; i < cantidad; i++) {
+            fechas.push(new Date(fecha));
+            fecha.setDate(fecha.getDate() + 7);
+        }
+
+        return fechas;
+    }
+
+    generarFechasDisponibles(diasAtencion: string[]) {
+        if (!diasAtencion || diasAtencion.length === 0) {
+            this.fechas.set([]);
+            return;
+        }
+
+        const todasLasFechas: Date[] = [];
+        diasAtencion.forEach(dia => {
+            const fechasDia = this.obtenerFechasSiguientes(dia, 2);
+            todasLasFechas.push(...fechasDia);
+        });
+
+        // Sort by date
+        todasLasFechas.sort((a, b) => a.getTime() - b.getTime());
+
+        // Format for display
+        const fechasFormateadas = todasLasFechas.map(f => {
+            const diasSemana = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+            const diaStr = diasSemana[f.getDay()];
+            const fechaStr = f.getDate();
+            return `${diaStr} ${fechaStr}`;
+        });
+
+        this.fechas.set(fechasFormateadas);
+        if (fechasFormateadas.length > 0) {
+            this.selectedFecha.set(fechasFormateadas[0]);
+        }
+    }
+
+    fechas = signal<string[]>([]);
+    horasDisponibles = signal<string[]>([]);
 
     // State
     selectedPaciente = signal<Paciente | null>(null);
     selectedCategoria = signal<any>(null);
     selectedServicio = signal<Servicio | null>(null);
     selectedProfesional = signal<any>(null);
-    selectedFecha = signal<string>('Lun 11');
+    selectedFecha = signal<string>('');
     selectedHora = signal<string>('');
 
     // Computed
@@ -145,18 +227,69 @@ export class SolicitarTurnoComponent {
         this.nextStep();
     }
 
-    selectServicio(servicio: any) {
+    selectServicio(servicio: Servicio) {
         this.selectedServicio.set(servicio);
         this.selectedProfesional.set(null);
+        this.horasDisponibles.set([]); // Reset slots until professional is selected
         this.nextStep();
     }
 
     selectProfesional(prof: any) {
         this.selectedProfesional.set(prof);
+
+        const servicio = this.selectedServicio();
+        const duracion = servicio?.duracionMinutos || 30;
+
+        // Determine shift hours
+        let startHour = 8;
+        let endHour = 17;
+
+        if (prof.turno === 'Mañana') {
+            startHour = 7;
+            endHour = 12;
+        } else if (prof.turno === 'Tarde') {
+            startHour = 13;
+            endHour = 18;
+        }
+
+        this.generarHorarios(duracion, startHour, endHour);
+
+        if (prof.diasAtencion) {
+            this.generarFechasDisponibles(prof.diasAtencion);
+        } else {
+            this.fechas.set([]);
+        }
         this.nextStep();
     }
 
+    //guardamos la hora seleccionada
     selectHora(hora: string) {
         this.selectedHora.set(hora);
     }
+
+    generarHorarios(duracionMinutos: number, startHour: number, endHour: number) {
+        const slots: string[] = [];
+
+        let currentMinutes = startHour * 60;
+        const endMinutes = endHour * 60;
+
+        while (currentMinutes < endMinutes) {
+            const h = Math.floor(currentMinutes / 60);
+            const m = currentMinutes % 60;
+
+            // Format HH:mm
+            const hStr = h < 10 ? `0${h}` : `${h}`;
+            const mStr = m < 10 ? `0${m}` : `${m}`;
+            const ampm = h < 12 ? 'AM' : 'PM';
+
+            slots.push(`${hStr}:${mStr} ${ampm}`);
+
+            currentMinutes += duracionMinutos;
+        }
+
+        this.horasDisponibles.set(slots);
+    }
+
+    //turnos
+
 }
