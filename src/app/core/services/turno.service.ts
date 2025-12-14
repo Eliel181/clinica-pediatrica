@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, doc, docData, DocumentReference, Firestore, updateDoc, query, where, getDocs } from '@angular/fire/firestore';
+import { addDoc, collection, doc, docData, DocumentReference, Firestore, updateDoc, query, where, getDocs, collectionData } from '@angular/fire/firestore';
 import { Turno } from '../interfaces/turno.model';
 import { Observable } from 'rxjs';
 
@@ -18,6 +18,15 @@ export class TurnoService {
   getTurnoById(id: string): Observable<Turno | undefined> {
     const turnoDocRef = doc(this.firestore, `turnos/${id}`);
     return docData(turnoDocRef, { idField: 'id' }) as Observable<Turno | undefined>;
+  }
+
+  getTurnosByClienteId(clienteId: string): Observable<Turno[]> {
+    const turnosCollection = collection(this.firestore, 'turnos');
+    const q = query(
+      turnosCollection,
+      where('responsableId', '==', clienteId)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<Turno[]>;
   }
 
   updateTurno(id: string, turno: Partial<Turno>): Promise<void> {
@@ -50,5 +59,11 @@ export class TurnoService {
       console.error('Error in getTurnosByProfesionalAndFecha:', error);
       return [];
     }
+  }
+
+  async cancelarTurno(id: string): Promise<void> {
+    await this.updateTurno(id, {
+      estado: 'Cancelado',
+    } as Turno);
   }
 }

@@ -339,7 +339,7 @@ export class SolicitarTurnoComponent {
             fechaString: fechaStr,
             horaString: horaStr,
             motivo: 'Consulta - ' + servicio.nombre,
-            estado: 'Pendiente',
+            estado: 'Confirmado',
             precioPagado: servicio.precio || 0,
             createdAt: new Date()
         };

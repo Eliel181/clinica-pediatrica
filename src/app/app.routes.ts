@@ -32,6 +32,9 @@ export const routes: Routes = [
             },
             {
                 path: 'solicitar-turno', loadComponent: () => import('./features/turnos/solicitar-turno/solicitar-turno.component').then(m => m.SolicitarTurnoComponent)
+            },
+            {
+                path: 'mis-turnos', loadComponent: () => import('./features/turnos/mis-turnos/mis-turnos.component').then(m => m.MisTurnosComponent)
             }
         ]
     },
