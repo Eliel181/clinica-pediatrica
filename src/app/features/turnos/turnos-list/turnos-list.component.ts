@@ -10,27 +10,16 @@ import { Usuario } from '../../../core/interfaces/usuario.model';
 import { Paciente } from '../../../core/interfaces/paciente.model';
 import { Cliente } from '../../../core/interfaces/cliente.model';
 
-// Interface para turnos enriquecidos con datos completos
-interface TurnoEnriquecido {
-  id: string;
-  paciente: {
-    nombre: string;
-    apellido: string;
-    email?: string;
-  };
-  responsable: {
-    nombre: string;
-    email: string;
-    telefono: string;
-  };
-  doctor: {
-    nombre: string;
-    especialidad: string;
-  };
-  fecha: string;
-  hora: string;
-  estado: string;
-  motivo: string;
+// Interface que extiende Turno con detalles enriquecidos
+interface TurnoConDetalles extends Turno {
+  pacienteNombre?: string;
+  pacienteApellido?: string;
+  pacienteEmail?: string;
+  responsableNombre?: string;
+  responsableEmail?: string;
+  responsableTelefono?: string;
+  profesionalNombre?: string;
+  profesionalEspecialidad?: string;
 }
 
 @Component({
@@ -47,7 +36,7 @@ export class TurnosListComponent implements OnInit {
   private clienteService = inject(ClienteService);
 
   // Signals para estado reactivo
-  turnos = signal<TurnoEnriquecido[]>([]);
+  turnos = signal<TurnoConDetalles[]>([]);
   isLoading = signal<boolean>(false);
 
   // Filters como signals
@@ -71,7 +60,7 @@ export class TurnosListComponent implements OnInit {
           const enrichedResults = await Promise.all(enrichedPromises);
 
           // Filtrar los que no se pudieron enriquecer completamente
-          const validTurnos = enrichedResults.filter((t): t is TurnoEnriquecido => t !== null);
+          const validTurnos = enrichedResults.filter((t): t is TurnoConDetalles => t !== null);
 
           // Aplicar filtro de texto si existe
           const filtered = this.searchTerm()
@@ -92,63 +81,62 @@ export class TurnosListComponent implements OnInit {
     }
   }
 
-  matchesSearchTerm(turno: TurnoEnriquecido, search: string): boolean {
+  matchesSearchTerm(turno: TurnoConDetalles, search: string): boolean {
     const searchLower = search.toLowerCase();
     return (
-      turno.paciente.nombre.toLowerCase().includes(searchLower) ||
-      turno.responsable.nombre.toLowerCase().includes(searchLower) ||
-      turno.doctor.nombre.toLowerCase().includes(searchLower) ||
+      (turno.pacienteNombre?.toLowerCase().includes(searchLower) ?? false) ||
+      (turno.responsableNombre?.toLowerCase().includes(searchLower) ?? false) ||
+      (turno.profesionalNombre?.toLowerCase().includes(searchLower) ?? false) ||
       turno.motivo.toLowerCase().includes(searchLower) ||
       turno.estado.toLowerCase().includes(searchLower)
     );
   }
 
-  async enrichTurno(turno: Turno): Promise<TurnoEnriquecido | null> {
+  async enrichTurno(turno: Turno): Promise<TurnoConDetalles | null> {
     try {
+      const turnoConDetalles: TurnoConDetalles = { ...turno };
+
       // Obtener datos del paciente
-      const paciente = turno.pacienteId
-        ? await this.pacienteService.getPacienteById(turno.pacienteId)
-        : null;
+      if (turno.pacienteId) {
+        const paciente = await this.pacienteService.getPacienteById(turno.pacienteId);
+        if (paciente) {
+          turnoConDetalles.pacienteNombre = `${paciente.nombre} ${paciente.apellido}`;
+          turnoConDetalles.pacienteApellido = paciente.apellido;
+        }
+      }
 
       // Obtener datos del responsable (cliente/tutor)
-      const responsable = turno.responsableId
-        ? await this.clienteService.getClienteById(turno.responsableId)
-        : null;
+      if (turno.responsableId) {
+        const responsable = await this.clienteService.getClienteById(turno.responsableId);
+        if (responsable) {
+          turnoConDetalles.responsableNombre = `${responsable.nombre} ${responsable.apellido}`;
+          turnoConDetalles.responsableEmail = responsable.email;
+          turnoConDetalles.responsableTelefono = responsable.telefono || 'N/A';
+          turnoConDetalles.pacienteEmail = responsable.email; // El email del paciente viene del responsable
+        }
+      }
 
       // Obtener datos del profesional
-      const profesional = turno.profesionalId
-        ? await this.usuarioService.getUsuarioById(turno.profesionalId)
-        : null;
+      if (turno.profesionalId) {
+        const profesional = await this.usuarioService.getUsuarioById(turno.profesionalId);
+        if (profesional) {
+          turnoConDetalles.profesionalNombre = `${profesional.nombre} ${profesional.apellido}`;
+          turnoConDetalles.profesionalEspecialidad = profesional.rol === 'Pediatra' ? 'Pediatría' : profesional.rol;
+        } else {
+          turnoConDetalles.profesionalNombre = 'Sin asignar';
+          turnoConDetalles.profesionalEspecialidad = 'N/A';
+        }
+      } else {
+        turnoConDetalles.profesionalNombre = 'Sin asignar';
+        turnoConDetalles.profesionalEspecialidad = 'N/A';
+      }
 
-      // Si falta información crítica, retornar null
-      if (!paciente || !responsable) {
+      // Si falta información crítica del paciente, retornar null
+      if (!turnoConDetalles.pacienteNombre) {
         return null;
       }
 
-      // Construir objeto enriquecido
-      const enriquecido: TurnoEnriquecido = {
-        id: turno.id,
-        paciente: {
-          nombre: `${paciente.nombre} ${paciente.apellido}`,
-          apellido: paciente.apellido,
-          email: responsable.email
-        },
-        responsable: {
-          nombre: `${responsable.nombre} ${responsable.apellido}`,
-          email: responsable.email,
-          telefono: responsable.telefono || 'N/A'
-        },
-        doctor: {
-          nombre: profesional ? `${profesional.nombre} ${profesional.apellido}` : 'Sin asignar',
-          especialidad: profesional?.rol === 'Pediatra' ? 'Pediatría' : profesional?.rol || 'N/A'
-        },
-        fecha: turno.fechaString || this.formatDate(turno.fecha),
-        hora: turno.horaString || turno.hora,
-        estado: turno.estado,
-        motivo: turno.motivo
-      };
-
-      return enriquecido;
+      return turnoConDetalles;
     } catch (error) {
       console.error('Error enriqueciendo turno:', turno.id, error);
       return null;
@@ -179,5 +167,20 @@ export class TurnosListComponent implements OnInit {
     this.fechaHasta.set('');
     this.searchTerm.set('');
     this.loadTurnos();
+  }
+
+  getStatusColor(estado: string): string {
+    switch (estado) {
+      case 'Pendiente':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'Confirmado':
+        return 'bg-teal-100 text-teal-800';
+      case 'Atendido':
+        return 'bg-green-100 text-green-800';
+      case 'Cancelado':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   }
 }
