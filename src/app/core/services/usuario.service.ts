@@ -13,4 +13,8 @@ export class UsuarioService {
     getPediatrasByServicio(servicioId: string): Observable<Usuario[]> {
         return this.firestoreService.getCollectionByFilter<Usuario>(this.collectionName, 'servicioId', servicioId);
     }
+
+    async getUsuarioById(id: string): Promise<Usuario | undefined> {
+        return this.firestoreService.getDocument<Usuario>(this.collectionName, id);
+    }
 }

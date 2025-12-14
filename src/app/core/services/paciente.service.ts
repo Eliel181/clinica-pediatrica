@@ -28,4 +28,8 @@ export class PacienteService {
     deletePaciente(id: string): Promise<void> {
         return this.firestoreService.deleteDocument(this.collectionName, id);
     }
+
+    async getPacienteById(id: string): Promise<Paciente | undefined> {
+        return this.firestoreService.getDocument<Paciente>(this.collectionName, id);
+    }
 }

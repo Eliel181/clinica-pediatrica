@@ -141,4 +141,8 @@ export class ClienteService {
     this.currentClient.set(null);
     this.router.navigate(['/portal-cliente']);
   }
+
+  async getClienteById(id: string): Promise<Cliente | undefined> {
+    return this.firestoreService.getDocument<Cliente>('clientes', id);
+  }
 }

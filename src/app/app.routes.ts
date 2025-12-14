@@ -62,6 +62,9 @@ export const routes: Routes = [
             },
             {
                 path: 'perfil-usuario', loadComponent: () => import('./features/auth/profile-user/profile-user.component').then(m => m.ProfileUserComponent)
+            },
+            {
+                path: 'gestion-turnos', loadComponent: () => import('./features/turnos/turnos-list/turnos-list.component').then(m => m.TurnosListComponent)
             }
         ]
     }

@@ -1,0 +1,219 @@
+<div class="space-y-6 p-6 bg-slate-50 min-h-screen font-sans relative">
+
+    <!-- Header & Filters Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 text-teal-600">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5" />
+            </svg>
+            Filtros de Búsqueda
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <!-- Fecha Desde -->
+            <div class="space-y-1.5">
+                <label for="fechaDesde" class="text-sm font-medium text-slate-600 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                        <path fill-rule="evenodd"
+                            d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Fecha Desde
+                </label>
+                <input type="date" id="fechaDesde" [ngModel]="fechaDesde()" (ngModelChange)="fechaDesde.set($event)"
+                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all outline-none">
+            </div>
+
+            <!-- Fecha Hasta -->
+            <div class="space-y-1.5">
+                <label for="fechaHasta" class="text-sm font-medium text-slate-600 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                        <path fill-rule="evenodd"
+                            d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Fecha Hasta
+                </label>
+                <input type="date" id="fechaHasta" [ngModel]="fechaHasta()" (ngModelChange)="fechaHasta.set($event)"
+                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all outline-none">
+            </div>
+
+            <!-- Buscador -->
+            <div class="space-y-1.5 md:col-span-2">
+                <label for="search" class="text-sm font-medium text-slate-600 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                        <path fill-rule="evenodd"
+                            d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Buscar
+                </label>
+                <div class="flex gap-2">
+                    <input type="text" id="search" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+                        placeholder="Paciente, doctor, motivo..."
+                        class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all outline-none">
+
+                    <button (click)="search()"
+                        class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm shadow-teal-200 transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                            <path fill-rule="evenodd"
+                                d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 flex justify-between items-center border-t border-slate-100 pt-4">
+            <span class="text-sm text-slate-500 font-medium">Mostrando <span class="text-slate-900 font-bold">{{
+                    turnos().length }}</span> turnos</span>
+            <button (click)="limpiarFiltros()"
+                class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors border border-transparent hover:border-teal-100">
+                Limpiar Filtros
+            </button>
+        </div>
+    </div>
+
+    <!-- Results List & Spinner -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden relative min-h-[400px]">
+
+        <!-- Loading Spinner Overlay -->
+        @if (isLoading()) {
+        <div class="absolute inset-0 z-10 bg-white/80 backdrop-blur-sm flex items-center justify-center">
+            <div class="flex flex-col items-center gap-3">
+                <div class="w-10 h-10 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin"></div>
+                <span class="text-sm font-medium text-teal-700 animate-pulse">Buscando turnos...</span>
+            </div>
+        </div>
+        }
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50 border-b border-slate-100">
+                        <th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Paciente</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Doctor</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Fecha y Hora</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Estado</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">
+                            Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @if (turnos().length === 0 && !isLoading()) {
+                    <tr>
+                        <td colspan="5" class="p-12 text-center">
+                            <div class="flex flex-col items-center justify-center gap-3 text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                </svg>
+                                <p class="font-medium">No se encontraron turnos con los filtros seleccionados.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+
+                    @for (turno of turnos(); track $index) {
+                    <tr class="hover:bg-slate-50/80 transition-colors group">
+                        <!-- Paciente -->
+                        <td class="p-4">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-sm">
+                                    {{ turno.paciente.nombre.charAt(0) }}
+                                </div>
+                                <div>
+                                    <p class="font-medium text-slate-900">{{ turno.paciente.nombre }}</p>
+                                    <p class="text-xs text-slate-500">{{ turno.paciente.email }}</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Doctor -->
+                        <td class="p-4">
+                            <div>
+                                <p class="font-medium text-slate-800 flex items-center gap-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                        class="w-4 h-4 text-teal-500">
+                                        <path
+                                            d="M10 2a.75.75 0 0 1 .75.75v1.5h1.5a.75.75 0 0 1 0 1.5h-1.5v1.5a.75.75 0 0 1-1.5 0v-1.5h-1.5a.75.75 0 0 1 0-1.5h1.5v-1.5A.75.75 0 0 1 10 2Z" />
+                                        <path
+                                            d="M4.5 9A1.5 1.5 0 0 0 3 10.5V17a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6.5A1.5 1.5 0 0 0 15.5 9h-11ZM11.5 14a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                                    </svg>
+                                    {{ turno.doctor.nombre }}
+                                </p>
+                                <p class="text-xs text-slate-500 mt-0.5">{{ turno.doctor.especialidad }}</p>
+                            </div>
+                        </td>
+
+                        <!-- Fecha -->
+                        <td class="p-4">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-medium text-slate-700">{{ turno.fecha }}</span>
+                                <span class="text-xs text-slate-500">{{ turno.hora }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Estado -->
+                        <td class="p-4">
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border"
+                                [class.bg-green-50.text-green-700.border-green-100]="turno.estado === 'Confirmado'"
+                                [class.bg-yellow-50.text-yellow-700.border-yellow-100]="turno.estado === 'Pendiente'"
+                                [class.bg-blue-50.text-blue-700.border-blue-100]="turno.estado === 'Finalizado'"
+                                [class.bg-red-50.text-red-700.border-red-100]="turno.estado === 'Cancelado'">
+                                <span class="w-1.5 h-1.5 rounded-full"
+                                    [class.bg-green-500]="turno.estado === 'Confirmado'"
+                                    [class.bg-yellow-500]="turno.estado === 'Pendiente'"
+                                    [class.bg-blue-500]="turno.estado === 'Finalizado'"
+                                    [class.bg-red-500]="turno.estado === 'Cancelado'"></span>
+                                {{ turno.estado }}
+                            </span>
+                        </td>
+
+                        <!-- Acciones -->
+                        <td class="p-4 text-right">
+                            <button
+                                class="group/btn inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all">
+                                <span class="hidden group-hover/btn:inline">Editar</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4">
+                                    <path
+                                        d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" />
+                                    <path
+                                        d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z" />
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination (Visual only) -->
+        <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/30 flex items-center justify-between">
+            <button
+                class="text-sm text-slate-500 hover:text-teal-600 font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                &larr; Anterior
+            </button>
+            <div class="flex gap-1">
+                <button
+                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-teal-600 text-white text-sm font-bold shadow-sm shadow-teal-200">1</button>
+                <button
+                    class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-600 text-sm font-medium transition-colors">2</button>
+                <button
+                    class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-600 text-sm font-medium transition-colors">3</button>
+            </div>
+            <button class="text-sm text-slate-500 hover:text-teal-600 font-medium">
+                Siguiente &rarr;
+            </button>
+        </div>
+    </div>
+</div>

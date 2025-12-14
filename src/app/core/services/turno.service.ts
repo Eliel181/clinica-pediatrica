@@ -27,6 +27,13 @@ export class TurnoService {
       where('responsableId', '==', clienteId)
     );
     return collectionData(q, { idField: 'id' }) as Observable<Turno[]>;
+
+  }
+
+  getAllTurnos(): Observable<Turno[]> {
+    const turnosCollection = collection(this.firestore, 'turnos');
+    const q = query(turnosCollection); // Query all
+    return collectionData(q, { idField: 'id' }) as Observable<Turno[]>;
   }
 
   updateTurno(id: string, turno: Partial<Turno>): Promise<void> {
@@ -66,4 +73,50 @@ export class TurnoService {
       estado: 'Cancelado',
     } as Turno);
   }
+
+  async getTurnosPorDia(fecha: Date): Promise<Turno[]> {
+    const turnosCollection = collection(this.firestore, 'turnos');
+    const q = query(turnosCollection, where('fecha', '==', fecha));
+
+    const snaps = await getDocs(q);
+    return snaps.docs.map((d) => {
+      const data: any = d.data();
+      return {
+        ...data,
+        fecha: data.fecha,
+        createdAt: data.createdAt
+      } as Turno;
+    });
+  }
+
+  getTurnosByDateRange(fechaDesde?: string, fechaHasta?: string): Observable<Turno[]> {
+    const turnosCollection = collection(this.firestore, 'turnos');
+
+    // Si no hay filtros de fecha, retornar todos
+    if (!fechaDesde && !fechaHasta) {
+      return collectionData(turnosCollection, { idField: 'id' }) as Observable<Turno[]>;
+    }
+
+    // Construir query con filtros de fecha
+    const constraints = [];
+
+    if (fechaDesde) {
+      // Convertir string YYYY-MM-DD a Date para comparar con Firestore Timestamp
+      const fechaDesdeDate = new Date(fechaDesde);
+      fechaDesdeDate.setHours(0, 0, 0, 0); // Inicio del día
+      constraints.push(where('fecha', '>=', fechaDesdeDate));
+    }
+
+    if (fechaHasta) {
+      // Convertir string YYYY-MM-DD a Date para comparar con Firestore Timestamp
+      const fechaHastaDate = new Date(fechaHasta);
+      fechaHastaDate.setHours(23, 59, 59, 999); // Fin del día
+      constraints.push(where('fecha', '<=', fechaHastaDate));
+    }
+
+    const q = query(turnosCollection, ...constraints);
+    return collectionData(q, { idField: 'id' }) as Observable<Turno[]>;
+  }
+
 }
+
