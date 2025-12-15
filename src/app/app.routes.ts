@@ -65,6 +65,12 @@ export const routes: Routes = [
             },
             {
                 path: 'gestion-turnos', loadComponent: () => import('./features/turnos/turnos-list/turnos-list.component').then(m => m.TurnosListComponent)
+            },
+            {
+                path: 'mis-turnos', loadComponent: () => import('./features/turnos/mis-turnos-profesional/mis-turnos-profesional.component').then(m => m.MisTurnosProfesionalComponent)
+            },
+            {
+                path: 'gestion-vacunas', loadComponent: () => import('./features/vacunas/vacuna-list/vacuna-list.component').then(m => m.VacunaListComponent)
             }
         ]
     }
