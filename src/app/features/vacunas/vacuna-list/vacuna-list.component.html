@@ -1,4 +1,13 @@
-<!-- Scrollable Content -->
+<!-- Spinner Overlay -->
+<div *ngIf="isLoading()"
+    class="fixed inset-0 bg-white/80 z-[70] flex items-center justify-center backdrop-blur-sm transition-all duration-300">
+    <div class="flex flex-col items-center gap-3">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-teal-100 border-t-teal-600 shadow-lg"></div>
+        <p class="text-teal-800 font-medium animate-pulse">Cargando inventario...</p>
+    </div>
+</div>
+
+<!-- Main Content -->
 <div class="flex-1 overflow-y-auto px-6 pb-10 bg-slate-50 h-full">
     <div class="max-w-7xl mx-auto flex flex-col gap-8">
         <!-- Page Heading -->
@@ -9,7 +18,7 @@
                 </h2>
                 <p class="text-slate-500 text-lg">Gestiona stock, vencimientos y proveedores.</p>
             </div>
-            <button
+            <button (click)="openModal()"
                 class="flex items-center gap-2 cursor-pointer bg-teal-600 hover:bg-teal-700 transition-colors text-white px-5 py-2.5 rounded-xl font-semibold shadow-md active:scale-95 transform duration-100">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -18,134 +27,24 @@
             </button>
         </div>
 
-        <!-- Stats Grid -->
+        <!-- Stats Grid (Placeholder stats for now) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Stat Card 1 -->
             <div
                 class="flex flex-col gap-3 rounded-2xl p-5 bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                 <div class="flex items-start justify-between">
-                    <p class="text-slate-500 font-medium">Valor Total Stock</p>
+                    <p class="text-slate-500 font-medium">Total Vacunas</p>
                     <div class="p-2 bg-teal-50 rounded-lg">
                         <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
                             </path>
                         </svg>
                     </div>
                 </div>
-                <p class="text-3xl font-bold text-slate-800">$45,230</p>
-                <span
-                    class="text-sm text-green-600 flex items-center gap-1 font-medium bg-green-50 w-fit px-2 py-0.5 rounded-full">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                    </svg>
-                    +2.4% vs mes anterior
-                </span>
+                <p class="text-3xl font-bold text-slate-800">{{ vacunas().length }}</p>
             </div>
-
-            <!-- Stat Card 2 -->
-            <div
-                class="flex flex-col gap-3 rounded-2xl p-5 bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-start justify-between">
-                    <p class="text-slate-500 font-medium">Para Reponer</p>
-                    <div class="p-2 bg-orange-50 rounded-lg">
-                        <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
-                    </div>
-                </div>
-                <p class="text-3xl font-bold text-slate-800">12 items</p>
-                <span class="text-sm text-orange-600 font-medium bg-orange-50 w-fit px-2 py-0.5 rounded-full">Requieren
-                    atención</span>
-            </div>
-
-            <!-- Stat Card 3 -->
-            <div
-                class="flex flex-col gap-3 rounded-2xl p-5 bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-start justify-between">
-                    <p class="text-slate-500 font-medium">Vence pronto (30d)</p>
-                    <div class="p-2 bg-red-50 rounded-lg">
-                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                </div>
-                <p class="text-3xl font-bold text-slate-800">5 lotes</p>
-                <span class="text-sm text-red-600 font-medium bg-red-50 w-fit px-2 py-0.5 rounded-full">Priorizar
-                    uso</span>
-            </div>
-
-            <!-- Stat Card 4 -->
-            <div
-                class="flex flex-col gap-3 rounded-2xl p-5 bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-start justify-between">
-                    <p class="text-slate-500 font-medium">Proveedores</p>
-                    <div class="p-2 bg-blue-50 rounded-lg">
-                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4">
-                            </path>
-                        </svg>
-                    </div>
-                </div>
-                <p class="text-3xl font-bold text-slate-800">8 activos</p>
-                <span class="text-sm text-slate-500 font-medium bg-slate-100 w-fit px-2 py-0.5 rounded-full">Todos
-                    válidos</span>
-            </div>
-        </div>
-
-        <!-- Critical Alerts Section -->
-        <div class="flex flex-col gap-4">
-            <h3 class="text-xl font-bold text-slate-800">
-                Alertas Críticas
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Alert 1 -->
-                <div class="flex items-start gap-4 p-5 rounded-xl bg-red-50 border border-red-100 shadow-sm">
-                    <div class="rounded-lg bg-red-100 p-2 flex-shrink-0">
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                            </path>
-                        </svg>
-                    </div>
-                    <div class="flex flex-col gap-1 flex-1">
-                        <p class="text-base font-bold text-red-900">Acción Requerida: Pfizer-BioNTech (Lote #392)</p>
-                        <p class="text-sm text-red-700 leading-relaxed">Este lote vence en <span class="font-bold">3
-                                días</span>. Quedan 45 unidades. Marcar para uso prioritario o descarte.</p>
-                        <div class="flex gap-4 mt-2">
-                            <button
-                                class="text-sm font-semibold text-red-800 hover:text-red-950 underline decoration-red-300 underline-offset-4">Ver
-                                Lote</button>
-                            <button
-                                class="text-sm font-semibold text-red-800 hover:text-red-950 underline decoration-red-300 underline-offset-4">Descartar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Alert 2 -->
-                <div class="flex items-start gap-4 p-5 rounded-xl bg-orange-50 border border-orange-100 shadow-sm">
-                    <div class="rounded-lg bg-orange-100 p-2 flex-shrink-0">
-                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                        </svg>
-                    </div>
-                    <div class="flex flex-col gap-1 flex-1">
-                        <p class="text-base font-bold text-orange-900">Stock Bajo: Moderna Spikevax</p>
-                        <p class="text-sm text-orange-800 leading-relaxed">Cantidad actual (12) por debajo del umbral
-                            (20). Tiempo de reposición: 5 días.</p>
-                        <div class="flex gap-4 mt-2">
-                            <button
-                                class="text-sm font-semibold text-orange-800 hover:text-orange-950 underline decoration-orange-300 underline-offset-4">Crear
-                                Orden de Compra</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Add more dynamic stats later -->
         </div>
 
         <!-- Main Inventory Table -->
@@ -163,25 +62,6 @@
                     <input
                         class="block w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl leading-5 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white transition-all sm:text-sm"
                         placeholder="Buscar por nombre, lote o proveedor..." type="text" />
-                </div>
-                <div class="flex gap-3 w-full sm:w-auto">
-                    <button
-                        class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 transition-colors shadow-sm">
-                        <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
-                            </path>
-                        </svg>
-                        Filtros
-                    </button>
-                    <button
-                        class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 transition-colors shadow-sm">
-                        <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                        Exportar
-                    </button>
                 </div>
             </div>
 
@@ -201,151 +81,242 @@
                                 Cantidad</th>
                             <th
                                 class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                Pto. Reposición</th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                 Vencimiento</th>
                             <th
                                 class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                 Proveedor</th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                Estado</th>
                             <th class="relative px-6 py-4">
                                 <span class="sr-only">Acciones</span>
                             </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-slate-100">
-                        <!-- Row 1: Low Stock -->
-                        <tr class="hover:bg-slate-50 transition-colors group">
+                        <tr *ngFor="let vacuna of vacunas()" class="hover:bg-slate-50 transition-colors group">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div
-                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs ring-2 ring-white">
-                                        MOD
+                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 font-bold text-xs ring-2 ring-white uppercase shadow-sm">
+                                        {{ vacuna.nombreComercial && vacuna.nombreComercial.length > 0 ?
+                                        vacuna.nombreComercial.substring(0, 3) : 'VAC' }}
                                     </div>
                                     <div class="ml-4">
-                                        <div class="text-sm font-bold text-slate-900">Moderna Spikevax</div>
-                                        <div class="text-xs text-slate-500">COVID-19 mRNA</div>
+                                        <div class="text-sm font-bold text-slate-900">{{ vacuna.nombreComercial }}</div>
+                                        <div class="text-xs text-slate-500">{{ vacuna.vacuna }} | {{ vacuna.laboratorio
+                                            }}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">#992A-X4</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">{{ vacuna.lote }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-slate-900 font-bold bg-slate-100 w-fit px-2 py-0.5 rounded">12
+                                <div class="text-sm font-bold bg-slate-100 w-fit px-2 py-0.5 rounded"
+                                    [ngClass]="{'text-red-700 bg-red-50': vacuna.cantidadDisponible < 10, 'text-slate-900': vacuna.cantidadDisponible >= 10}">
+                                    {{ vacuna.cantidadDisponible }} / {{ vacuna.cantidadTotal }}
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">20</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">Oct 24, 2024</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">McKesson</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800 border border-orange-200">
-                                    Stock Bajo
-                                </span>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
+                                {{ vacuna.fechaVencimiento | date:'mediumDate' }}
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ vacuna.proveedor }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button
-                                    class="text-slate-400 hover:text-teal-600 transition-colors rounded-full p-1 hover:bg-slate-100">
+                                <button (click)="openModal(vacuna)"
+                                    class="text-slate-400 hover:text-teal-600 transition-colors rounded-full p-2 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z">
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                                         </path>
                                     </svg>
                                 </button>
                             </td>
                         </tr>
 
-                        <!-- Row 2: Critical -->
-                        <tr class="hover:bg-red-50/50 transition-colors bg-red-50/20">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div
-                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 font-bold text-xs ring-2 ring-white">
-                                        PFI
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-bold text-slate-900">Pfizer-BioNTech</div>
-                                        <div class="text-xs text-slate-500">Comirnaty</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">#392-B7</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-slate-900 font-bold bg-slate-100 w-fit px-2 py-0.5 rounded">45
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">50</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-red-600 font-bold flex items-center gap-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <!-- Empty State -->
+                        <tr *ngIf="vacunas().length === 0 && !isLoading()">
+                            <td colspan="6" class="px-6 py-10 text-center text-slate-500">
+                                <div class="flex flex-col items-center justify-center gap-2">
+                                    <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                     </svg>
-                                    En 3 Días
+                                    <p>No se encontraron vacunas en el inventario.</p>
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Pfizer Direct</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 border border-red-200">
-                                    Vence Pronto
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button
-                                    class="text-slate-400 hover:text-teal-600 transition-colors rounded-full p-1 hover:bg-slate-100">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Row 3: Normal -->
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div
-                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 font-bold text-xs ring-2 ring-white">
-                                        GSK
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-bold text-slate-900">Fluarix Tetra</div>
-                                        <div class="text-xs text-slate-500">Influenza Quad</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">#FL-2024-Q1</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-slate-900 font-bold bg-slate-100 w-fit px-2 py-0.5 rounded">142
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">50</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">Mar 15, 2025</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">GSK Health</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 border border-green-200">
-                                    En Stock
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button
-                                    class="text-slate-400 hover:text-teal-600 transition-colors rounded-full p-1 hover:bg-slate-100">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z">
-                                        </path>
-                                    </svg>
-                                </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Form -->
+<div *ngIf="isModalVisible" class="fixed inset-0 z-[100] overflow-y-auto" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 py-8">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" (click)="closeModal()"></div>
+
+        <!-- Modal Panel -->
+        <div
+            class="relative bg-white rounded-2xl w-full max-w-4xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[90vh]">
+
+            <!-- Header -->
+            <div
+                class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">
+                        {{ isEditMode ? 'Editar Vacuna' : 'Nueva Vacuna' }}
+                    </h3>
+                    <p class="text-sm text-slate-500">Complete los detalles del lote de vacunación.</p>
+                </div>
+                <button (click)="closeModal()"
+                    class="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-slate-50">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Form Body -->
+            <div class="flex-1 overflow-y-auto p-6">
+                <form [formGroup]="vacunaForm" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                    <!-- Left Column: Basic Info -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
+                            <div class="p-1.5 bg-teal-50 rounded text-teal-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-slate-800">Detalles del Producto</h4>
+                        </div>
+
+                        <div class="grid gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Comercial <span
+                                        class="text-red-500">*</span></label>
+                                <input formControlName="nombreComercial" type="text" placeholder="Ej: Prevenar 13"
+                                    class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Tipo de Vacuna <span
+                                            class="text-red-500">*</span></label>
+                                    <input formControlName="vacuna" type="text" placeholder="Ej: Neumococo"
+                                        class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Laboratorio <span
+                                            class="text-red-500">*</span></label>
+                                    <input formControlName="laboratorio" type="text" placeholder="Ej: Pfizer"
+                                        class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Observaciones</label>
+                                <textarea formControlName="observaciones" rows="3"
+                                    class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow placeholder-slate-400"
+                                    placeholder="Información adicional..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Inventory & Logistics -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
+                            <div class="p-1.5 bg-blue-50 rounded text-blue-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-slate-800">Logística e Inventario</h4>
+                        </div>
+
+                        <div class="grid gap-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Lote # <span
+                                            class="text-red-500">*</span></label>
+                                    <input formControlName="lote" type="text"
+                                        class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Vencimiento <span
+                                            class="text-red-500">*</span></label>
+                                    <input formControlName="fechaVencimiento" type="date"
+                                        class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow">
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Total
+                                        Unidades <span class="text-red-500">*</span></label>
+                                    <input formControlName="cantidadTotal" type="number" min="0"
+                                        class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Disponible
+                                        <span class="text-red-500">*</span></label>
+                                    <input formControlName="cantidadDisponible" type="number" min="0"
+                                        class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Temperatura</label>
+                                    <div class="flex items-center gap-2">
+                                        <input formControlName="temperaturaMin" type="number" placeholder="Min"
+                                            class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 text-center shadow-sm transition-shadow">
+                                        <span class="text-slate-400">-</span>
+                                        <input formControlName="temperaturaMax" type="number" placeholder="Max"
+                                            class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 text-center shadow-sm transition-shadow">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Proveedor <span
+                                            class="text-red-500">*</span></label>
+                                    <input formControlName="proveedor" type="text"
+                                        class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Fecha Ingreso <span
+                                            class="text-red-500">*</span></label>
+                                    <input formControlName="fechaIngreso" type="date"
+                                        class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Recibido Por</label>
+                                    <input formControlName="recibidoPor" type="text"
+                                        class="w-full rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500 text-sm py-2.5 px-4 shadow-sm transition-shadow">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-slate-50 px-6 py-4 flex justify-end gap-3 border-t border-slate-100 sticky bottom-0">
+                <button type="button" (click)="closeModal()"
+                    class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-medium hover:bg-white hover:border-slate-300 hover:text-slate-700 transition-all focus:ring-2 focus:ring-slate-200">
+                    Cancelar
+                </button>
+                <button type="button" (click)="saveVacuna()" [disabled]="vacunaForm.invalid || isLoading()"
+                    class="px-6 py-2.5 rounded-xl bg-teal-600 text-white font-medium hover:bg-teal-700 shadow-md hover:shadow-lg disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed transition-all focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+                    {{ isEditMode ? 'Guardar Cambios' : 'Registrar Stock' }}
+                </button>
             </div>
         </div>
     </div>
