@@ -210,7 +210,7 @@ export class MisTurnosProfesionalComponent {
     return this.turnos().filter(t => t.estado === 'Pendiente').length;
   }
 
-  getTurnosCancelados(): number {
-    return this.turnos().filter(t => t.estado === 'Cancelado').length;
+  getTurnosAtendidos(): number {
+    return this.turnos().filter(t => t.estado === 'Atendido').length;
   }
 }
