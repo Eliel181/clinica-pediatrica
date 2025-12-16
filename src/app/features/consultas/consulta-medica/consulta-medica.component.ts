@@ -33,6 +33,7 @@ export class ConsultaMedicaComponent implements OnInit {
   paciente = signal<Paciente | null | undefined>(null);
   turnoId: string | null = null;
   consultaForm!: FormGroup;
+  consultaGuardada = signal<boolean>(false);
 
   ngOnInit(): void {
     this.initForm();
@@ -134,11 +135,12 @@ export class ConsultaMedicaComponent implements OnInit {
 
       this.alertService.open({
         title: 'Éxito',
-        message: 'Consulta guardada correctamente.',
+        message: 'Consulta guardada. Ahora puede registrar vacunas.',
         type: 'success'
       });
 
-      this.router.navigate(['/mis-turnos-profesional']);
+      this.consultaGuardada.set(true);
+      this.consultaForm.disable();
 
     } catch (error) {
       console.error('Error al guardar consulta:', error);
@@ -148,5 +150,15 @@ export class ConsultaMedicaComponent implements OnInit {
         type: 'error'
       });
     }
+  }
+
+  registrarVacuna() {
+    if (this.consultaGuardada() && this.turnoId) {
+      this.router.navigate(['/administracion/vacunas-aplicacion', this.paciente()!.id]);
+    }
+  }
+
+  volver() {
+    this.router.navigate(['/administracion/mis-turnos-profesional']);
   }
 }

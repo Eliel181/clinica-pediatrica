@@ -74,6 +74,9 @@ export const routes: Routes = [
             },
             {
                 path: 'consulta-medica/:id', loadComponent: () => import('./features/consultas/consulta-medica/consulta-medica.component').then(m => m.ConsultaMedicaComponent)
+            },
+            {
+                path: 'vacunas-aplicacion/:id', loadComponent: () => import('./features/vacunas/vacunas-aplicacion/vacunas-aplicacion.component').then(m => m.VacunasAplicacionComponent)
             }
         ]
     }
