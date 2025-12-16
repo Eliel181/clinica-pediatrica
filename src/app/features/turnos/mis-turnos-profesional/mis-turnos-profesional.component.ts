@@ -6,6 +6,7 @@ import { FirestoreService } from '../../../core/services/firestore.service';
 import { Turno } from '../../../core/interfaces/turno.model';
 import { Paciente } from '../../../core/interfaces/paciente.model';
 import { Cliente } from '../../../core/interfaces/cliente.model';
+import { RouterLink, RouterModule } from '@angular/router';
 
 interface TurnoConDetalles extends Turno {
   pacienteNombre?: string;
@@ -17,7 +18,7 @@ interface TurnoConDetalles extends Turno {
 
 @Component({
   selector: 'app-mis-turnos-profesional',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, RouterModule],
   templateUrl: './mis-turnos-profesional.component.html',
   styleUrl: './mis-turnos-profesional.component.css'
 })
@@ -80,20 +81,38 @@ export class MisTurnosProfesionalComponent {
         // Load details for each turno
         const turnosConDetalles = await Promise.all(
           turnosProfesional.map(async (turno) => {
-            const turnoConDetalles: TurnoConDetalles = { ...turno };
-
-            // Load patient details
-            try {
-              const paciente = await this.firestoreService.getDocument<Paciente>('pacientes', turno.pacienteId);
-              if (paciente) {
-                turnoConDetalles.pacienteNombre = `${paciente.nombre} ${paciente.apellido}`;
-                turnoConDetalles.pacienteEdad = this.calculateAge(paciente.fechaNacimiento);
-              }
-            } catch (error) {
-              console.error('Error loading patient:', error);
+            // 1. Normalize Date Object immediately
+            let fechaNormalized: Date;
+            if (turno.fecha && (turno.fecha as any).toDate) {
+              fechaNormalized = (turno.fecha as any).toDate();
+            } else if (typeof turno.fecha === 'string') {
+              fechaNormalized = new Date(turno.fecha);
+            } else {
+              fechaNormalized = new Date(turno.fecha);
             }
 
-            // Load responsable (cliente) details
+            const turnoConDetalles: TurnoConDetalles = {
+              ...turno,
+              fecha: fechaNormalized // Replace with real Date object
+            };
+
+            // 2. Load patient details
+            if (turno.pacienteId) {
+              try {
+                const paciente = await this.firestoreService.getDocument<Paciente>('pacientes', turno.pacienteId);
+                if (paciente) {
+                  turnoConDetalles.pacienteNombre = `${paciente.nombre} ${paciente.apellido}`;
+                  turnoConDetalles.pacienteEdad = this.calculateAge(paciente.fechaNacimiento);
+                } else {
+                  turnoConDetalles.pacienteNombre = 'Paciente no encontrado';
+                }
+              } catch (error) {
+                console.error('Error loading patient:', error);
+                turnoConDetalles.pacienteNombre = 'Error cargando paciente';
+              }
+            }
+
+            // 3. Load responsable (cliente) details
             if (turno.responsableId) {
               try {
                 const responsable = await this.firestoreService.getDocument<Cliente>('clientes', turno.responsableId);
@@ -121,10 +140,20 @@ export class MisTurnosProfesionalComponent {
     });
   }
 
-  private calculateAge(fechaNacimiento: string): number {
+  private calculateAge(fechaNacimiento: any): number {
     if (!fechaNacimiento) return 0;
+
     const today = new Date();
-    const birthDate = new Date(fechaNacimiento);
+    let birthDate: Date;
+
+    if (typeof fechaNacimiento === 'string') {
+      birthDate = new Date(fechaNacimiento);
+    } else if (fechaNacimiento?.toDate) {
+      birthDate = fechaNacimiento.toDate();
+    } else {
+      birthDate = new Date(fechaNacimiento);
+    }
+
     let age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
@@ -148,8 +177,19 @@ export class MisTurnosProfesionalComponent {
     }
   }
 
-  formatDate(fecha: Date | string): string {
-    const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
+  formatDate(fecha: Date | string | any): string {
+    // Robust parsing just in case
+    let date: Date;
+    if (typeof fecha === 'string') {
+      date = new Date(fecha);
+    } else if (fecha?.toDate) {
+      date = fecha.toDate();
+    } else {
+      date = fecha;
+    }
+
+    if (!date || isNaN(date.getTime())) return 'Fecha inválida';
+
     return date.toLocaleDateString('es-AR', {
       weekday: 'long',
       year: 'numeric',

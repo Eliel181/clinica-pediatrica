@@ -1,6 +1,6 @@
 <!-- Spinner Overlay -->
 <div *ngIf="isLoading()"
-    class="fixed inset-0 bg-white/80 z-[70] flex items-center justify-center backdrop-blur-sm transition-all duration-300">
+    class="fixed inset-0 bg-white/80 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
     <div class="flex flex-col items-center gap-3">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-teal-100 border-t-teal-600 shadow-lg"></div>
         <p class="text-teal-800 font-medium animate-pulse">Cargando inventario...</p>
@@ -8,8 +8,8 @@
 </div>
 
 <!-- Main Content -->
-<div class="flex-1 overflow-y-auto px-6 pb-10 bg-slate-50 h-full">
-    <div class="max-w-7xl mx-auto flex flex-col gap-8">
+<div class="flex-1 bg-slate-50 h-full">
+    <div class="flex flex-col gap-8">
         <!-- Page Heading -->
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 py-6">
             <div class="flex flex-col gap-1">

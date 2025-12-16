@@ -71,6 +71,9 @@ export const routes: Routes = [
             },
             {
                 path: 'gestion-vacunas', loadComponent: () => import('./features/vacunas/vacuna-list/vacuna-list.component').then(m => m.VacunaListComponent)
+            },
+            {
+                path: 'consulta-medica/:id', loadComponent: () => import('./features/consultas/consulta-medica/consulta-medica.component').then(m => m.ConsultaMedicaComponent)
             }
         ]
     }

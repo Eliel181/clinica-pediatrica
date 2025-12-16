@@ -1,0 +1,271 @@
+<div class="w-full max-w-[1100px] flex flex-col gap-6">
+    <!-- Patient Header Card -->
+    <div
+        class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6">
+        <div class="flex flex-col md:flex-row justify-between gap-6 items-start md:items-center">
+            <div class="flex gap-4 items-start">
+                <div
+                    class="size-16 rounded-full bg-primary/20 flex items-center justify-center text-primary-dark font-bold text-2xl">
+                    JD
+                </div>
+                <div class="flex flex-col gap-1">
+                    <h1
+                        class="text-text-main-light dark:text-text-main-dark tracking-tight text-2xl font-bold leading-tight">
+                        Consultation: Jane Doe</h1>
+                    <div class="flex flex-wrap items-center gap-3 text-sm text-text-sub-light dark:text-text-sub-dark">
+                        <span class="flex items-center gap-1"><span
+                                class="material-symbols-outlined text-[18px]">badge</span> ID: #49203</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                        <span class="flex items-center gap-1"><span
+                                class="material-symbols-outlined text-[18px]">cake</span> DOB: 12 Oct 2015
+                            (8y)</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                        <span class="flex items-center gap-1"><span
+                                class="material-symbols-outlined text-[18px]">female</span> Female</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <div class="px-3 py-1 rounded-full bg-alert-bg border border-red-200 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-alert-text text-[18px]">warning</span>
+                    <span class="text-alert-text text-sm font-bold">Allergies: Penicillin, Peanuts</span>
+                </div>
+                <button class="text-primary text-sm font-medium hover:underline flex items-center gap-1">
+                    View Medical History <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Two Column Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left Column: Vitals & Assessment (7/12) -->
+        <div class="lg:col-span-8 flex flex-col gap-6">
+            <!-- Section 1: Vitals & Growth -->
+            <section
+                class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden">
+                <div
+                    class="px-6 py-4 border-b border-border-light dark:border-border-dark flex justify-between items-center bg-background-light/50 dark:bg-background-dark/50">
+                    <h3 class="text-text-main-light dark:text-text-main-dark text-lg font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">monitor_heart</span>
+                        Vitals &amp; Growth
+                    </h3>
+                    <button
+                        class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark hover:text-primary transition-colors">Show
+                        History</button>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="flex flex-col gap-2">
+                            <label
+                                class="text-sm font-medium text-text-main-light dark:text-text-main-dark">Weight</label>
+                            <div class="relative">
+                                <input
+                                    class="w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark focus:border-primary focus:ring-primary px-4 py-2.5 pr-12"
+                                    placeholder="0.0" type="number" />
+                                <span
+                                    class="absolute right-3 top-2.5 text-text-sub-light dark:text-text-sub-dark text-sm font-medium">kg</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label
+                                class="text-sm font-medium text-text-main-light dark:text-text-main-dark">Height</label>
+                            <div class="relative">
+                                <input
+                                    class="w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark focus:border-primary focus:ring-primary px-4 py-2.5 pr-12"
+                                    placeholder="0" type="number" />
+                                <span
+                                    class="absolute right-3 top-2.5 text-text-sub-light dark:text-text-sub-dark text-sm font-medium">cm</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label
+                                class="text-sm font-medium text-text-main-light dark:text-text-main-dark">Temperature</label>
+                            <div class="relative">
+                                <input
+                                    class="w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark focus:border-primary focus:ring-primary px-4 py-2.5 pr-12"
+                                    placeholder="0.0" type="number" />
+                                <span
+                                    class="absolute right-3 top-2.5 text-text-sub-light dark:text-text-sub-dark text-sm font-medium">°C</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 p-3 bg-primary/10 rounded-lg border border-primary/20">
+                        <span class="material-symbols-outlined text-primary-dark">calculate</span>
+                        <p class="text-sm font-medium text-text-main-light dark:text-text-main-dark">
+                            Calculated BMI: <span class="font-bold">--</span> <span
+                                class="text-text-sub-light dark:text-text-sub-dark font-normal">(Enter vitals to
+                                calculate)</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <!-- Section 2: Assessment -->
+            <section
+                class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden">
+                <div
+                    class="px-6 py-4 border-b border-border-light dark:border-border-dark bg-background-light/50 dark:bg-background-dark/50">
+                    <h3 class="text-text-main-light dark:text-text-main-dark text-lg font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">clinical_notes</span>
+                        Assessment
+                    </h3>
+                </div>
+                <div class="p-6 flex flex-col gap-6">
+                    <!-- Symptoms -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-text-main-light dark:text-text-main-dark">Observed
+                            Symptoms</label>
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <span
+                                class="bg-primary/20 text-primary-dark px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 cursor-pointer hover:bg-red-100 hover:text-red-600 group transition-colors">
+                                Fever
+                                <span
+                                    class="material-symbols-outlined text-[16px] group-hover:block hidden">close</span>
+                                <span
+                                    class="material-symbols-outlined text-[16px] group-hover:hidden block">check</span>
+                            </span>
+                            <span
+                                class="bg-primary/20 text-primary-dark px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 cursor-pointer hover:bg-red-100 hover:text-red-600 group transition-colors">
+                                Sore Throat
+                                <span
+                                    class="material-symbols-outlined text-[16px] group-hover:block hidden">close</span>
+                                <span
+                                    class="material-symbols-outlined text-[16px] group-hover:hidden block">check</span>
+                            </span>
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2.5 text-text-sub-light dark:text-text-sub-dark">
+                                <span class="material-symbols-outlined text-[20px]">search</span>
+                            </span>
+                            <input
+                                class="w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark focus:border-primary focus:ring-primary pl-10 pr-4 py-2.5"
+                                placeholder="Add symptom (e.g. Cough, Rash)..." type="text" />
+                        </div>
+                        <div class="flex gap-2 mt-1">
+                            <button
+                                class="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-text-sub-light transition-colors">+
+                                Headache</button>
+                            <button
+                                class="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-text-sub-light transition-colors">+
+                                Fatigue</button>
+                            <button
+                                class="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-text-sub-light transition-colors">+
+                                Nausea</button>
+                        </div>
+                    </div>
+                    <!-- Diagnosis -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-text-main-light dark:text-text-main-dark">Diagnosis
+                            &amp; Findings</label>
+                        <textarea
+                            class="w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark focus:border-primary focus:ring-primary p-4 min-h-[120px]"
+                            placeholder="Enter clinical diagnosis and key findings..."></textarea>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- Right Column: Plan & Actions (5/12) -->
+        <div class="lg:col-span-4 flex flex-col gap-6">
+            <!-- Section 3: Treatment Plan -->
+            <section
+                class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden flex flex-col h-full">
+                <div
+                    class="px-6 py-4 border-b border-border-light dark:border-border-dark bg-background-light/50 dark:bg-background-dark/50">
+                    <h3 class="text-text-main-light dark:text-text-main-dark text-lg font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">medication</span>
+                        Treatment Plan
+                    </h3>
+                </div>
+                <div class="p-6 flex flex-col gap-6 flex-1">
+                    <!-- Prescriptions -->
+                    <div class="flex flex-col gap-3">
+                        <div class="flex justify-between items-center">
+                            <label
+                                class="text-sm font-medium text-text-main-light dark:text-text-main-dark">Prescriptions</label>
+                            <button
+                                class="text-xs font-bold text-primary hover:text-primary-dark transition-colors flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">add_circle</span> ADD DRUG
+                            </button>
+                        </div>
+                        <div class="border border-border-light dark:border-border-dark rounded-lg overflow-hidden">
+                            <table class="w-full text-left text-sm">
+                                <thead
+                                    class="bg-background-light dark:bg-background-dark text-text-sub-light dark:text-text-sub-dark font-medium border-b border-border-light dark:border-border-dark">
+                                    <tr>
+                                        <th class="px-3 py-2">Drug</th>
+                                        <th class="px-3 py-2 w-20">Dosage</th>
+                                        <th class="px-3 py-2 w-8"></th>
+                                    </tr>
+                                </thead>
+                                <tbody
+                                    class="divide-y divide-border-light dark:divide-border-dark bg-surface-light dark:bg-surface-dark">
+                                    <tr>
+                                        <td class="px-3 py-3">
+                                            <div class="font-medium text-text-main-light dark:text-text-main-dark">
+                                                Amoxicillin</div>
+                                            <div class="text-xs text-text-sub-light dark:text-text-sub-dark">3x
+                                                daily / 5 days</div>
+                                        </td>
+                                        <td class="px-3 py-3 text-text-main-light dark:text-text-main-dark">
+                                            250mg</td>
+                                        <td class="px-3 py-3 text-right">
+                                            <button class="text-gray-400 hover:text-red-500 transition-colors">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div
+                                class="p-3 bg-background-light/50 dark:bg-background-dark/50 text-center text-xs text-text-sub-light cursor-pointer hover:bg-background-light hover:text-primary transition-colors">
+                                + Add another medication
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Internal Notes -->
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label
+                            class="text-sm font-medium text-text-main-light dark:text-text-main-dark flex items-center justify-between">
+                            Internal Notes
+                            <span class="text-xs text-text-sub-light dark:text-text-sub-dark font-normal"><span
+                                    class="material-symbols-outlined text-[12px] align-middle">lock</span>
+                                Private</span>
+                        </label>
+                        <textarea
+                            class="w-full rounded-lg border-border-light dark:border-border-dark bg-yellow-50 dark:bg-yellow-900/10 text-text-main-light dark:text-text-main-dark focus:border-yellow-400 focus:ring-yellow-400 p-3 min-h-[100px] text-sm resize-none"
+                            placeholder="Private notes for medical staff only..."></textarea>
+                    </div>
+                </div>
+            </section>
+            <!-- Actions Panel -->
+            <section
+                class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 sticky top-24">
+                <div class="flex flex-col gap-4">
+                    <div class="flex justify-between items-center text-sm text-text-sub-light dark:text-text-sub-dark">
+                        <span>Autosaved 2m ago</span>
+                        <span class="flex items-center gap-1 text-green-600"><span
+                                class="material-symbols-outlined text-[16px]">cloud_done</span> Synced</span>
+                    </div>
+                    <button
+                        class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-md shadow-primary/20">
+                        <span class="material-symbols-outlined">save</span>
+                        Save Consultation
+                    </button>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button
+                            class="w-full flex items-center justify-center gap-2 bg-background-light dark:bg-background-dark hover:bg-gray-200 dark:hover:bg-gray-700 border border-border-light dark:border-border-dark text-text-main-light dark:text-text-main-dark font-medium py-2.5 px-4 rounded-lg transition-colors text-sm">
+                            <span class="material-symbols-outlined text-[18px]">print</span>
+                            Print
+                        </button>
+                        <button
+                            class="w-full flex items-center justify-center gap-2 bg-background-light dark:bg-background-dark hover:bg-gray-200 dark:hover:bg-gray-700 border border-border-light dark:border-border-dark text-text-main-light dark:text-text-main-dark font-medium py-2.5 px-4 rounded-lg transition-colors text-sm">
+                            <span class="material-symbols-outlined text-[18px]">share</span>
+                            Refer
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- Spacer for bottom breathing room -->
+    <div class="h-10"></div>
+</div>
