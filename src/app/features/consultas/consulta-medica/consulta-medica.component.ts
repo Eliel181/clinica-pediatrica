@@ -12,9 +12,11 @@ import { ConsultaService } from '../../../core/services/consulta.service';
 import { AlertService } from '../../../core/services/alert.service'; // Import AlertService
 import { Consulta } from '../../../core/interfaces/consulta.model';
 
+import { VacunasAplicacionComponent } from '../../vacunas/vacunas-aplicacion/vacunas-aplicacion.component';
+
 @Component({
   selector: 'app-consulta-medica',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, VacunasAplicacionComponent],
   templateUrl: './consulta-medica.component.html',
   styleUrl: './consulta-medica.component.css'
 })
@@ -34,6 +36,7 @@ export class ConsultaMedicaComponent implements OnInit {
   turnoId: string | null = null;
   consultaForm!: FormGroup;
   consultaGuardada = signal<boolean>(false);
+  activeTab = signal<'consulta' | 'vacunas'>('consulta');
 
   ngOnInit(): void {
     this.initForm();
@@ -154,7 +157,7 @@ export class ConsultaMedicaComponent implements OnInit {
 
   registrarVacuna() {
     if (this.consultaGuardada() && this.turnoId) {
-      this.router.navigate(['/administracion/vacunas-aplicacion', this.paciente()!.id]);
+      this.activeTab.set('vacunas');
     }
   }
 

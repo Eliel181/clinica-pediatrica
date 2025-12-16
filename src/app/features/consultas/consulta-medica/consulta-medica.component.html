@@ -1,4 +1,4 @@
-<form [formGroup]="consultaForm" class="w-full max-w-[1100px] mx-auto flex flex-col gap-6 pb-12">
+<form [formGroup]="consultaForm" class="w-full max-w-[1100px] mx-auto flex flex-col gap-6 pb-12 pt-6">
     <!-- Patient Header Card -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
         <div class="flex flex-col md:flex-row justify-between gap-6 items-start md:items-center">
@@ -69,199 +69,233 @@
         </div>
     </div>
 
-    <!-- Two Column Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Left Column: Vitals & Assessment (7/12) -->
-        <div class="lg:col-span-8 flex flex-col gap-6">
-            <!-- Section 1: Vitals & Growth -->
-            <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                    <h3 class="text-slate-800 text-lg font-bold flex items-center gap-2">
-                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                        Signos Vitales y Crecimiento
-                    </h3>
-                    <button type="button"
-                        class="text-xs font-bold text-teal-600 hover:text-teal-700 transition-colors uppercase">
-                        Ver Historial
-                    </button>
-                </div>
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm font-semibold text-slate-700">Peso</label>
-                            <div class="relative">
-                                <input formControlName="peso"
-                                    class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 pr-12 shadow-sm transition-all text-sm"
-                                    placeholder="0.0" type="number" />
-                                <span
-                                    class="absolute right-3 top-2.5 text-slate-400 text-sm font-medium pointer-events-none">kg</span>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm font-semibold text-slate-700">Altura</label>
-                            <div class="relative">
-                                <input formControlName="talla"
-                                    class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 pr-12 shadow-sm transition-all text-sm"
-                                    placeholder="0" type="number" />
-                                <span
-                                    class="absolute right-3 top-2.5 text-slate-400 text-sm font-medium pointer-events-none">cm</span>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm font-semibold text-slate-700">Temperatura</label>
-                            <div class="relative">
-                                <input formControlName="temperatura"
-                                    class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 pr-12 shadow-sm transition-all text-sm"
-                                    placeholder="0.0" type="number" />
-                                <span
-                                    class="absolute right-3 top-2.5 text-slate-400 text-sm font-medium pointer-events-none">°C</span>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm font-semibold text-slate-700">P. Cefálico</label>
-                            <div class="relative">
-                                <input formControlName="perimetroCefalico"
-                                    class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 pr-12 shadow-sm transition-all text-sm"
-                                    placeholder="0.0" type="number" />
-                                <span
-                                    class="absolute right-3 top-2.5 text-slate-400 text-sm font-medium pointer-events-none">cm</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3 p-4 bg-teal-50/50 rounded-xl border border-teal-100">
-                        <div class="p-2 bg-white rounded-lg shadow-sm text-teal-600">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- Tab Navigation -->
+    <div class="flex items-center gap-6 border-b border-slate-200 mb-6">
+        <button (click)="activeTab.set('consulta')" type="button"
+            [ngClass]="activeTab() === 'consulta' ? 'text-teal-600 border-teal-600' : 'text-slate-500 border-transparent hover:text-slate-700'"
+            class="pb-3 px-1 text-sm font-bold border-b-2 transition-colors flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+            Consulta Médica
+        </button>
+        <button (click)="activeTab.set('vacunas')" type="button"
+            [ngClass]="activeTab() === 'vacunas' ? 'text-teal-600 border-teal-600' : 'text-slate-500 border-transparent hover:text-slate-700'"
+            class="pb-3 px-1 text-sm font-bold border-b-2 transition-colors flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+            </svg>
+            Vacunas
+        </button>
+    </div>
+
+    <!-- Active Tab: Consulta (Original Content) -->
+    <div *ngIf="activeTab() === 'consulta'" class="w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Column: Vitals & Assessment (7/12) -->
+            <div class="lg:col-span-8 flex flex-col gap-6">
+                <!-- Section 1: Vitals & Growth -->
+                <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                        <h3 class="text-slate-800 text-lg font-bold flex items-center gap-2">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 7h6m0 36v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
-                        </div>
-                        <p class="text-sm font-medium text-slate-700">
-                            IMC Calculado: <span class="font-bold text-slate-900 mx-1">{{ consultaForm.get('imc')?.value
-                                || '--' }}</span>
-                            <span *ngIf="!consultaForm.get('imc')?.value" class="text-slate-400 font-normal">(Ingresa
-                                peso y altura)</span>
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section 2: Assessment -->
-            <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                    <h3 class="text-slate-800 text-lg font-bold flex items-center gap-2">
-                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                        Evaluación Médica
-                    </h3>
-                </div>
-                <div class="p-6 flex flex-col gap-6">
-                    <!-- Motivo -->
-                    <div class="flex flex-col gap-2">
-                        <label class="text-sm font-semibold text-slate-700">Motivo de Consulta (*)</label>
-                        <input formControlName="motivoConsulta"
-                            class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 shadow-sm text-sm"
-                            placeholder="Ej. Control de niño sano, fiebre..." type="text" />
-                    </div>
-
-                    <!-- Diagnosis -->
-                    <div class="flex flex-col gap-2">
-                        <label class="text-sm font-semibold text-slate-700">Diagnóstico y Hallazgos</label>
-                        <textarea formControlName="diagnostico"
-                            class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 p-4 min-h-[120px] shadow-sm text-sm"
-                            placeholder="Ingrese el diagnóstico clínico y observaciones principales..."></textarea>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Right Column: Plan & Actions (5/12) -->
-        <div class="lg:col-span-4 flex flex-col gap-6">
-            <!-- Section 3: Treatment Plan -->
-            <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
-                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                    <h3 class="text-slate-800 text-lg font-bold flex items-center gap-2">
-                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                        </svg>
-                        Plan de Tratamiento
-                    </h3>
-                </div>
-                <div class="p-6 flex flex-col gap-6 flex-1">
-                    <!-- Tratamiento / Indicaciones -->
-                    <div class="flex flex-col gap-2">
-                        <label class="text-sm font-semibold text-slate-700">Tratamiento / Recetas</label>
-                        <textarea formControlName="tratamiento"
-                            class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 p-4 min-h-[150px] shadow-sm text-sm"
-                            placeholder="Describa el tratamiento y recetas indicadas..."></textarea>
-                    </div>
-
-                    <!-- Internal Notes -->
-                    <div class="flex flex-col gap-2 flex-1">
-                        <label class="text-sm font-semibold text-slate-700 flex items-center justify-between">
-                            Notas Internas
-                            <span
-                                class="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md font-medium flex items-center gap-1 border border-amber-100">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                                Privado
-                            </span>
-                        </label>
-                        <textarea formControlName="notas"
-                            class="w-full rounded-xl border-amber-200 bg-amber-50/50 text-slate-800 focus:border-amber-400 focus:ring-amber-400 p-4 min-h-[100px] text-sm resize-none shadow-sm"
-                            placeholder="Notas privadas solo para personal médico..."></textarea>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Actions Panel -->
-            <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sticky top-6">
-                <div class="flex flex-col gap-4">
-
-                    <!-- Boton Finalizar: Visible solo si NO está guardada -->
-                    <button *ngIf="!consultaGuardada()" (click)="guardarConsulta()" [disabled]="consultaForm.invalid"
-                        [ngClass]="{'opacity-50 cursor-not-allowed': consultaForm.invalid, 'hover:bg-teal-700 active:scale-95': !consultaForm.invalid}"
-                        class="w-full flex items-center justify-center gap-2 bg-teal-600 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md shadow-teal-600/20">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                        </svg>
-                        Finalizar Consulta
-                    </button>
-
-                    <!-- Botones Post-Guardado: Registrar Vacuna y Volver -->
-                    <button *ngIf="consultaGuardada()" (click)="registrarVacuna()"
-                        class="w-full flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md shadow-teal-600/20">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                        </svg>
-                        Registrar Vacuna Aplicada
-                    </button>
-
-                    <button *ngIf="consultaGuardada()" (click)="volver()"
-                        class="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl transition-colors text-sm shadow-sm">
-                        Volver a Mis Turnos
-                    </button>
-                    <div class="grid gap-3">
+                            Signos Vitales y Crecimiento
+                        </h3>
                         <button type="button"
-                            class="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                            </svg>
-                            Imprimir
+                            class="text-xs font-bold text-teal-600 hover:text-teal-700 transition-colors uppercase">
+                            Ver Historial
                         </button>
                     </div>
-                </div>
-            </section>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                            <div class="flex flex-col gap-2">
+                                <label class="text-sm font-semibold text-slate-700">Peso</label>
+                                <div class="relative">
+                                    <input formControlName="peso"
+                                        class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 pr-12 shadow-sm transition-all text-sm"
+                                        placeholder="0.0" type="number" />
+                                    <span
+                                        class="absolute right-3 top-2.5 text-slate-400 text-sm font-medium pointer-events-none">kg</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label class="text-sm font-semibold text-slate-700">Altura</label>
+                                <div class="relative">
+                                    <input formControlName="talla"
+                                        class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 pr-12 shadow-sm transition-all text-sm"
+                                        placeholder="0" type="number" />
+                                    <span
+                                        class="absolute right-3 top-2.5 text-slate-400 text-sm font-medium pointer-events-none">cm</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label class="text-sm font-semibold text-slate-700">Temperatura</label>
+                                <div class="relative">
+                                    <input formControlName="temperatura"
+                                        class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 pr-12 shadow-sm transition-all text-sm"
+                                        placeholder="0.0" type="number" />
+                                    <span
+                                        class="absolute right-3 top-2.5 text-slate-400 text-sm font-medium pointer-events-none">°C</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label class="text-sm font-semibold text-slate-700">P. Cefálico</label>
+                                <div class="relative">
+                                    <input formControlName="perimetroCefalico"
+                                        class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 pr-12 shadow-sm transition-all text-sm"
+                                        placeholder="0.0" type="number" />
+                                    <span
+                                        class="absolute right-3 top-2.5 text-slate-400 text-sm font-medium pointer-events-none">cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 bg-teal-50/50 rounded-xl border border-teal-100">
+                            <div class="p-2 bg-white rounded-lg shadow-sm text-teal-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 7h6m0 36v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <p class="text-sm font-medium text-slate-700">
+                                IMC Calculado: <span class="font-bold text-slate-900 mx-1">{{
+                                    consultaForm.get('imc')?.value
+                                    || '--' }}</span>
+                                <span *ngIf="!consultaForm.get('imc')?.value"
+                                    class="text-slate-400 font-normal">(Ingresa
+                                    peso y altura)</span>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Assessment -->
+                <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                        <h3 class="text-slate-800 text-lg font-bold flex items-center gap-2">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                            Evaluación Médica
+                        </h3>
+                    </div>
+                    <div class="p-6 flex flex-col gap-6">
+                        <!-- Motivo -->
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm font-semibold text-slate-700">Motivo de Consulta (*)</label>
+                            <input formControlName="motivoConsulta"
+                                class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 px-4 py-2.5 shadow-sm text-sm"
+                                placeholder="Ej. Control de niño sano, fiebre..." type="text" />
+                        </div>
+
+                        <!-- Diagnosis -->
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm font-semibold text-slate-700">Diagnóstico y Hallazgos</label>
+                            <textarea formControlName="diagnostico"
+                                class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 p-4 min-h-[120px] shadow-sm text-sm"
+                                placeholder="Ingrese el diagnóstico clínico y observaciones principales..."></textarea>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Plan & Actions (5/12) -->
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                <!-- Section 3: Treatment Plan -->
+                <section
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                        <h3 class="text-slate-800 text-lg font-bold flex items-center gap-2">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                            </svg>
+                            Plan de Tratamiento
+                        </h3>
+                    </div>
+                    <div class="p-6 flex flex-col gap-6 flex-1">
+                        <!-- Tratamiento / Indicaciones -->
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm font-semibold text-slate-700">Tratamiento / Recetas</label>
+                            <textarea formControlName="tratamiento"
+                                class="w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-teal-500 focus:ring-teal-500 p-4 min-h-[150px] shadow-sm text-sm"
+                                placeholder="Describa el tratamiento y recetas indicadas..."></textarea>
+                        </div>
+
+                        <!-- Internal Notes -->
+                        <div class="flex flex-col gap-2 flex-1">
+                            <label class="text-sm font-semibold text-slate-700 flex items-center justify-between">
+                                Notas Internas
+                                <span
+                                    class="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md font-medium flex items-center gap-1 border border-amber-100">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    Privado
+                                </span>
+                            </label>
+                            <textarea formControlName="notas"
+                                class="w-full rounded-xl border-amber-200 bg-amber-50/50 text-slate-800 focus:border-amber-400 focus:ring-amber-400 p-4 min-h-[100px] text-sm resize-none shadow-sm"
+                                placeholder="Notas privadas solo para personal médico..."></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Actions Panel -->
+                <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sticky top-6">
+                    <div class="flex flex-col gap-4">
+
+                        <!-- Boton Finalizar: Visible solo si NO está guardada -->
+                        <button type="button" *ngIf="!consultaGuardada()" (click)="guardarConsulta()"
+                            [disabled]="consultaForm.invalid"
+                            [ngClass]="{'opacity-50 cursor-not-allowed': consultaForm.invalid, 'hover:bg-teal-700 active:scale-95': !consultaForm.invalid}"
+                            class="w-full flex items-center justify-center gap-2 bg-teal-600 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md shadow-teal-600/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                            </svg>
+                            Finalizar Consulta
+                        </button>
+
+                        <!-- Botones Post-Guardado: Registrar Vacuna y Volver -->
+                        <button type="button" *ngIf="consultaGuardada()" (click)="registrarVacuna()"
+                            class="w-full flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md shadow-teal-600/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                            </svg>
+                            Registrar Vacuna Aplicada
+                        </button>
+
+                        <button type="button" *ngIf="consultaGuardada()" (click)="volver()"
+                            class="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl transition-colors text-sm shadow-sm">
+                            Volver a Mis Turnos
+                        </button>
+                        <div class="grid gap-3">
+                            <button type="button"
+                                class="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                </svg>
+                                Imprimir
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
+
+    <!-- Active Tab: Vacunas -->
+    <app-vacunas-aplicacion *ngIf="activeTab() === 'vacunas'" [pacienteId]="paciente()?.id"
+        [turnoId]="turnoId || undefined">
+    </app-vacunas-aplicacion>
+
 </form>

@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, docData, DocumentReference, Firestore, query, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, doc, docData, DocumentReference, Firestore, query, updateDoc, where } from '@angular/fire/firestore';
 import { Vacuna } from '../interfaces/vacuna.model';
 import { Observable } from 'rxjs';
+import { VacunaAplicada } from '../interfaces/vacuna-aplicada.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +30,23 @@ export class VacunaService {
     const vacunasCollection = collection(this.firestore, 'vacunas');
     const q = query(vacunasCollection); // Query all
     return collectionData(q, { idField: 'id' }) as Observable<Vacuna[]>;
+  }
+
+  //eventos para gestionar vacunas aplicadas
+  crearVacunaAplicada(vacunaAplicada: Partial<VacunaAplicada>): Promise<DocumentReference> {
+    const vacunasAplicadasCollection = collection(this.firestore, 'vacunas-aplicadas');
+    return addDoc(vacunasAplicadasCollection, vacunaAplicada);
+  }
+
+  getAllVacunasAplicadas(): Observable<VacunaAplicada[]> {
+    const vacunasAplicadasCollection = collection(this.firestore, 'vacunas-aplicadas');
+    const q = query(vacunasAplicadasCollection); // Query all
+    return collectionData(q, { idField: 'id' }) as Observable<VacunaAplicada[]>;
+  }
+
+  getAllVacunasAplicadasByPacienteId(pacienteId: string): Observable<VacunaAplicada[]> {
+    const vacunasAplicadasCollection = collection(this.firestore, 'vacunas-aplicadas');
+    const q = query(vacunasAplicadasCollection, where('pacienteId', '==', pacienteId));
+    return collectionData(q, { idField: 'id' }) as Observable<VacunaAplicada[]>;
   }
 }
