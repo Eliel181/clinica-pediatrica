@@ -22,26 +22,55 @@
         </div>
 
         <!-- Date Filters -->
-        <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-            <button
-                class="flex items-center gap-2 h-10 px-5 rounded-full bg-teal-600 text-white font-bold text-sm shadow-sm transition-colors">
-                Hoy
-            </button>
-            <button
-                class="flex items-center gap-2 h-10 px-5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-teal-700 font-medium text-sm transition-colors">
-                Esta Semana
-            </button>
-            <button
-                class="flex items-center gap-2 h-10 px-5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-teal-700 font-medium text-sm transition-colors">
-                Este Mes
-            </button>
-            <button
-                class="flex items-center gap-2 h-10 px-5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-teal-700 font-medium text-sm transition-colors">
-                <span>Rango Personalizado</span>
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-            </button>
+        <div class="flex flex-col gap-4">
+            <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                <button (click)="setFilter('hoy')" [class.bg-teal-600]="activeFilter() === 'hoy'"
+                    [class.text-white]="activeFilter() === 'hoy'" [class.bg-white]="activeFilter() !== 'hoy'"
+                    [class.text-slate-600]="activeFilter() !== 'hoy'"
+                    class="flex items-center gap-2 h-10 px-5 rounded-full font-bold text-sm shadow-sm transition-colors border border-slate-200 hover:bg-slate-50 hover:text-teal-700">
+                    Hoy
+                </button>
+                <button (click)="setFilter('semana')" [class.bg-teal-600]="activeFilter() === 'semana'"
+                    [class.text-white]="activeFilter() === 'semana'" [class.bg-white]="activeFilter() !== 'semana'"
+                    [class.text-slate-600]="activeFilter() !== 'semana'"
+                    class="flex items-center gap-2 h-10 px-5 rounded-full font-bold text-sm shadow-sm transition-colors border border-slate-200 hover:bg-slate-50 hover:text-teal-700">
+                    Esta Semana
+                </button>
+                <button (click)="setFilter('mes')" [class.bg-teal-600]="activeFilter() === 'mes'"
+                    [class.text-white]="activeFilter() === 'mes'" [class.bg-white]="activeFilter() !== 'mes'"
+                    [class.text-slate-600]="activeFilter() !== 'mes'"
+                    class="flex items-center gap-2 h-10 px-5 rounded-full font-bold text-sm shadow-sm transition-colors border border-slate-200 hover:bg-slate-50 hover:text-teal-700">
+                    Este Mes
+                </button>
+                <button (click)="setFilter('custom')" [class.bg-teal-600]="activeFilter() === 'custom'"
+                    [class.text-white]="activeFilter() === 'custom'" [class.bg-white]="activeFilter() !== 'custom'"
+                    [class.text-slate-600]="activeFilter() !== 'custom'"
+                    class="flex items-center gap-2 h-10 px-5 rounded-full font-bold text-sm shadow-sm transition-colors border border-slate-200 hover:bg-slate-50 hover:text-teal-700">
+                    <span>Rango Personalizado</span>
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Custom Range Inputs -->
+            <div *ngIf="isCustomRangeVisible()"
+                class="flex items-end gap-3 p-4 bg-white rounded-xl border border-slate-200 shadow-sm w-fit animate-fade-in-down">
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Desde</label>
+                    <input type="date" [(ngModel)]="customRangeStart"
+                        class="h-10 px-3 rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Hasta</label>
+                    <input type="date" [(ngModel)]="customRangeEnd"
+                        class="h-10 px-3 rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                </div>
+                <button (click)="applyCustomFilter(customRangeStart(), customRangeEnd())"
+                    class="h-10 px-5 rounded-lg bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition-colors">
+                    Aplicar
+                </button>
+            </div>
         </div>
 
         <!-- Loading State -->
@@ -159,7 +188,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-                        <tr *ngFor="let turno of turnosActivos()" class="group hover:bg-slate-50 transition-colors">
+                        <tr *ngFor="let turno of turnos()" class="group hover:bg-slate-50 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <div
@@ -186,12 +215,12 @@
                                 <span
                                     class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border"
                                     [ngClass]="{
-                                        'bg-green-50 text-green-700 border-green-200': turno.estado === 'Confirmado',
+                                        'bg-green-50 text-green-700 border-green-200': turno.estado === 'Confirmado' || turno.estado === 'Atendido',
                                         'bg-yellow-50 text-yellow-700 border-yellow-200': turno.estado === 'Pendiente',
                                         'bg-red-50 text-red-700 border-red-200': turno.estado === 'Cancelado'
                                     }">
                                     <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{
-                                            'bg-green-500': turno.estado === 'Confirmado',
+                                            'bg-green-500': turno.estado === 'Confirmado' || turno.estado === 'Atendido',
                                             'bg-yellow-500': turno.estado === 'Pendiente',
                                             'bg-red-500': turno.estado === 'Cancelado'
                                         }"></span>
@@ -214,7 +243,8 @@
                                         <!-- Menú desplegable -->
                                         <div
                                             class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-40 z-[9999] bg-white shadow-[0_2px_6px_rgba(0,0,0,0.05)] rounded-2xl p-2 mt-2">
-                                            <div class="first:pt-0 last:pb-0">
+                                            <div *ngIf="turno.estado === 'Confirmado' || turno.estado === 'Pendiente'"
+                                                class="first:pt-0 last:pb-0">
                                                 <span
                                                     class="block py-2 px-3 mb-2 text-xs font-medium uppercase text-[#9291aa] ">Acciones</span>
                                                 <a [routerLink]="['/administracion/consulta-medica', turno.id]"
@@ -236,9 +266,9 @@
                         </tr>
 
                         <!-- Empty State -->
-                        <tr *ngIf="turnosActivos().length === 0">
+                        <tr *ngIf="turnos().length === 0">
                             <td colspan="5" class="text-center py-6">
-                                <p class="text-slate-500 text-sm">No hay turnos activos</p>
+                                <p class="text-slate-500 text-sm">No hay turnos para este rango de fechas</p>
                             </td>
                         </tr>
                     </tbody>

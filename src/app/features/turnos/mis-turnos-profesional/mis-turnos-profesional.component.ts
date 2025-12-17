@@ -1,5 +1,6 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TurnoService } from '../../../core/services/turno.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { FirestoreService } from '../../../core/services/firestore.service';
@@ -18,7 +19,7 @@ interface TurnoConDetalles extends Turno {
 
 @Component({
   selector: 'app-mis-turnos-profesional',
-  imports: [CommonModule, RouterLink, RouterModule],
+  imports: [CommonModule, RouterLink, RouterModule, FormsModule],
   templateUrl: './mis-turnos-profesional.component.html',
   styleUrl: './mis-turnos-profesional.component.css'
 })
@@ -59,23 +60,95 @@ export class MisTurnosProfesionalComponent {
       d1.getDate() === d2.getDate();
   }
 
+  // Filter state
+  activeFilter = signal<'hoy' | 'semana' | 'mes' | 'custom'>('hoy');
+  isCustomRangeVisible = signal<boolean>(false);
+  customRangeStart = signal<string>('');
+  customRangeEnd = signal<string>('');
+
   constructor() {
     effect(() => {
+      // Re-trigger load when filter or custom range changes IF we have a user
+      // However, to avoid infinite loops or complex effects, 
+      // we might just call loadTurnos directly from setFilter for now, 
+      // or keep the initial load here.
+      // Let's keep the initial load driven by auth, and manual re-loads driven by user action.
+      // But actually, we want the initial load to respect the default 'hoy' filter.
+
       const profesional = this.authService.currentUser();
       if (profesional && profesional.uid) {
-        this.loadTurnos(profesional.uid);
+        // Initial load with default filter 'hoy'
+        this.setFilter('hoy');
       } else {
         this.loading.set(false);
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
-  private loadTurnos(profesionalId: string): void {
+  setFilter(filter: 'hoy' | 'semana' | 'mes' | 'custom') {
+    this.activeFilter.set(filter);
+
+    if (filter === 'custom') {
+      this.isCustomRangeVisible.set(!this.isCustomRangeVisible());
+      return; // Wait for user to select dates and click apply
+    } else {
+      this.isCustomRangeVisible.set(false);
+    }
+
+    const { start, end } = this.calculateDateRange(filter);
+    const profesional = this.authService.currentUser();
+    if (profesional?.uid) {
+      this.loadTurnos(profesional.uid, start, end);
+    }
+  }
+
+  applyCustomFilter(start: string, end: string) {
+    if (!start || !end) return;
+    this.customRangeStart.set(start);
+    this.customRangeEnd.set(end);
+
+    const profesional = this.authService.currentUser();
+    if (profesional?.uid) {
+      this.loadTurnos(profesional.uid, start, end);
+    }
+  }
+
+  private calculateDateRange(filter: 'hoy' | 'semana' | 'mes'): { start: string, end: string } {
+    const today = new Date();
+    let start = new Date(today);
+    let end = new Date(today);
+
+    switch (filter) {
+      case 'hoy':
+        // Start and end are today
+        break;
+      case 'semana':
+        // Monday to Sunday of current week
+        const day = today.getDay(); // 0 (Sun) - 6 (Sat)
+        const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+        start = new Date(today.setDate(diff));
+        end = new Date(today.setDate(start.getDate() + 6));
+        break;
+      case 'mes':
+        start = new Date(today.getFullYear(), today.getMonth(), 1);
+        end = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of month
+        break;
+    }
+
+    return {
+      start: start.toISOString().split('T')[0],
+      end: end.toISOString().split('T')[0]
+    };
+  }
+
+  private loadTurnos(profesionalId: string, fechaDesde?: string, fechaHasta?: string): void {
     this.loading.set(true);
 
-    this.turnoService.getTurnosByDateRange().subscribe({
+    this.turnoService.getTurnosByDateRange(fechaDesde, fechaHasta).subscribe({
       next: async (allTurnos) => {
-        // Filtrar turnos del profesional
+        // Filtrar turnos del profesional (server side filtering for date, but client side for professional ID 
+        // because the service returns all turnos in date range currently, then we filter by ID here. 
+        // Ideally service should do compound query, but this works for now).
         const turnosProfesional = allTurnos.filter(t => t.profesionalId === profesionalId);
 
         // Load details for each turno
