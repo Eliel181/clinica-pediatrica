@@ -13,10 +13,12 @@ import { AlertService } from '../../../core/services/alert.service'; // Import A
 import { Consulta } from '../../../core/interfaces/consulta.model';
 
 import { VacunasAplicacionComponent } from '../../vacunas/vacunas-aplicacion/vacunas-aplicacion.component';
+import { GraficasPacienteComponent } from '../graficas-paciente/graficas-paciente.component';
 
 @Component({
   selector: 'app-consulta-medica',
-  imports: [CommonModule, ReactiveFormsModule, VacunasAplicacionComponent],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, VacunasAplicacionComponent, GraficasPacienteComponent],
   templateUrl: './consulta-medica.component.html',
   styleUrl: './consulta-medica.component.css'
 })

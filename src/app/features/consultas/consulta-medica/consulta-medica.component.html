@@ -69,6 +69,13 @@
         </div>
     </div>
 
+
+    <!-- Growth Charts -->
+    <div *ngIf="paciente()?.id">
+        <app-graficas-paciente [pacienteId]="paciente()?.id"
+            [fechaNacimiento]="paciente()?.fechaNacimiento"></app-graficas-paciente>
+    </div>
+
     <!-- Tab Navigation -->
     <div class="flex items-center gap-6 border-b border-slate-200 mb-6">
         <button (click)="activeTab.set('consulta')" type="button"

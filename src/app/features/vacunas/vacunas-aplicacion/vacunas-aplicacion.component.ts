@@ -58,7 +58,7 @@ export class VacunasAplicacionComponent implements OnInit {
       lote: ['', Validators.required],
       vacunaNombre: [{ value: '', disabled: true }, Validators.required], // Auto-filled
       vacunaId: ['', Validators.required], // Hidden ID
-      fechaAplicacion: [new Date().toISOString().split('T')[0], Validators.required],
+      fechaAplicacion: [{ value: new Date().toISOString().split('T')[0], disabled: true }, Validators.required],
       dosis: ['1°', [Validators.required]],
       // injectionSite removed as requested
       observaciones: ['']
@@ -127,7 +127,7 @@ export class VacunasAplicacionComponent implements OnInit {
         vacunaNombre: vacunaSeleccionada.vacuna,
         lote: vacunaSeleccionada.lote,
         dosis: formValue.dosis,
-        fechaAplicacion: new Date(formValue.fechaAplicacion),
+        fechaAplicacion: new Date(), // Use current date/time to avoid timezone issues
         aplicadaPorId: this.currentUser()?.uid,
         aplicadaPorNombre: this.currentUser()?.nombre + ' ' + this.currentUser()?.apellido,
         profesionalId: this.currentUser()?.uid, // Added as requested

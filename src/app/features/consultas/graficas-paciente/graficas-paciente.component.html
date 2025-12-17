@@ -1,1 +1,21 @@
-<p>graficas-paciente works!</p>
+<div *ngIf="hasData()" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Weight Chart -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <apx-chart [series]="weightChartOptions.series" [chart]="weightChartOptions.chart"
+            [xaxis]="weightChartOptions.xaxis" [dataLabels]="weightChartOptions.dataLabels"
+            [grid]="weightChartOptions.grid" [stroke]="weightChartOptions.stroke" [title]="weightChartOptions.title"
+            [colors]="weightChartOptions.colors"></apx-chart>
+    </div>
+
+    <!-- Height Chart -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <apx-chart [series]="heightChartOptions.series" [chart]="heightChartOptions.chart"
+            [xaxis]="heightChartOptions.xaxis" [dataLabels]="heightChartOptions.dataLabels"
+            [grid]="heightChartOptions.grid" [stroke]="heightChartOptions.stroke" [title]="heightChartOptions.title"
+            [colors]="heightChartOptions.colors"></apx-chart>
+    </div>
+</div>
+
+<div *ngIf="!hasData()" class="bg-slate-50 rounded-xl border border-slate-200 p-8 text-center text-slate-500 italic">
+    No hay suficientes datos de consultas para generar las gráficas de crecimiento.
+</div>
