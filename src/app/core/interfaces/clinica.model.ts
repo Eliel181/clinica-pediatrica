@@ -1,5 +1,4 @@
 import { Timestamp } from "@angular/fire/firestore";
-import { Imagen } from "./imagen.model";
 
 export interface Clinica {
     id?: string;
@@ -7,11 +6,8 @@ export interface Clinica {
     direccion: string;
     telefono: string;
     email: string;
-    logo: Imagen;
+    logoBase64: string;
     horarioAtencion: string;
-    servicios: string[];
-    imagenPrincipal?: Imagen;
-    imagenSecundaria?: Imagen;
     diasNoAtencion: DiasNoAtencion[];
 }
 

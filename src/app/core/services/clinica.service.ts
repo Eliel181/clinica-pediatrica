@@ -8,17 +8,17 @@ import { Clinica, DiasNoAtencion } from '../interfaces/clinica.model';
 export class ClinicaService {
   private firestore: Firestore = inject(Firestore);
 
-  async obtnerClinica() {
+  async obtnerClinica(): Promise<Clinica | null> {
     const clinicaRef = collection(this.firestore, 'clinicas');
     const q = query(clinicaRef, limit(1));
 
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
-      return querySnapshot.docs[0].data();
+      const doc = querySnapshot.docs[0];
+      return { id: doc.id, ...doc.data() } as Clinica;
     }
 
-    throw new Error('No se encontraron datos de la clinica');
     return null;
   }
 
