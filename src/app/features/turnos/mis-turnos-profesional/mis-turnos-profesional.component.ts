@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { TurnoService } from '../../../core/services/turno.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { FirestoreService } from '../../../core/services/firestore.service';
+import { PdfMakeService } from '../../../core/services/pdf-make.service';
+import { ClinicaService } from '../../../core/services/clinica.service';
 import { Turno } from '../../../core/interfaces/turno.model';
 import { Paciente } from '../../../core/interfaces/paciente.model';
 import { Cliente } from '../../../core/interfaces/cliente.model';
@@ -27,6 +29,8 @@ export class MisTurnosProfesionalComponent {
   private turnoService = inject(TurnoService);
   authService = inject(AuthService); // Public para acceder en template
   private firestoreService = inject(FirestoreService);
+  private pdfMakeService = inject(PdfMakeService);
+  private clinicaService = inject(ClinicaService);
 
   // Signals
   turnos = signal<TurnoConDetalles[]>([]);
@@ -68,16 +72,9 @@ export class MisTurnosProfesionalComponent {
 
   constructor() {
     effect(() => {
-      // Re-trigger load when filter or custom range changes IF we have a user
-      // However, to avoid infinite loops or complex effects, 
-      // we might just call loadTurnos directly from setFilter for now, 
-      // or keep the initial load here.
-      // Let's keep the initial load driven by auth, and manual re-loads driven by user action.
-      // But actually, we want the initial load to respect the default 'hoy' filter.
-
       const profesional = this.authService.currentUser();
       if (profesional && profesional.uid) {
-        // Initial load with default filter 'hoy'
+        // Inicia la carga por defecto con el filtro 'hoy'
         this.setFilter('hoy');
       } else {
         this.loading.set(false);
@@ -90,7 +87,7 @@ export class MisTurnosProfesionalComponent {
 
     if (filter === 'custom') {
       this.isCustomRangeVisible.set(!this.isCustomRangeVisible());
-      return; // Wait for user to select dates and click apply
+      return;
     } else {
       this.isCustomRangeVisible.set(false);
     }
@@ -146,12 +143,8 @@ export class MisTurnosProfesionalComponent {
 
     this.turnoService.getTurnosByDateRange(fechaDesde, fechaHasta).subscribe({
       next: async (allTurnos) => {
-        // Filtrar turnos del profesional (server side filtering for date, but client side for professional ID 
-        // because the service returns all turnos in date range currently, then we filter by ID here. 
-        // Ideally service should do compound query, but this works for now).
         const turnosProfesional = allTurnos.filter(t => t.profesionalId === profesionalId);
 
-        // Load details for each turno
         const turnosConDetalles = await Promise.all(
           turnosProfesional.map(async (turno) => {
             // 1. Normalize Date Object immediately
@@ -285,5 +278,223 @@ export class MisTurnosProfesionalComponent {
 
   getTurnosAtendidos(): number {
     return this.turnos().filter(t => t.estado === 'Atendido').length;
+  }
+
+  async exportarReporte() {
+    try {
+      // Obtener datos de la clínica
+      const clinica = await this.clinicaService.obtnerClinica();
+
+      // Determinar el rango de fechas para el título
+      let rangoFechas = '';
+      switch (this.activeFilter()) {
+        case 'hoy':
+          rangoFechas = 'Hoy';
+          break;
+        case 'semana':
+          rangoFechas = 'Esta Semana';
+          break;
+        case 'mes':
+          rangoFechas = 'Este Mes';
+          break;
+        case 'custom':
+          rangoFechas = `${this.customRangeStart()} - ${this.customRangeEnd()}`;
+          break;
+      }
+
+      // Crear contenido del PDF
+      const content: any[] = [];
+
+      // Agregar encabezado de la clínica si existe
+      if (clinica) {
+        content.push({
+          columns: [
+            {
+              image: clinica.logoBase64,
+              width: 60,
+              alignment: 'left'
+            },
+            {
+              width: '*',
+              stack: [
+                {
+                  text: clinica.nombre,
+                  style: 'clinicName',
+                  margin: [0, 0, 0, 4]
+                },
+                {
+                  text: [
+                    { text: '📞 ', fontSize: 8 },
+                    { text: clinica.telefono, fontSize: 9 },
+                    { text: '  |  ', fontSize: 9, color: '#cbd5e1' },
+                    { text: '✉️ ', fontSize: 8 },
+                    { text: clinica.email, fontSize: 9 }
+                  ],
+                  color: '#64748b',
+                  margin: [0, 0, 0, 2]
+                },
+                {
+                  text: [
+                    { text: '📍 ', fontSize: 8 },
+                    { text: clinica.direccion, fontSize: 9 }
+                  ],
+                  color: '#64748b'
+                }
+              ],
+              margin: [15, 0, 0, 0]
+            }
+          ],
+          margin: [0, 0, 0, 15]
+        });
+
+        // Línea separadora
+        content.push({
+          canvas: [
+            {
+              type: 'line',
+              x1: 0,
+              y1: 0,
+              x2: 515,
+              y2: 0,
+              lineWidth: 1,
+              lineColor: '#e2e8f0'
+            }
+          ],
+          margin: [0, 0, 0, 20]
+        });
+      }
+
+      // Título del reporte
+      content.push(
+        {
+          text: `Reporte de Turnos - ${rangoFechas}`,
+          style: 'header',
+          margin: [0, 10, 0, 5]
+        },
+        {
+          text: `Dr. ${this.authService.currentUser()?.nombre} ${this.authService.currentUser()?.apellido}`,
+          fontSize: 12,
+          color: '#64748b',
+          margin: [0, 0, 0, 20]
+        }
+      );
+
+      // Agregar tabla si hay turnos
+      if (this.turnos().length > 0) {
+        const tableBody: any[] = [
+          [
+            { text: 'Paciente', style: 'tableHeader', fillColor: '#0d9488', color: '#ffffff' },
+            { text: 'Edad', style: 'tableHeader', fillColor: '#0d9488', color: '#ffffff', alignment: 'center' },
+            { text: 'Fecha', style: 'tableHeader', fillColor: '#0d9488', color: '#ffffff' },
+            { text: 'Hora', style: 'tableHeader', fillColor: '#0d9488', color: '#ffffff', alignment: 'center' },
+            { text: 'Motivo', style: 'tableHeader', fillColor: '#0d9488', color: '#ffffff' },
+            { text: 'Estado', style: 'tableHeader', fillColor: '#0d9488', color: '#ffffff', alignment: 'center' }
+          ]
+        ];
+
+        this.turnos().forEach((turno, index) => {
+          // Color del estado
+          let estadoColor = '#64748b';
+          let estadoBg = '#f1f5f9';
+
+          switch (turno.estado) {
+            case 'Confirmado':
+              estadoColor = '#059669';
+              estadoBg = '#d1fae5';
+              break;
+            case 'Pendiente':
+              estadoColor = '#d97706';
+              estadoBg = '#fef3c7';
+              break;
+            case 'Atendido':
+              estadoColor = '#0d9488';
+              estadoBg = '#ccfbf1';
+              break;
+            case 'Cancelado':
+              estadoColor = '#dc2626';
+              estadoBg = '#fee2e2';
+              break;
+          }
+
+          const fillColor = index % 2 === 0 ? '#ffffff' : '#f8fafc';
+
+          tableBody.push([
+            {
+              text: turno.pacienteNombre || 'N/A',
+              fillColor: fillColor,
+              margin: [0, 5, 0, 5]
+            },
+            {
+              text: turno.pacienteEdad?.toString() || 'N/A',
+              fillColor: fillColor,
+              alignment: 'center',
+              margin: [0, 5, 0, 5]
+            },
+            {
+              text: this.formatDate(turno.fecha),
+              fillColor: fillColor,
+              fontSize: 9,
+              margin: [0, 5, 0, 5]
+            },
+            {
+              text: turno.hora || 'N/A',
+              fillColor: fillColor,
+              alignment: 'center',
+              margin: [0, 5, 0, 5]
+            },
+            {
+              text: turno.motivo || 'Consulta General',
+              fillColor: fillColor,
+              fontSize: 9,
+              margin: [0, 5, 0, 5]
+            },
+            {
+              text: turno.estado,
+              fillColor: estadoBg,
+              color: estadoColor,
+              bold: true,
+              alignment: 'center',
+              fontSize: 9,
+              margin: [2, 5, 2, 5]
+            }
+          ]);
+        });
+
+        content.push({
+          table: {
+            headerRows: 1,
+            widths: ['*', 40, 'auto', 45, '*', 70],
+            body: tableBody
+          },
+          layout: {
+            hLineWidth: (i: number, node: any) => i === 0 || i === 1 ? 0 : 0.5,
+            vLineWidth: () => 0,
+            hLineColor: () => '#e2e8f0',
+            paddingLeft: () => 8,
+            paddingRight: () => 8,
+            paddingTop: () => 6,
+            paddingBottom: () => 6
+          },
+          margin: [0, 10, 0, 20]
+        });
+      } else {
+        content.push({
+          text: 'No hay turnos para mostrar en este rango de fechas.',
+          alignment: 'center',
+          color: '#64748b',
+          italics: true,
+          margin: [0, 40, 0, 40]
+        });
+      }
+
+      // Generar PDF
+      await this.pdfMakeService.generatePdf(
+        content,
+        `Reporte_Turnos_${rangoFechas}`
+      );
+    } catch (error) {
+      console.error('Error generando reporte PDF:', error);
+      alert('Error al generar el reporte. Por favor, intente nuevamente.');
+    }
   }
 }
