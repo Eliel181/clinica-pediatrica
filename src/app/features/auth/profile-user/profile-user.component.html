@@ -1,1 +1,209 @@
-<p>profile-user works!</p>
+<div class="min-h-screen bg-slate-50 relative overflow-hidden pt-6 pb-12">
+    <!-- Decorative background elements -->
+    <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-teal-50/50 to-transparent pointer-events-none">
+    </div>
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-teal-100/30 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/4 -left-24 w-72 h-72 bg-blue-100/30 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+        <!-- Header -->
+        <div class="mb-10">
+            <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Mi Perfil</h1>
+            <p class="mt-2 text-slate-500 text-lg">Gestiona tu información personal y mantén tus datos actualizados.</p>
+        </div>
+
+        <!-- Alert si no hay usuario -->
+        <div *ngIf="!hasUser()" class="bg-amber-50 border-l-4 border-amber-400 p-4 mb-8 rounded-r-xl shadow-sm">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-amber-800">
+                        No se ha podido cargar la información del usuario.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" *ngIf="hasUser()">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                <!-- Columna Izquierda: Foto y Resumen (4 columnas) -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div
+                        class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/20 p-8 flex flex-col items-center text-center relative overflow-hidden">
+
+                        <!-- Gradient accent top -->
+                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-teal-400 to-teal-600"></div>
+
+                        <!-- Foto de Perfil -->
+                        <div class="relative group mb-6">
+                            <div
+                                class="w-40 h-40 rounded-full overflow-hidden bg-slate-100 ring-4 ring-teal-50 ring-offset-2 transition-all duration-300 group-hover:ring-teal-100 shadow-xl">
+                                <img [src]="imagenBase64Preview() || 'https://ui-avatars.com/api/?name=' + (currentUser()?.nombre || 'U') + '+' + (currentUser()?.apellido || '') + '&background=0D9488&color=fff'"
+                                    alt="Foto de perfil"
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            </div>
+
+                            <!-- Boton de cambiar foto (Overlay) -->
+                            <label
+                                class="absolute inset-0 flex items-center justify-center bg-slate-900/60 backdrop-blur-[2px] rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-all duration-300 transform scale-95 group-hover:scale-100">
+                                <span class="text-white text-sm font-semibold flex flex-col items-center tracking-wide">
+                                    <svg class="w-8 h-8 mb-2 text-teal-200" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
+                                        </path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    Cambiar Foto
+                                </span>
+                                <input type="file" class="hidden" (change)="onFileSelected($event)" accept="image/*">
+                            </label>
+                        </div>
+
+                        <h2 class="text-xl font-bold text-slate-800 mb-1">{{ currentUser()?.nombre }} {{
+                            currentUser()?.apellido }}</h2>
+                        <p class="text-slate-500 font-medium mb-6">{{ currentUser()?.email }}</p>
+
+                        <div class="w-full pt-6 border-t border-slate-100">
+                            <div class="flex items-center justify-center">
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase bg-teal-50 text-teal-700 border border-teal-100">
+                                    <span class="w-1.5 h-1.5 rounded-full mr-2 bg-teal-500"></span>
+                                    {{ currentUser()?.rol || 'Usuario' }}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Formulario de Datos (8 columnas) -->
+                <div class="lg:col-span-8 space-y-6">
+
+                    <!-- Seccion informacion personal -->
+                    <div
+                        class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/20 overflow-hidden">
+                        <div class="px-8 py-6 border-b border-slate-100 bg-white/50">
+                            <h3 class="text-lg font-bold text-slate-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-teal-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                Información Personal
+                            </h3>
+                        </div>
+
+                        <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+
+                            <!-- Nombre -->
+                            <div class="space-y-2">
+                                <label for="nombre" class="block text-sm font-semibold text-slate-700">Nombre</label>
+                                <input type="text" id="nombre" formControlName="nombre"
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all duration-300">
+                                <p *ngIf="profileForm.get('nombre')?.touched && profileForm.get('nombre')?.invalid"
+                                    class="text-xs text-rose-500 font-medium">El nombre es requerido.</p>
+                            </div>
+
+                            <!-- Apellido -->
+                            <div class="space-y-2">
+                                <label for="apellido"
+                                    class="block text-sm font-semibold text-slate-700">Apellido</label>
+                                <input type="text" id="apellido" formControlName="apellido"
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all duration-300">
+                                <p *ngIf="profileForm.get('apellido')?.touched && profileForm.get('apellido')?.invalid"
+                                    class="text-xs text-rose-500 font-medium">El apellido es requerido.</p>
+                            </div>
+
+                            <!-- Documento (DNI) -->
+                            <div class="space-y-2">
+                                <label for="documento" class="block text-sm font-semibold text-slate-700">Documento
+                                    (DNI)</label>
+                                <input type="text" id="documento" formControlName="documento"
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all duration-300">
+                                <p *ngIf="profileForm.get('documento')?.touched && profileForm.get('documento')?.invalid"
+                                    class="text-xs text-rose-500 font-medium">El documento es requerido.</p>
+                            </div>
+
+                            <!-- Telefono -->
+                            <div class="space-y-2">
+                                <label for="telefono"
+                                    class="block text-sm font-semibold text-slate-700">Teléfono</label>
+                                <input type="tel" id="telefono" formControlName="telefono"
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all duration-300">
+                            </div>
+
+                            <!-- Fecha Nacimiento -->
+                            <div class="space-y-2">
+                                <label for="fechaNacimiento" class="block text-sm font-semibold text-slate-700">Fecha de
+                                    Nacimiento</label>
+                                <input type="date" id="fechaNacimiento" formControlName="fechaNacimiento"
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all duration-300">
+                            </div>
+
+                            <!-- Genero -->
+                            <div class="space-y-2">
+                                <label for="genero" class="block text-sm font-semibold text-slate-700">Género</label>
+                                <div class="relative">
+                                    <select id="genero" formControlName="genero"
+                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all duration-300 appearance-none">
+                                        <option value="">Seleccionar...</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Femenino">Femenino</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                    <div
+                                        class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-500">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Direccion -->
+                            <div class="md:col-span-2 space-y-2">
+                                <label for="direccion"
+                                    class="block text-sm font-semibold text-slate-700">Dirección</label>
+                                <input type="text" id="direccion" formControlName="direccion"
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all duration-300">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Botones de Accion -->
+                    <div class="flex items-center justify-end space-x-4 pt-4">
+                        <button type="button"
+                            class="px-6 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all duration-200 shadow-sm">
+                            Cancelar
+                        </button>
+                        <button type="submit" [disabled]="profileForm.invalid || isSubmitting"
+                            class="px-8 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-teal-600 to-teal-500 rounded-xl hover:from-teal-700 hover:to-teal-600 focus:outline-none focus:ring-4 focus:ring-teal-500/30 disabled:opacity-75 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(20,184,166,0.25)] hover:shadow-[0_6px_20px_0_rgba(20,184,166,0.35)] hover:-translate-y-0.5 transition-all duration-300 flex items-center">
+                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24" *ngIf="isSubmitting">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            {{ isSubmitting ? 'Guardando...' : 'Guardar Cambios' }}
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
