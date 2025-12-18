@@ -72,7 +72,7 @@ export class UserManagmentComponent implements OnInit {
         type: 'success',
       })
       this.router.navigate(['/administracion/gestion-usuarios']);
-      this.authService.sendEmailVerification();
+      //this.authService.sendEmailVerification();
     } catch (error: any) {
       this.alertService.open({
         title: 'Error',

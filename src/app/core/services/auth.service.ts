@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendEmailVerification, onAuthStateChanged, signOut, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendEmailVerification, onAuthStateChanged, signOut, sendPasswordResetEmail, User } from '@angular/fire/auth';
 import { FirestoreService } from './firestore.service';
 import { Router } from '@angular/router';
 import { Usuario } from '../interfaces/usuario.model';
@@ -80,7 +80,8 @@ export class AuthService {
 
       await this.firestoreService.setDocument('usuarios', firebaseUser.uid, newUser);
 
-      return firebaseUser;
+      //return firebaseUser;
+      sendEmailVerification(firebaseUser);
 
     } catch (error) {
       alert('No se pudo completar el registro, es posble que el correo este en uso');
@@ -89,8 +90,8 @@ export class AuthService {
   }
 
   // Metodo para enviar un email de confirmacion
-  async sendEmailVerification(): Promise<void> {
-    const firebaseUser = this.auth.currentUser;
+  async sendEmailVerification(firebaseUserParam: User): Promise<void> {
+    const firebaseUser = firebaseUserParam;
 
     if (!firebaseUser) {
       throw new Error('No hay usuario autenticado');

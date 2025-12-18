@@ -79,6 +79,7 @@ md:block md:translate-x-0 md:end-auto md:bottom-0
         <div class="mb-5 px-2 flex flex-col gap-y-5">
             <!-- List -->
             <ul class="flex flex-col gap-y-0.5">
+                @if(currentUser()?.rol === 'Admin'){
                 <li>
                     <a routerLink="/administracion/gestion-usuarios"
                         routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
@@ -100,6 +101,8 @@ md:block md:translate-x-0 md:end-auto md:bottom-0
                             Interno</span>
                     </a>
                 </li>
+                }
+                @if(currentUser()?.rol === 'Admin'){
                 <li>
                     <a routerLink="/administracion/gestion-clinica"
                         routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
@@ -121,24 +124,29 @@ md:block md:translate-x-0 md:end-auto md:bottom-0
                             class="truncate hs-overlay-minified:opacity-0 transition-opacity duration-300">Configuraciones</span>
                     </a>
                 </li>
+                }
+                @if(currentUser()?.rol === 'Admin' || currentUser()?.rol === 'Pediatra'){
                 <li>
                     <a class="group relative w-full flex items-center gap-2.5 py-2 px-0.5 text-sm font-medium text-slate-500 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-all duration-200"
                         href="explore.html">
                         <span
                             class="flex shrink-0 justify-center items-center size-8 bg-white rounded-lg border border-gray-100 shadow-sm group-hover:bg-white group-hover:border-teal-200 transition-colors">
-                            <svg class="shrink-0 size-4 group-hover:rotate-180 transition-transform duration-500"
+                            <svg class="shrink-0 size-4 group-hover:scale-110 transition-transform duration-300"
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                                <path d="M2 12h20" />
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                             </svg>
                         </span>
                         <span
-                            class="truncate hs-overlay-minified:opacity-0 transition-opacity duration-300">Explore</span>
+                            class="truncate hs-overlay-minified:opacity-0 transition-opacity duration-300">Pacientes</span>
                     </a>
                 </li>
+                }
+                @if(currentUser()?.rol === 'Admin'){
                 <li>
                     <a routerLink="/administracion/gestion-servicios"
                         routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
@@ -157,6 +165,8 @@ md:block md:translate-x-0 md:end-auto md:bottom-0
                             Servicios</span>
                     </a>
                 </li>
+                }
+                @if(currentUser()?.rol === 'Admin' || currentUser()?.rol === 'Recepcionista'){
                 <li>
                     <a routerLink="/administracion/gestion-turnos"
                         routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
@@ -178,6 +188,8 @@ md:block md:translate-x-0 md:end-auto md:bottom-0
                             Turnos</span>
                     </a>
                 </li>
+                }
+                @if(currentUser()?.rol === 'Pediatra'){
                 <li>
                     <a routerLink="/administracion/mis-turnos"
                         routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
@@ -200,6 +212,8 @@ md:block md:translate-x-0 md:end-auto md:bottom-0
                             Mis Turnos</span>
                     </a>
                 </li>
+                }
+                @if(currentUser()?.rol === 'Admin' || currentUser()?.rol === 'Empleado'){
                 <li>
                     <a routerLink="/administracion/gestion-vacunas"
                         routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
@@ -220,6 +234,49 @@ md:block md:translate-x-0 md:end-auto md:bottom-0
                         </span>
                         <span class="truncate hs-overlay-minified:opacity-0 transition-opacity duration-300">
                             Vacunas</span>
+                    </a>
+                </li>
+                }
+                <li>
+                    <a routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
+                        class="group w-full flex items-center gap-2.5 py-2 px-0.5 text-sm font-medium text-slate-500 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-all duration-200"
+                        href="chat-details.html">
+                        <span
+                            class="flex shrink-0 justify-center items-center size-8 bg-white rounded-lg border border-gray-100 shadow-sm group-hover:bg-white group-hover:border-teal-200 transition-colors">
+                            <svg class="shrink-0 size-4 group-hover:scale-110 transition-transform duration-300"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m18 2 4 4" />
+                                <path d="m17 7 3-3" />
+                                <path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5" />
+                                <path d="m9 11 4 4" />
+                                <path d="m5 19-3 3" />
+                            </svg>
+                        </span>
+                        <span class="truncate hs-overlay-minified:opacity-0 transition-opacity duration-300">
+                            Tareas</span>
+                    </a>
+                </li>
+                <li>
+                    <a routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
+                        class="group w-full flex items-center gap-2.5 py-2 px-0.5 text-sm font-medium text-slate-500 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-all duration-200"
+                        href="chat-details.html">
+                        <span
+                            class="flex shrink-0 justify-center items-center size-8 bg-white rounded-lg border border-gray-100 shadow-sm group-hover:bg-white group-hover:border-teal-200 transition-colors">
+                            <svg class="shrink-0 size-4 group-hover:scale-110 transition-transform duration-300"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m18 2 4 4" />
+                                <path d="m17 7 3-3" />
+                                <path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5" />
+                                <path d="m9 11 4 4" />
+                                <path d="m5 19-3 3" />
+                            </svg>
+                        </span>
+                        <span class="truncate hs-overlay-minified:opacity-0 transition-opacity duration-300">
+                            Dashboard</span>
                     </a>
                 </li>
             </ul>

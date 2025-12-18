@@ -64,7 +64,7 @@ export class MisTurnosProfesionalComponent {
       d1.getDate() === d2.getDate();
   }
 
-  // Filter state
+  // Estado de los filtros
   activeFilter = signal<'hoy' | 'semana' | 'mes' | 'custom'>('hoy');
   isCustomRangeVisible = signal<boolean>(false);
   customRangeStart = signal<string>('');
