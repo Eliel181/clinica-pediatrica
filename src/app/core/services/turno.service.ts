@@ -30,6 +30,15 @@ export class TurnoService {
 
   }
 
+  getTurnosByProfesionalId(profesionalId: string): Observable<Turno[]> {
+    const turnosCollection = collection(this.firestore, 'turnos');
+    const q = query(
+      turnosCollection,
+      where('profesionalId', '==', profesionalId)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<Turno[]>;
+  }
+
   getAllTurnos(): Observable<Turno[]> {
     const turnosCollection = collection(this.firestore, 'turnos');
     const q = query(turnosCollection); // Query all

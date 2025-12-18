@@ -10,6 +10,10 @@ export class PacienteService {
     private firestoreService = inject(FirestoreService);
     private collectionName = 'pacientes';
 
+    getAllPacientes(): Observable<Paciente[]> {
+        return this.firestoreService.getCollection<Paciente>(this.collectionName);
+    }
+
     getPacientesByResponsable(responsableId: string): Observable<Paciente[]> {
         return this.firestoreService.getCollectionByFilter<Paciente>(this.collectionName, 'responsableId', responsableId);
     }

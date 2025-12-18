@@ -1,1 +1,125 @@
-<p>paciente-list works!</p>
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Panel de Pacientes</h1>
+        <p class="dashboard-subtitle" *ngIf="currentUserRole">
+            Vista: <span class="role-badge">{{ currentUserRole }}</span>
+        </p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando pacientes...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!isLoading">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Total Pacientes</p>
+                    <p class="stat-value">{{ stats.total }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card masculino">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Masculino</p>
+                    <p class="stat-value">{{ stats.masculino }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card femenino">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Femenino</p>
+                    <p class="stat-value">{{ stats.femenino }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card otro">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Otro</p>
+                    <p class="stat-value">{{ stats.otro }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient List -->
+        <div class="patient-list-section">
+            <h2 class="section-title">Lista de Pacientes</h2>
+
+            <!-- Empty State -->
+            <div *ngIf="pacientes.length === 0" class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                </svg>
+                <p>No se encontraron pacientes</p>
+                <p class="empty-subtitle" *ngIf="currentUserRole === 'Pediatra'">
+                    No tienes turnos asignados con pacientes
+                </p>
+            </div>
+
+            <!-- Patient Table -->
+            <div *ngIf="pacientes.length > 0" class="table-container">
+                <table class="patient-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre Completo</th>
+                            <th>DNI</th>
+                            <th>Sexo</th>
+                            <th>Edad</th>
+                            <th>Fecha de Nacimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let paciente of pacientes" class="patient-row">
+                            <td class="patient-name">
+                                {{ paciente.nombre }} {{ paciente.apellido }}
+                            </td>
+                            <td>{{ paciente.dni }}</td>
+                            <td>
+                                <span class="gender-badge" [ngClass]="paciente.sexo.toLowerCase()">
+                                    {{ paciente.sexo }}
+                                </span>
+                            </td>
+                            <td>{{ calculateAge(paciente.fechaNacimiento) }} años</td>
+                            <td>{{ paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
