@@ -127,7 +127,8 @@ md:block md:translate-x-0 md:end-auto md:bottom-0
                 }
                 @if(currentUser()?.rol === 'Admin' || currentUser()?.rol === 'Pediatra'){
                 <li>
-                    <a class="group relative w-full flex items-center gap-2.5 py-2 px-0.5 text-sm font-medium text-slate-500 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-all duration-200"
+                    <a routerLink="/administracion/gestion-pacientes"
+                        class="group relative w-full flex items-center gap-2.5 py-2 px-0.5 text-sm font-medium text-slate-500 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-all duration-200"
                         href="explore.html">
                         <span
                             class="flex shrink-0 justify-center items-center size-8 bg-white rounded-lg border border-gray-100 shadow-sm group-hover:bg-white group-hover:border-teal-200 transition-colors">

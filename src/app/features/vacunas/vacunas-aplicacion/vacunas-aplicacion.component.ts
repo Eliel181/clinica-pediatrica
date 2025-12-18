@@ -5,7 +5,16 @@ import { VacunaService } from '../../../core/services/vacuna.service';
 import { Vacuna } from '../../../core/interfaces/vacuna.model';
 import { AlertService } from '../../../core/services/alert.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { PacienteService } from '../../../core/services/paciente.service';
+import { Paciente } from '../../../core/interfaces/paciente.model';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+import {
+  ESQUEMA_VACUNACION,
+  VacunaEsquema,
+  calcularEdadEnMeses,
+  obtenerVacunasPendientes,
+  obtenerProximaVacuna
+} from '../../../core/constants/esquema-vacunacion';
 
 @Component({
   selector: 'app-vacunas-aplicacion',
@@ -22,6 +31,7 @@ export class VacunasAplicacionComponent implements OnInit {
   private vacunaService = inject(VacunaService);
   private alertService = inject(AlertService);
   private authService = inject(AuthService);
+  private pacienteService = inject(PacienteService);
   private firestore = inject(Firestore);
 
   vacunaForm!: FormGroup;
@@ -45,11 +55,49 @@ export class VacunasAplicacionComponent implements OnInit {
   // History signal
   historialVacunas = signal<any[]>([]);
 
+  // Esquema de vacunación
+  esquemaVacunacion = ESQUEMA_VACUNACION;
+  paciente = signal<Paciente | null>(null);
+  edadPacienteMeses = computed(() => {
+    const pac = this.paciente();
+    if (!pac || !pac.fechaNacimiento) return 0;
+    const fechaNac = (pac.fechaNacimiento as any).toDate
+      ? (pac.fechaNacimiento as any).toDate()
+      : new Date(pac.fechaNacimiento as any);
+    return calcularEdadEnMeses(fechaNac);
+  });
+
+  // Vacunas pendientes según edad y historial
+  vacunasPendientes = computed(() => {
+    const edadMeses = this.edadPacienteMeses();
+    const historial = this.historialVacunas();
+    return obtenerVacunasPendientes(edadMeses, historial);
+  });
+
+  // Próxima vacuna a aplicar
+  proximaVacuna = computed(() => {
+    const edadMeses = this.edadPacienteMeses();
+    return obtenerProximaVacuna(edadMeses);
+  });
+
   ngOnInit() {
     this.initForm();
     this.loadVacunas();
     if (this.pacienteId) {
+      this.loadPaciente();
       this.loadHistorial();
+    }
+  }
+
+  async loadPaciente() {
+    if (!this.pacienteId) return;
+    try {
+      const pacienteData = await this.pacienteService.getPacienteById(this.pacienteId);
+      if (pacienteData) {
+        this.paciente.set(pacienteData as Paciente);
+      }
+    } catch (error) {
+      console.error('Error cargando paciente:', error);
     }
   }
 
