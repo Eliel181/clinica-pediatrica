@@ -130,13 +130,6 @@ export class ClienteService {
   }
 
   async logOut() {
-    // const client = this.currentClient();
-    // if (client) {
-    //   await this.firestoreService.updateDocument('clientes', client.id!, {
-    //     online: false,
-    //     lastSeen: new Date()
-    //   });
-    // }
     await signOut(this.auth);
     this.currentClient.set(null);
     this.router.navigate(['/portal-cliente']);

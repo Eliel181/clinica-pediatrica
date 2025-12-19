@@ -3,7 +3,7 @@ export interface VacunaEsquema {
     nombre: string;
     dosis: string;
     edadRecomendada: string;
-    edadMeses: number; // Para cálculos
+    edadMeses: number; // Para calculos
     descripcion?: string;
 }
 

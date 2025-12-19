@@ -1,0 +1,300 @@
+<form [formGroup]="registroForm" (ngSubmit)="guardarRegistro()" class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-6">
+    <!-- Left Column: Input & Logging (7 cols) -->
+    <div class="lg:col-span-7 space-y-6">
+        <!-- Date Navigator -->
+        <div class="flex items-center justify-between bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+            <button type="button" (click)="cambiarFecha(-1)"
+                class="p-2 hover:bg-slate-50 rounded-full text-slate-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span class="font-semibold text-slate-800 capitalize">{{ fechaFormateada() }}</span>
+            </div>
+            <button type="button" (click)="cambiarFecha(1)"
+                class="p-2 hover:bg-slate-50 rounded-full text-slate-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Quick Add Toolbar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <button type="button" (click)="seleccionarTipoIngesta('Líquido')"
+                [ngClass]="tipoIngestaSeleccionado() === 'Líquido' ? 'ring-2 ring-blue-500 bg-blue-50' : ''"
+                class="flex flex-col items-center justify-center gap-2 p-4 bg-white border border-slate-200 rounded-xl hover:border-teal-500 hover:shadow-md transition-all group">
+                <div
+                    class="size-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            [attr.d]="obtenerIconoPorTipo('Líquido')" />
+                    </svg>
+                </div>
+                <span class="text-sm font-medium text-slate-700">Líquidos</span>
+            </button>
+            <button type="button" (click)="seleccionarTipoIngesta('Sólido')"
+                [ngClass]="tipoIngestaSeleccionado() === 'Sólido' ? 'ring-2 ring-teal-500 bg-teal-50' : ''"
+                class="flex flex-col items-center justify-center gap-2 p-4 bg-white border border-slate-200 rounded-xl hover:border-teal-500 hover:shadow-md transition-all group">
+                <div
+                    class="size-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            [attr.d]="obtenerIconoPorTipo('Sólido')" />
+                    </svg>
+                </div>
+                <span class="text-sm font-bold text-slate-800">Sólidos</span>
+            </button>
+            <button type="button" (click)="seleccionarTipoIngesta('Snack')"
+                [ngClass]="tipoIngestaSeleccionado() === 'Snack' ? 'ring-2 ring-orange-500 bg-orange-50' : ''"
+                class="flex flex-col items-center justify-center gap-2 p-4 bg-white border border-slate-200 rounded-xl hover:border-teal-500 hover:shadow-md transition-all group">
+                <div
+                    class="size-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            [attr.d]="obtenerIconoPorTipo('Snack')" />
+                    </svg>
+                </div>
+                <span class="text-sm font-medium text-slate-700">Snacks</span>
+            </button>
+            <button type="button" (click)="seleccionarTipoIngesta('Suplemento')"
+                [ngClass]="tipoIngestaSeleccionado() === 'Suplemento' ? 'ring-2 ring-purple-500 bg-purple-50' : ''"
+                class="flex flex-col items-center justify-center gap-2 p-4 bg-white border border-slate-200 rounded-xl hover:border-teal-500 hover:shadow-md transition-all group">
+                <div
+                    class="size-10 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            [attr.d]="obtenerIconoPorTipo('Suplemento')" />
+                    </svg>
+                </div>
+                <span class="text-sm font-medium text-slate-700">Suplementos</span>
+            </button>
+        </div>
+
+        <!-- Input Form -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <h3 class="font-bold text-lg text-slate-800">Registrar {{ tipoIngestaSeleccionado() }}</h3>
+                <span
+                    class="text-xs font-medium px-2 py-1 bg-amber-50 text-amber-700 rounded-md border border-amber-200">
+                    Verificar Alergias
+                </span>
+            </div>
+            <div class="p-6 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Time -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">Hora</label>
+                        <div class="relative">
+                            <input formControlName="hora"
+                                class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none"
+                                type="time" />
+                        </div>
+                    </div>
+                    <!-- Food Category -->
+                    <div class="space-y-2"
+                        *ngIf="tipoIngestaSeleccionado() === 'Sólido' || tipoIngestaSeleccionado() === 'Snack'">
+                        <label class="text-sm font-semibold text-slate-700">Categoría</label>
+                        <select formControlName="categoria"
+                            class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none">
+                            <option value="Fruta">Fruta</option>
+                            <option value="Vegetal">Vegetal</option>
+                            <option value="Grano/Cereal">Grano/Cereal</option>
+                            <option value="Proteína">Proteína</option>
+                            <option value="Lácteo">Lácteo</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <!-- Food Item -->
+                    <div class="space-y-2"
+                        [ngClass]="tipoIngestaSeleccionado() === 'Líquido' || tipoIngestaSeleccionado() === 'Suplemento' ? 'md:col-span-2' : 'md:col-span-2'">
+                        <label class="text-sm font-semibold text-slate-700">
+                            {{ tipoIngestaSeleccionado() === 'Líquido' ? 'Tipo de Líquido' :
+                            tipoIngestaSeleccionado() === 'Suplemento' ? 'Nombre del Suplemento' : 'Alimento' }}
+                        </label>
+                        <input formControlName="nombreAlimento"
+                            class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none"
+                            [placeholder]="tipoIngestaSeleccionado() === 'Líquido' ? 'ej. Leche Materna, Fórmula...' : 
+                                         tipoIngestaSeleccionado() === 'Suplemento' ? 'ej. Vitamina D, Hierro...' : 
+                                         'ej. Puré de Banana, Avena...'" type="text" />
+                    </div>
+                    <!-- Quantity -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">Cantidad</label>
+                        <div class="flex rounded-xl shadow-sm">
+                            <input formControlName="cantidad"
+                                class="flex-1 min-w-0 block w-full bg-white border border-slate-200 rounded-l-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none"
+                                placeholder="0" type="number" step="0.1" min="0" />
+                            <select formControlName="unidadMedida"
+                                class="bg-white border border-l-0 border-slate-200 rounded-r-xl px-3 py-2.5 text-slate-600 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none">
+                                <option value="ml">ml</option>
+                                <option value="oz">oz</option>
+                                <option value="cdas">cdas</option>
+                                <option value="cdtas">cdtas</option>
+                                <option value="gramos">gramos</option>
+                                <option value="unidad">unidad</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Reaction -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">Reacción</label>
+                        <div class="flex gap-2">
+                            <button type="button" (click)="registroForm.patchValue({reaccion: 'Comió bien'})"
+                                [ngClass]="registroForm.get('reaccion')?.value === 'Comió bien' ? 'bg-green-50 border-green-300' : ''"
+                                class="flex-1 py-2.5 px-2 rounded-xl border border-slate-200 hover:bg-green-50 hover:border-green-300 text-center text-sm transition-colors"
+                                title="Comió bien">
+                                😋
+                            </button>
+                            <button type="button" (click)="registroForm.patchValue({reaccion: 'Rechazó'})"
+                                [ngClass]="registroForm.get('reaccion')?.value === 'Rechazó' ? 'bg-yellow-50 border-yellow-300' : ''"
+                                class="flex-1 py-2.5 px-2 rounded-xl border border-slate-200 hover:bg-yellow-50 hover:border-yellow-300 text-center text-sm transition-colors"
+                                title="Rechazó/Quisquilloso">
+                                🤐
+                            </button>
+                            <button type="button" (click)="registroForm.patchValue({reaccion: 'Vomitó'})"
+                                [ngClass]="registroForm.get('reaccion')?.value === 'Vomitó' ? 'bg-red-50 border-red-300' : ''"
+                                class="flex-1 py-2.5 px-2 rounded-xl border border-slate-200 hover:bg-red-50 hover:border-red-300 text-center text-sm transition-colors"
+                                title="Escupió/Vomitó">
+                                🤮
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Notes -->
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">Notas (Opcional)</label>
+                        <textarea formControlName="notas"
+                            class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none resize-none"
+                            placeholder="Observaciones específicas..." rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+                <button type="button" (click)="cancelar()"
+                    class="px-5 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-100 transition-colors">
+                    Cancelar
+                </button>
+                <button type="submit" [disabled]="registroForm.invalid || cargando()"
+                    class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-medium shadow-md transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {{ cargando() ? 'Guardando...' : 'Guardar Registro' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Analysis & History (5 cols) -->
+    <div class="lg:col-span-5 space-y-6">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-2 gap-4" *ngIf="estadisticas() as stats">
+            <!-- Fluid Goal -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-sm font-medium text-slate-600">Meta de Líquidos</span>
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-end gap-1 mb-1">
+                        <span class="text-2xl font-bold text-slate-900">{{ stats.totalLiquidos }}</span>
+                        <span class="text-sm text-slate-500 mb-1">/ {{ stats.metaLiquidos || 800 }}ml</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-blue-500 h-2 rounded-full"
+                            [style.width.%]="(stats.totalLiquidos / (stats.metaLiquidos || 800)) * 100"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Calories/Intake -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-sm font-medium text-slate-600">Calorías Est.</span>
+                    <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-end gap-1 mb-1">
+                        <span class="text-2xl font-bold text-slate-900">{{ stats.totalCalorias }}</span>
+                        <span class="text-sm text-slate-500 mb-1">kcal</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-orange-500 h-2 rounded-full"
+                            [style.width.%]="(stats.totalCalorias / (stats.metaCalorias || 900)) * 100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Timeline -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm h-full max-h-[600px] flex flex-col">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="font-bold text-lg text-slate-800">Línea de Tiempo de Hoy</h3>
+                <span class="text-xs font-medium text-slate-500 bg-slate-50 px-2 py-1 rounded-md">
+                    Última comida: {{ calcularTiempoDesdeUltimaComida() }}
+                </span>
+            </div>
+            <div class="flex-1 overflow-y-auto p-5">
+                <div *ngIf="registrosOrdenados().length === 0" class="text-center py-12">
+                    <svg class="w-16 h-16 mx-auto text-slate-300 mb-4" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <p class="text-slate-500 font-medium">No hay registros para este día</p>
+                    <p class="text-sm text-slate-400 mt-1">Comienza agregando el primer registro</p>
+                </div>
+
+                <div *ngIf="registrosOrdenados().length > 0"
+                    class="relative pl-6 border-l-2 border-slate-200 space-y-8">
+                    <div *ngFor="let registro of registrosOrdenados()" class="relative">
+                        <div class="absolute -left-[31px] rounded-full p-1.5 size-8 flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-teal-50 text-teal-600 border border-teal-200': registro.tipoIngesta === 'Sólido',
+                                'bg-blue-50 text-blue-600 border border-blue-200': registro.tipoIngesta === 'Líquido',
+                                'bg-orange-50 text-orange-600 border border-orange-200': registro.tipoIngesta === 'Snack',
+                                'bg-purple-50 text-purple-600 border border-purple-200': registro.tipoIngesta === 'Suplemento'
+                            }">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    [attr.d]="obtenerIconoPorTipo(registro.tipoIngesta)" />
+                            </svg>
+                        </div>
+                        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1">
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">{{ registro.nombreAlimento }}</p>
+                                <p class="text-xs text-slate-500">
+                                    {{ registro.tipoIngesta }}
+                                    <span *ngIf="registro.reaccion"> • {{ registro.reaccion }}</span>
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-sm font-bold text-slate-800">
+                                    {{ registro.cantidad }} {{ registro.unidadMedida }}
+                                </span>
+                                <span class="text-xs text-slate-500">{{ registro.hora }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-100 text-center">
+                <button type="button" class="text-sm font-medium text-teal-600 hover:text-teal-700 transition-colors">
+                    Ver Historial Completo
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -45,7 +45,7 @@ export class PacienteListComponent implements OnInit {
     this.currentUserRole = currentUser.rol || '';
 
     if (currentUser.rol === 'Admin') {
-      // Admin: Load all patients
+      // SI es admin cargamos todos los pacientes
       this.pacienteService.getAllPacientes().subscribe({
         next: (pacientes) => {
           this.pacientes = pacientes;
@@ -62,14 +62,14 @@ export class PacienteListComponent implements OnInit {
       this.turnoService.getTurnosByProfesionalId(currentUser.uid)
         .pipe(
           switchMap(turnos => {
-            // Extract unique patient IDs
+            // Extraemos los IDs únicos de los pacientes
             const uniquePacienteIds = [...new Set(turnos.map(t => t.pacienteId))];
 
             if (uniquePacienteIds.length === 0) {
               return of([]);
             }
 
-            // Load all patients and filter by IDs
+            // Cargamos todos los pacientes y filtramos por IDs
             return this.pacienteService.getAllPacientes().pipe(
               map(allPacientes =>
                 allPacientes.filter(p => uniquePacienteIds.includes(p.id))
@@ -84,12 +84,11 @@ export class PacienteListComponent implements OnInit {
             this.isLoading = false;
           },
           error: (error) => {
-            console.error('Error loading patients for pediatra:', error);
             this.isLoading = false;
           }
         });
     } else {
-      // Other roles: no access
+      // Otros roles: no acceso
       this.isLoading = false;
     }
   }

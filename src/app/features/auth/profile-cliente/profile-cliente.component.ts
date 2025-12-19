@@ -114,6 +114,17 @@ export class ProfileClienteComponent {
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      // Validar tamaño (máx 500KB)
+      if (file.size > 500 * 1024) {
+        this.alert.open({
+          title: 'Imagen demasiado pesada',
+          message: 'La imagen seleccionada supera el límite de 500KB. Por favor seleccione una imagen más pequeña.',
+          type: 'error'
+        });
+        event.target.value = ''; // Limpiar el input
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = () => {
         const result = reader.result as string;
@@ -239,9 +250,6 @@ export class ProfileClienteComponent {
       }
 
       this.closeModal();
-      // List updates automatically via subscription in loadPacientes? 
-      // Not exactly, if FirestoreService.getCollectionByFilter returns an observable that stays open (collectionData), it updates auto.
-      // Yes, collectionData is real-time.
 
     } catch (error) {
       console.error('Error saving paciente', error);
