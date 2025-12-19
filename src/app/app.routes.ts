@@ -80,6 +80,21 @@ export const routes: Routes = [
             },
             {
                 path: 'gestion-pacientes', loadComponent: () => import('./features/pacientes/paciente-list/paciente-list.component').then(m => m.PacienteListComponent)
+            },
+            {
+                path: 'gestion-tareas', loadComponent: () => import('./features/tareas/gestion-tareas/gestion-tareas.component').then(m => m.GestionTareasComponent)
+            },
+            {
+                path: 'gestion-tareas/form-tarea', loadComponent: () => import('./features/tareas/edit-tarea/edit-tarea.component').then(m => m.EditTareaComponent)
+            },
+            {
+                path: 'gestion-tareas/form-tarea/:id', loadComponent: () => import('./features/tareas/edit-tarea/edit-tarea.component').then(m => m.EditTareaComponent)
+            },
+            {
+                path: 'mis-tareas', loadComponent: () => import('./features/tareas/mis-tareas/mis-tareas.component').then(m => m.MisTareasComponent)
+            },
+            {
+                path: 'mis-tareas/:id', loadComponent: () => import('./features/tareas/detalle-tarea/detalle-tarea.component').then(m => m.DetalleTareaComponent)
             }
         ]
     }

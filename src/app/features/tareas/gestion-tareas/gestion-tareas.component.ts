@@ -1,0 +1,191 @@
+import { ChangeDetectorRef, Component, computed, inject, OnDestroy, OnInit, Signal, signal } from '@angular/core';
+import { EstadoTarea, Tarea } from '../../../core/interfaces/tarea.model';
+import { TaskService } from '../../../core/services/task.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { Usuario } from '../../../core/interfaces/usuario.model';
+import { Subject, takeUntil } from 'rxjs';
+import { Timestamp } from 'firebase/firestore'; import { AlertService } from '../../../core/services/alert.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+
+@Component({
+  selector: 'app-gestion-tareas',
+  imports: [CommonModule, RouterModule],
+  templateUrl: './gestion-tareas.component.html',
+  styleUrl: './gestion-tareas.component.css'
+})
+export class GestionTareasComponent implements OnInit, OnDestroy {
+  private taskService: TaskService = inject(TaskService);
+  private authService: AuthService = inject(AuthService);
+  private alertService: AlertService = inject(AlertService);
+  public empleados = signal<Usuario[]>([]);
+  private allTasks = signal<Tarea[]>([]);
+  public isLoading = signal(true);
+
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private destroy$ = new Subject<void>();
+
+  public filtroEmpleado = signal<string>('todos');
+  public filtroEstado = signal<EstadoTarea | 'todos'>('todos');
+
+  terminoBusqueda = signal('');
+
+  private normalizarTexto(texto: string): string {
+    if (!texto) return '';
+    return texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+  public tareasFiltradas: Signal<Tarea[]> = computed(() => {
+    const tasks = this.allTasks();
+    const employeeId = this.filtroEmpleado();
+    const status = this.filtroEstado();
+    const terminoNormalizado = this.normalizarTexto(this.terminoBusqueda());
+
+    return tasks.filter(tarea => {
+      const matchEmpleado = (employeeId === 'todos' || tarea.asignadoA === employeeId);
+
+      const matchEstado = (status === 'todos' || tarea.estado === status);
+
+      const matchBusqueda = terminoNormalizado === '' ||
+        this.normalizarTexto(tarea.titulo).includes(terminoNormalizado) ||
+        this.normalizarTexto(tarea.descripcion).includes(terminoNormalizado) ||
+        this.normalizarTexto(tarea.nombreEmpleadoAsignado).includes(terminoNormalizado);
+
+      return matchEmpleado && matchEstado && matchBusqueda;
+    });
+  });
+
+
+  paginaActual = signal(1);
+  tareasPorPagina = signal(2);
+
+  totalPaginas = computed(() => {
+    return Math.ceil(this.tareasFiltradas().length / this.tareasPorPagina());
+  });
+
+  paginasDisponibles: Signal<number[]> = computed(() => {
+    return Array.from({ length: this.totalPaginas() }, (_, i) => i + 1);
+  });
+
+  tareasPaginadas: Signal<Tarea[]> = computed(() => {
+    const filtradas = this.tareasFiltradas();
+    const pagina = this.paginaActual();
+    const porPagina = this.tareasPorPagina();
+
+    const inicio = (pagina - 1) * porPagina;
+    const fin = inicio + porPagina;
+
+    return filtradas.slice(inicio, fin);
+  });
+
+
+  ngOnInit(): void {
+    this.cargarDatosIniciales();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  cargarDatosIniciales(): void {
+    this.isLoading.set(true);
+
+    this.taskService.getEmpleados()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(emps => {
+        this.empleados.set(emps);
+
+        this.cdr.detectChanges();
+        if (window.HSStaticMethods) {
+          window.HSStaticMethods.autoInit();
+        }
+      });
+
+    this.taskService.getAllTareas()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(tasks => {
+        this.allTasks.set(tasks);
+        this.isLoading.set(false);
+      });
+  }
+
+  onFiltroEmpleadoChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.filtroEmpleado.set(target.value);
+    this.paginaActual.set(1);
+  }
+
+  onFiltroEstadoChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.filtroEstado.set(target.value as EstadoTarea | 'todos');
+    this.paginaActual.set(1);
+  }
+
+  onBusquedaChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.terminoBusqueda.set(input.value);
+    this.paginaActual.set(1);
+  }
+
+  irAPagina(numeroPagina: number): void {
+    if (numeroPagina >= 1 && numeroPagina <= this.totalPaginas()) {
+      this.paginaActual.set(numeroPagina);
+    }
+  }
+
+  async confirmarEliminacion(tarea: Tarea): Promise<void> {
+    if (!tarea.id) return;
+
+    const admin = this.authService.currentUser();
+
+    if (!admin) { return; }
+
+    const result = await this.alertService.open({ title: 'Eliminar Tarea', message: `¿Deseas eliminar la tarea "${tarea.titulo}"?`, type: 'question' });
+
+    if (!result) { return; }
+
+    if (result) {
+      try {
+        await this.taskService.eliminarTarea(tarea.id!, tarea.titulo);
+        this.alertService.open({ title: 'Tarea eliminada', message: `La tarea "${tarea.titulo}" ha sido eliminada.`, type: 'success' });
+      } catch (error) {
+        console.error('Error al eliminar tarea:', error);
+        this.alertService.open({ title: 'Error', message: 'No se pudo eliminar la tarea.', type: 'error' });
+      }
+    }
+
+
+  }
+
+
+  formatDate(timestamp: Timestamp): Date {
+    return timestamp.toDate();
+  }
+
+  // Métodos auxiliares para las columnas
+  esTareaVencida(tarea: Tarea): boolean {
+    if (!tarea.fechaDeVencimiento) return false;
+    const fechaVencimiento = this.formatDate(tarea.fechaDeVencimiento);
+    return new Date(fechaVencimiento) < new Date();
+  }
+
+  esTareaPorVencer(tarea: Tarea): boolean {
+    if (!tarea.fechaDeVencimiento) return false;
+    const fechaVencimiento = this.formatDate(tarea.fechaDeVencimiento);
+    const hoy = new Date();
+    const vencimiento = new Date(fechaVencimiento);
+    const diffTime = vencimiento.getTime() - hoy.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 7 && diffDays >= 0;
+  }
+
+  diasRestantes(tarea: Tarea): number {
+    if (!tarea.fechaDeVencimiento) return 0;
+    const fechaVencimiento = this.formatDate(tarea.fechaDeVencimiento);
+    const hoy = new Date();
+    const vencimiento = new Date(fechaVencimiento);
+    const diffTime = vencimiento.getTime() - hoy.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+}

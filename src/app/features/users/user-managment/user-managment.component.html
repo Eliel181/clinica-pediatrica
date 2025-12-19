@@ -195,7 +195,8 @@
                                 [class.border-red-500]="userForm.get('rol')?.invalid && userForm.get('rol')?.touched">
                                 <option value="Admin">Administrador</option>
                                 <option value="Pediatra">Pediatra</option>
-                                <option value="Recepcio nista">Recepcionista</option>
+                                <option value="Recepcionista">Recepcionista</option>
+                                <option value="Empleado">Empleado</option>
                             </select>
                             @if (userForm.get('rol')?.invalid && userForm.get('rol')?.touched) {
                             <p class="text-xs text-red-500 mt-1">El rol es requerido.</p>
