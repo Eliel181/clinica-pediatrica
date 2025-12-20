@@ -4,7 +4,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { TurnoService } from '../../../core/services/turno.service';
 import { Usuario } from '../../../core/interfaces/usuario.model';
 import { Turno } from '../../../core/interfaces/turno.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { Paciente } from '../../../core/interfaces/paciente.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,7 +21,7 @@ import { RegistroAlimentacionComponent } from '../../alimentos/registro-alimenta
 @Component({
   selector: 'app-consulta-medica',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, VacunasAplicacionComponent, GraficasPacienteComponent, RegistroAlimentacionComponent],
+  imports: [CommonModule, ReactiveFormsModule, VacunasAplicacionComponent, GraficasPacienteComponent, RegistroAlimentacionComponent, RouterModule],
   templateUrl: './consulta-medica.component.html',
   styleUrl: './consulta-medica.component.css'
 })
@@ -79,7 +79,7 @@ export class ConsultaMedicaComponent implements OnInit {
       notas: [''] // Notas internas
     });
 
-    // Calculate BMI automatically
+    // Calcular IMC automaticamente
     this.consultaForm.valueChanges.subscribe(values => {
       const peso = values.peso;
       const talla = values.talla;
@@ -402,7 +402,7 @@ export class ConsultaMedicaComponent implements OnInit {
                 margin: [0, 2, 0, 0]
               },
               {
-                text: `Mat. ${profesional.documento || 'N/A'}`,
+                text: `Mat. ${profesional.matricula || 'N/A'}`,
                 fontSize: 8,
                 alignment: 'center',
                 color: '#94a3b8',

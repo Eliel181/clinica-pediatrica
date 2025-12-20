@@ -31,16 +31,11 @@ export class AlimentacionService {
         return docData(registroDocRef, { idField: 'id' }) as Observable<RegistroAlimentacion | undefined>;
     }
 
-    /**
-     * Obtener todos los registros de un paciente
-     */
     getRegistrosByPacienteId(pacienteId: string): Observable<RegistroAlimentacion[]> {
         const registrosCollection = collection(this.firestore, this.collectionName);
         const q = query(
             registrosCollection,
-            where('pacienteId', '==', pacienteId),
-            orderBy('fecha', 'desc'),
-            orderBy('hora', 'desc')
+            where('pacienteId', '==', pacienteId)
         );
         return collectionData(q, { idField: 'id' }) as Observable<RegistroAlimentacion[]>;
     }
@@ -58,18 +53,20 @@ export class AlimentacionService {
         const registrosCollection = collection(this.firestore, this.collectionName);
         const q = query(
             registrosCollection,
-            where('pacienteId', '==', pacienteId),
-            where('fecha', '>=', startOfDay),
-            where('fecha', '<=', endOfDay),
-            orderBy('fecha', 'desc'),
-            orderBy('hora', 'desc')
+            where('pacienteId', '==', pacienteId)
         );
-        return collectionData(q, { idField: 'id' }) as Observable<RegistroAlimentacion[]>;
+
+        // Filtrar por fecha en el cliente para evitar índices compuestos
+        return collectionData(q, { idField: 'id' }).pipe(
+            map((registros: any[]) => {
+                return registros.filter(r => {
+                    const fechaRegistro = r.fecha?.toDate ? r.fecha.toDate() : new Date(r.fecha);
+                    return fechaRegistro >= startOfDay && fechaRegistro <= endOfDay;
+                });
+            })
+        ) as Observable<RegistroAlimentacion[]>;
     }
 
-    /**
-     * Actualizar un registro existente
-     */
     updateRegistro(id: string, registro: Partial<RegistroAlimentacion>): Promise<void> {
         const registroDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
         return updateDoc(registroDocRef, {
@@ -78,9 +75,6 @@ export class AlimentacionService {
         });
     }
 
-    /**
-     * Eliminar un registro
-     */
     deleteRegistro(id: string): Promise<void> {
         const registroDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
         return deleteDoc(registroDocRef);

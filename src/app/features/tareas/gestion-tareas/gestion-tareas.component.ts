@@ -141,7 +141,7 @@ export class GestionTareasComponent implements OnInit, OnDestroy {
 
     if (!admin) { return; }
 
-    const result = await this.alertService.open({ title: 'Eliminar Tarea', message: `¿Deseas eliminar la tarea "${tarea.titulo}"?`, type: 'question' });
+    const result = await this.alertService.open({ title: 'Eliminar Tarea', message: `¿Deseas eliminar la tarea "${tarea.titulo}"?`, type: 'info' });
 
     if (!result) { return; }
 

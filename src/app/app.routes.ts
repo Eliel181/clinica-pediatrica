@@ -79,6 +79,9 @@ export const routes: Routes = [
                 path: 'vacunas-aplicacion/:id', loadComponent: () => import('./features/vacunas/vacunas-aplicacion/vacunas-aplicacion.component').then(m => m.VacunasAplicacionComponent)
             },
             {
+                path: 'historia-clinica/:id', loadComponent: () => import('./features/consultas/historia-clinica/historia-clinica.component').then(m => m.HistoriaClinicaComponent)
+            },
+            {
                 path: 'gestion-pacientes', loadComponent: () => import('./features/pacientes/paciente-list/paciente-list.component').then(m => m.PacienteListComponent)
             },
             {

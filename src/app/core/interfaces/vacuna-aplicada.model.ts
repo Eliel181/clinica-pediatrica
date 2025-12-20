@@ -4,7 +4,7 @@ export interface VacunaAplicada {
     pacienteId: string;
     aplicadaPor: string;
 
-    vacuna: string;
+    vacunaNombre: string;
     dosis: string;
 
     fechaAplicacion: Date;
