@@ -36,7 +36,8 @@ export class SolicitarTurnoComponent {
         { number: 3, title: 'Servicio', icon: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z' },
         { number: 4, title: 'Profesional', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
         { number: 5, title: 'Fecha', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
-        { number: 6, title: 'Confirmar', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' }
+        { number: 6, title: 'Pago', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' },
+        { number: 7, title: 'Confirmar', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' }
     ];
 
     // Data Signals
@@ -260,6 +261,11 @@ export class SolicitarTurnoComponent {
     selectedFecha = signal<string>('');
     selectedHora = signal<string>('');
 
+    // Payment State
+    selectedMetodoPago = signal<'Tarjeta' | 'Transferencia' | null>(null);
+    comprobanteBase64 = signal<string>('');
+    uploadingComprobante = signal<boolean>(false);
+
     // Computed
     availableServices = computed(() => {
         const cat = this.selectedCategoria();
@@ -288,9 +294,9 @@ export class SolicitarTurnoComponent {
     }
 
     nextStep() {
-        if (this.currentStep() < 6) {
+        if (this.currentStep() < 7) {
             this.currentStep.update(v => v + 1);
-        } else if (this.currentStep() === 6) {
+        } else if (this.currentStep() === 7) {
             this.confirmarTurno();
         }
     }
@@ -302,8 +308,9 @@ export class SolicitarTurnoComponent {
         const fechaStr = this.selectedFecha();
         const horaStr = this.selectedHora();
         const responsable = this.clienteService.currentClient();
+        const metodoPago = this.selectedMetodoPago();
 
-        if (!paciente || !servicio || !profesional || !fechaStr || !horaStr || !responsable) {
+        if (!paciente || !servicio || !profesional || !fechaStr || !horaStr || !responsable || !metodoPago) {
             this.alertService.open({
                 title: 'Error',
                 message: 'Faltan datos para confirmar el turno.',
@@ -339,16 +346,22 @@ export class SolicitarTurnoComponent {
             fechaString: fechaStr,
             horaString: horaStr,
             motivo: 'Consulta - ' + servicio.nombre,
-            estado: 'Confirmado',
+            metodoPago: metodoPago,
+            comprobanteBase64: metodoPago === 'Transferencia' ? this.comprobanteBase64() : undefined,
+            estado: metodoPago === 'Tarjeta' ? 'Confirmado' : 'Pendiente',
             precioPagado: servicio.precio || 0,
             createdAt: new Date()
         };
 
         try {
             await this.turnoService.crearTurno(nuevoTurno);
+            const mensaje = metodoPago === 'Tarjeta'
+                ? `Tu turno para ${servicio.nombre} ha sido confirmado.`
+                : `Tu turno para ${servicio.nombre} ha sido registrado y está pendiente de verificación del comprobante.`;
+
             await this.alertService.open({
-                title: '¡Turno Reservado!',
-                message: `Tu turno para ${servicio.nombre} ha sido reservado correctamente.`,
+                title: metodoPago === 'Tarjeta' ? '¡Turno Confirmado!' : '¡Turno Registrado!',
+                message: mensaje,
                 type: 'success'
             });
             this.router.navigate(['/home']);
@@ -421,6 +434,43 @@ export class SolicitarTurnoComponent {
         this.selectedHora.set(hora);
     }
 
+    // Payment methods
+    selectMetodoPago(metodo: 'Tarjeta' | 'Transferencia') {
+        this.selectedMetodoPago.set(metodo);
+        if (metodo === 'Tarjeta') {
+            this.comprobanteBase64.set(''); // Clear receipt if switching to card
+        }
+    }
+
+    async onFileSelected(event: any) {
+        const file = event.target.files[0];
+        if (file) {
+            this.uploadingComprobante.set(true);
+            try {
+                const base64 = await this.convertToBase64(file);
+                this.comprobanteBase64.set(base64 as string);
+            } catch (error) {
+                console.error('Error converting file:', error);
+                await this.alertService.open({
+                    title: 'Error',
+                    message: 'Error al cargar el archivo. Inténtalo de nuevo.',
+                    type: 'error'
+                });
+            } finally {
+                this.uploadingComprobante.set(false);
+            }
+        }
+    }
+
+    convertToBase64(file: File): Promise<string | ArrayBuffer | null> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
     generarHorarios(duracionMinutos: number, startHour: number, endHour: number) {
         const slots: string[] = [];
 
@@ -443,7 +493,5 @@ export class SolicitarTurnoComponent {
 
         this.horasDisponibles.set(slots);
     }
-
-    //turnos
 
 }

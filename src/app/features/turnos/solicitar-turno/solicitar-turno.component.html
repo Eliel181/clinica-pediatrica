@@ -280,8 +280,138 @@
                 </div>
             </div>
 
-            <!-- Step 6: Confirmación -->
-            <div *ngIf="currentStep() === 6"
+            <!-- Step 6: Payment Method -->
+            <div *ngIf="currentStep() === 6" class="p-8 sm:p-10 flex-grow animate-fadeIn">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Método de Pago</h2>
+                <p class="text-slate-500 mb-8">Selecciona cómo deseas pagar tu consulta</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                    <!-- Tarjeta Option -->
+                    <button (click)="selectMetodoPago('Tarjeta')" [ngClass]="selectedMetodoPago() === 'Tarjeta' 
+                            ? 'border-teal-600 bg-teal-50 ring-2 ring-teal-500' 
+                            : 'border-slate-200 hover:border-teal-300'"
+                        class="p-6 rounded-2xl border-2 transition-all text-left group hover:shadow-lg">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-14 h-14 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-slate-900 text-lg mb-1">Tarjeta</h3>
+                                <p class="text-sm text-slate-600">Pago inmediato</p>
+                                <div class="mt-3 flex items-center gap-2">
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-green-100 text-green-800">
+                                        ✓ Turno confirmado
+                                    </span>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedMetodoPago() === 'Tarjeta'" class="text-teal-600">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Transferencia Option -->
+                    <button (click)="selectMetodoPago('Transferencia')" [ngClass]="selectedMetodoPago() === 'Transferencia' 
+                            ? 'border-amber-600 bg-amber-50 ring-2 ring-amber-500' 
+                            : 'border-slate-200 hover:border-amber-300'"
+                        class="p-6 rounded-2xl border-2 transition-all text-left group hover:shadow-lg">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-14 h-14 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-slate-900 text-lg mb-1">Transferencia</h3>
+                                <p class="text-sm text-slate-600">Requiere comprobante</p>
+                                <div class="mt-3 flex items-center gap-2">
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-amber-100 text-amber-800">
+                                        ⏳ Turno pendiente
+                                    </span>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedMetodoPago() === 'Transferencia'" class="text-amber-600">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Upload Receipt for Transferencia -->
+                <div *ngIf="selectedMetodoPago() === 'Transferencia'" class="mt-8 max-w-2xl mx-auto">
+                    <div class="p-6 bg-amber-50 rounded-2xl border-2 border-amber-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <svg class="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <h3 class="font-bold text-amber-900 mb-1">Subir Comprobante de Transferencia</h3>
+                                <p class="text-sm text-amber-700">
+                                    Por favor, sube el comprobante de transferencia. Tu turno quedará pendiente hasta
+                                    que sea verificado por nuestro equipo.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="block">
+                                <input type="file" accept="image/*" (change)="onFileSelected($event)" class="block w-full text-sm text-slate-600 
+                                    file:mr-4 file:py-3 file:px-6 
+                                    file:rounded-xl file:border-0 
+                                    file:text-sm file:font-semibold 
+                                    file:bg-white file:text-amber-700 
+                                    hover:file:bg-amber-100 file:cursor-pointer
+                                    file:transition-colors cursor-pointer" />
+                            </label>
+
+                            <div *ngIf="uploadingComprobante()" class="mt-3 flex items-center gap-2 text-amber-700">
+                                <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                <span class="text-sm font-medium">Cargando archivo...</span>
+                            </div>
+
+                            <div *ngIf="comprobanteBase64() && !uploadingComprobante()"
+                                class="mt-3 flex items-center gap-2 text-green-700 bg-green-50 px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm font-semibold">✓ Comprobante cargado correctamente</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7: Confirmación -->
+            <div *ngIf="currentStep() === 7"
                 class="p-8 sm:p-10 flex-grow animate-fadeIn flex flex-col items-center justify-center text-center">
                 <div class="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mb-6 text-teal-600">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,9 +450,13 @@
                         <span class="text-slate-500">Fecha</span>
                         <span class="font-semibold text-slate-800 text-right">{{ selectedFecha() }}</span>
                     </div>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between border-b border-slate-200 pb-3">
                         <span class="text-slate-500">Hora</span>
                         <span class="font-semibold text-slate-800 text-right">{{ selectedHora() }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Método de Pago</span>
+                        <span class="font-semibold text-slate-800 text-right">{{ selectedMetodoPago() }}</span>
                     </div>
                 </div>
             </div>
@@ -340,8 +474,9 @@
                               (currentStep() === 2 && !selectedCategoria()) || 
                               (currentStep() === 3 && !selectedServicio()) || 
                               (currentStep() === 4 && (!selectedProfesional() || availableProfesionales().length === 0)) ||
-                              (currentStep() === 5 && !selectedHora())">
-                    {{ currentStep() === 6 ? 'Confirmar Turno' : 'Siguiente' }}
+                              (currentStep() === 5 && !selectedHora()) ||
+                              (currentStep() === 6 && (!selectedMetodoPago() || (selectedMetodoPago() === 'Transferencia' && !comprobanteBase64())))">
+                    {{ currentStep() === 7 ? 'Confirmar Turno' : 'Siguiente' }}
                 </button>
             </div>
         </div>
