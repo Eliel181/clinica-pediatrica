@@ -3,7 +3,8 @@
         <!-- Page Heading -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-                <h2 class="text-3xl font-bold text-slate-900 tracking-tight font_outfit">Hola, Dra. Clara</h2>
+                <h2 class="text-3xl font-bold text-slate-900 tracking-tight font_outfit">Hola, {{ currentUser()?.nombre
+                    }} {{ currentUser()?.apellido }}</h2>
                 <p class="text-slate-600 mt-1 font_outfit">Aquí tienes el resumen de la actividad de la clínica hoy.</p>
             </div>
             <div class="flex gap-3">
@@ -14,13 +15,6 @@
                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
                     Exportar
-                </button>
-                <button
-                    class="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white rounded-xl text-sm font-semibold hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20 font_outfit">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Nueva Cita
                 </button>
             </div>
         </div>
@@ -39,18 +33,11 @@
                             <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
                     </div>
-                    <span
-                        class="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg font_outfit">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        +5%
-                    </span>
+
                 </div>
                 <div>
-                    <p class="text-slate-600 text-sm font-medium font_outfit">Citas de Hoy</p>
-                    <h3 class="text-3xl font-bold text-slate-900 mt-1 font_outfit">24</h3>
+                    <p class="text-slate-600 text-sm font-medium font_outfit">Turnos de Hoy</p>
+                    <h3 class="text-3xl font-bold text-slate-900 mt-1 font_outfit">{{ citasHoy() }}</h3>
                 </div>
             </div>
 
@@ -64,14 +51,7 @@
                                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                     </div>
-                    <span
-                        class="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg font_outfit">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        +2
-                    </span>
+
                 </div>
                 <div>
                     <p class="text-slate-600 text-sm font-medium font_outfit">Pacientes Nuevos</p>
@@ -89,18 +69,12 @@
                                 d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <span
-                        class="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg font_outfit">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        +12%
-                    </span>
                 </div>
                 <div>
                     <p class="text-slate-600 text-sm font-medium font_outfit">Ingresos Mensuales</p>
-                    <h3 class="text-3xl font-bold text-slate-900 mt-1 font_outfit">$12,450</h3>
+                    <h3 class="text-3xl font-bold text-slate-900 mt-1 font_outfit">${{
+                        ingresosMensuales().toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0
+                        }) }}</h3>
                 </div>
             </div>
 
@@ -114,14 +88,6 @@
                                 d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                     </div>
-                    <span
-                        class="flex items-center gap-1 text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-lg font_outfit">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
-                        </svg>
-                        -1%
-                    </span>
                 </div>
                 <div>
                     <p class="text-slate-600 text-sm font-medium font_outfit">Gastos Operativos</p>
@@ -168,8 +134,9 @@
             <!-- Recent/Upcoming Activity -->
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-bold text-slate-900 font_outfit">Próximas Citas</h3>
-                    <a class="text-sm font-bold text-teal-600 hover:text-teal-700 font_outfit" href="#">Ver todas</a>
+                    <h3 class="text-lg font-bold text-slate-900 font_outfit">Próximos Turnos</h3>
+                    <a routerLink="/administracion/gestion-turnos"
+                        class="text-sm font-bold text-teal-600 hover:text-teal-700 font_outfit">Ver todas</a>
                 </div>
                 <div class="flex flex-col gap-4 overflow-y-auto max-h-[340px] pr-2">
                     @if (recentAppointments().length === 0) {

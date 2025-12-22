@@ -6,6 +6,8 @@ import { Turno } from '../../core/interfaces/turno.model';
 import { PacienteService } from '../../core/services/paciente.service';
 import { Paciente } from '../../core/interfaces/paciente.model';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
+import { RouterLink, RouterModule } from "@angular/router";
 
 export type ChartOptions = {
   series: any[];
@@ -30,7 +32,7 @@ interface TurnoConPaciente extends Turno {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule],
+  imports: [CommonModule, NgApexchartsModule, RouterLink, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -39,6 +41,9 @@ export class DashboardComponent implements OnInit {
 
   private turnoService = inject(TurnoService);
   private pacienteService = inject(PacienteService);
+  private authService = inject(AuthService);
+
+  currentUser = this.authService.currentUser;
 
   selectedPeriod = signal<TimePeriod>('week');
   public chartOptions = signal<Partial<ChartOptions>>({});
@@ -46,6 +51,10 @@ export class DashboardComponent implements OnInit {
 
   // Citas recientes con datos del paciente
   recentAppointments = signal<TurnoConPaciente[]>([]);
+
+  // Estadísticas del dashboard
+  citasHoy = signal<number>(0);
+  ingresosMensuales = signal<number>(0);
 
   ngOnInit(): void {
     this.loadTurnos();
@@ -57,6 +66,8 @@ export class DashboardComponent implements OnInit {
         this.allTurnos = turnos.filter(t => t.estado !== 'Cancelado');
         this.updateChart(this.selectedPeriod());
         this.loadRecentAppointments(turnos);
+        this.calculateCitasHoy(turnos);
+        this.calculateIngresosMensuales(turnos);
       },
       error: (error) => {
         console.error('Error cargando turnos:', error);
@@ -302,5 +313,41 @@ export class DashboardComponent implements OnInit {
     });
 
     return { categories, data };
+  }
+
+  private calculateCitasHoy(turnos: Turno[]): void {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const citasDeHoy = turnos.filter(turno => {
+      if (turno.estado === 'Cancelado') return false;
+
+      const turnoDate = turno.fecha instanceof Date ? turno.fecha : (turno.fecha as any).toDate();
+      turnoDate.setHours(0, 0, 0, 0);
+
+      return turnoDate.getTime() === today.getTime();
+    });
+
+    this.citasHoy.set(citasDeHoy.length);
+  }
+
+  private calculateIngresosMensuales(turnos: Turno[]): void {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+
+    const ingresos = turnos
+      .filter(turno => {
+        if (turno.estado === 'Cancelado') return false;
+
+        const turnoDate = turno.fecha instanceof Date ? turno.fecha : (turno.fecha as any).toDate();
+        return turnoDate.getMonth() === currentMonth && turnoDate.getFullYear() === currentYear;
+      })
+      .reduce((total, turno) => total + (turno.precioPagado || 0), 0);
+
+    this.ingresosMensuales.set(ingresos);
   }
 }
