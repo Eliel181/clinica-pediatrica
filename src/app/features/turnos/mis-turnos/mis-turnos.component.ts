@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TurnoService } from '../../../core/services/turno.service';
 import { ClienteService } from '../../../core/services/cliente.service';
@@ -6,16 +6,19 @@ import { FirestoreService } from '../../../core/services/firestore.service';
 import { Turno } from '../../../core/interfaces/turno.model';
 import { Paciente } from '../../../core/interfaces/paciente.model';
 import { Usuario } from '../../../core/interfaces/usuario.model';
+import { RouterModule } from '@angular/router';
+import { AlertService } from '../../../core/services/alert.service';
 
 interface TurnoConDetalles extends Turno {
   pacienteNombre?: string;
   pacienteEdad?: number;
   profesionalNombre?: string;
+  profesionalImagen?: string;
 }
 
 @Component({
   selector: 'app-mis-turnos',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './mis-turnos.component.html',
   styleUrl: './mis-turnos.component.css'
 })
@@ -23,10 +26,16 @@ export class MisTurnosComponent {
   private turnoService = inject(TurnoService);
   private clienteService = inject(ClienteService);
   private firestoreService = inject(FirestoreService);
+  private alertService = inject(AlertService);
+  private cdr = inject(ChangeDetectorRef);
 
   // Signals
   turnos = signal<TurnoConDetalles[]>([]);
   loading = signal<boolean>(true);
+
+  // Cache for professionals and patients to avoid redundant requests
+  private professionalsCache = new Map<string, Usuario>();
+  private patientsCache = new Map<string, Paciente>();
 
   // Computed signals for filtering
   turnosActivos = computed(() => {
@@ -39,6 +48,24 @@ export class MisTurnosComponent {
     return this.turnos().filter(t =>
       t.estado === 'Atendido' || t.estado === 'Cancelado'
     );
+  });
+
+  // Computed signals for stats
+  turnosConfirmadosCount = computed(() => {
+    return this.turnosActivos().filter(t => t.estado === 'Confirmado').length;
+  });
+
+  turnosPendientesCount = computed(() => {
+    return this.turnosActivos().filter(t => t.estado === 'Pendiente').length;
+  });
+
+  // Computed signals for filtered lists
+  turnosPendientes = computed(() => {
+    return this.turnosActivos().filter(t => t.estado === 'Pendiente');
+  });
+
+  turnosConfirmados = computed(() => {
+    return this.turnosActivos().filter(t => t.estado === 'Confirmado');
   });
 
   constructor() {
@@ -57,14 +84,25 @@ export class MisTurnosComponent {
 
     this.turnoService.getTurnosByClienteId(clienteId).subscribe({
       next: async (turnos) => {
-        // Load details for each turno
+        // Load details for each turno in parallel for better performance
         const turnosConDetalles = await Promise.all(
           turnos.map(async (turno) => {
-            const turnoConDetalles: TurnoConDetalles = { ...turno };
+            const turnoConDetalles: TurnoConDetalles = {
+              ...turno,
+              // Convert Firestore Timestamp to Date
+              fecha: turno.fecha instanceof Date ? turno.fecha : (turno.fecha as any).toDate(),
+              createdAt: turno.createdAt instanceof Date ? turno.createdAt : (turno.createdAt as any).toDate()
+            };
 
-            // Load patient details
+            // Load patient details with cache
             try {
-              const paciente = await this.firestoreService.getDocument<Paciente>('pacientes', turno.pacienteId);
+              let paciente = this.patientsCache.get(turno.pacienteId);
+              if (!paciente) {
+                paciente = await this.firestoreService.getDocument<Paciente>('pacientes', turno.pacienteId);
+                if (paciente) {
+                  this.patientsCache.set(turno.pacienteId, paciente);
+                }
+              }
               if (paciente) {
                 turnoConDetalles.pacienteNombre = `${paciente.nombre} ${paciente.apellido}`;
                 turnoConDetalles.pacienteEdad = this.calculateAge(paciente.fechaNacimiento);
@@ -73,12 +111,19 @@ export class MisTurnosComponent {
               console.error('Error loading patient:', error);
             }
 
-            // Load professional details
+            // Load professional details with cache
             if (turno.profesionalId) {
               try {
-                const profesional = await this.firestoreService.getDocument<Usuario>('usuarios', turno.profesionalId);
+                let profesional = this.professionalsCache.get(turno.profesionalId);
+                if (!profesional) {
+                  profesional = await this.firestoreService.getDocument<Usuario>('usuarios', turno.profesionalId);
+                  if (profesional) {
+                    this.professionalsCache.set(turno.profesionalId, profesional);
+                  }
+                }
                 if (profesional) {
-                  turnoConDetalles.profesionalNombre = `Dr. ${profesional.nombre} ${profesional.apellido}`;
+                  turnoConDetalles.profesionalNombre = `${profesional.nombre} ${profesional.apellido}`;
+                  turnoConDetalles.profesionalImagen = profesional.imagenBase64;
                 }
               } catch (error) {
                 console.error('Error loading professional:', error);
@@ -91,12 +136,37 @@ export class MisTurnosComponent {
 
         this.turnos.set(turnosConDetalles);
         this.loading.set(false);
+        this.cdr.detectChanges(); // Force change detection to update UI immediately
       },
       error: (error) => {
         console.error('Error loading turnos:', error);
         this.loading.set(false);
       }
     });
+  }
+
+  async cancelarTurno(turnoId: string): Promise<void> {
+    const result = await this.alertService.open({
+      title: 'Cancelar Turno',
+      message: '¿Estás seguro que deseas cancelar este turno?',
+      type: 'info',
+    });
+
+    if (result) {
+      this.turnoService.cancelarTurno(turnoId).then(() => {
+        this.alertService.open({
+          title: 'Turno cancelado',
+          message: 'El turno ha sido cancelado correctamente.',
+          type: 'success',
+        });
+      }).catch((error) => {
+        this.alertService.open({
+          title: 'Error al cancelar el turno',
+          message: 'Hubo un error al cancelar el turno.',
+          type: 'error',
+        });
+      });
+    }
   }
 
   private calculateAge(fechaNacimiento: string): number {

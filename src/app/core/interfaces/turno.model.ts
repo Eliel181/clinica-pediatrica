@@ -12,7 +12,9 @@ export interface Turno {
 
     estado: 'Pendiente' | 'Confirmado' | 'Atendido' | 'Cancelado';
 
-    precioPagado: number;
+    metodoPago?: 'Tarjeta' | 'Transferencia';
+    precioPagado?: number;
+    comprobanteBase64?: string;
 
     createdAt: Date;
 }
