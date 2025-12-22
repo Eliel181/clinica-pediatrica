@@ -5,6 +5,7 @@ import { PacienteService } from '../../../core/services/paciente.service';
 import { TurnoService } from '../../../core/services/turno.service';
 import { Paciente } from '../../../core/interfaces/paciente.model';
 import { combineLatest, map, switchMap, of } from 'rxjs';
+import { RouterLink, RouterModule } from "@angular/router";
 
 interface DashboardStats {
   total: number;
@@ -15,7 +16,7 @@ interface DashboardStats {
 
 @Component({
   selector: 'app-paciente-list',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, RouterModule],
   templateUrl: './paciente-list.component.html',
   styleUrl: './paciente-list.component.css'
 })

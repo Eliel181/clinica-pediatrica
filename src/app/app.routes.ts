@@ -43,6 +43,12 @@ export const routes: Routes = [
         component: PrivateLayoutComponent,
         children: [
             {
+                path: '', pathMatch: 'full', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+            {
+                path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+            {
                 path: 'gestion-usuarios', loadComponent: () => import('./features/users/user-list/user-list.component').then(m => m.UserListComponent)
             },
             {

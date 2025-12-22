@@ -3,6 +3,7 @@ import { addDoc, collection, collectionData, doc, docData, DocumentReference, Fi
 import { Vacuna } from '../interfaces/vacuna.model';
 import { Observable } from 'rxjs';
 import { VacunaAplicada } from '../interfaces/vacuna-aplicada.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,9 @@ import { VacunaAplicada } from '../interfaces/vacuna-aplicada.model';
 export class VacunaService {
 
   private firestore: Firestore = inject(Firestore);
+  private authService: AuthService = inject(AuthService);
+
+  currentUser = this.authService.currentUser;
 
   crearVacuna(vacuna: Partial<Vacuna>): Promise<DocumentReference> {
     const vacunasCollection = collection(this.firestore, 'vacunas');
@@ -46,7 +50,7 @@ export class VacunaService {
 
   getAllVacunasAplicadasByPacienteId(pacienteId: string): Observable<VacunaAplicada[]> {
     const vacunasAplicadasCollection = collection(this.firestore, 'vacunas-aplicadas');
-    const q = query(vacunasAplicadasCollection, where('pacienteId', '==', pacienteId));
+    const q = query(vacunasAplicadasCollection, where('pacienteId', '==', pacienteId), where('aplicadaPorId', '==', this.currentUser()?.uid));
     return collectionData(q, { idField: 'id' }) as Observable<VacunaAplicada[]>;
   }
 }

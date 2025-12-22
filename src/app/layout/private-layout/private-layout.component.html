@@ -81,7 +81,8 @@ md:block md:translate-x-0 md:end-auto md:bottom-0
             <ul class="flex flex-col gap-y-0.5">
                 @if(currentUser()?.rol === 'Admin'){
                 <li>
-                    <a routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
+                    <a routerLink="/administracion/dashboard"
+                        routerLinkActive="bg-teal-50 text-teal-600 ring-1 ring-teal-200 shadow-sm"
                         class="group w-full flex items-center gap-2.5 py-2 px-0.5 text-sm font-medium text-slate-500 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-all duration-200"
                         href="chat-details.html">
                         <span

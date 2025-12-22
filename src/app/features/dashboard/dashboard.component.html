@@ -1,0 +1,257 @@
+<div class="flex-1 overflow-y-auto p-6 lg:p-10 scroll-smooth">
+    <div class="max-w-7xl mx-auto space-y-8">
+        <!-- Page Heading -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h2 class="text-3xl font-bold text-slate-900 tracking-tight font_outfit">Hola, Dra. Clara</h2>
+                <p class="text-slate-600 mt-1 font_outfit">Aquí tienes el resumen de la actividad de la clínica hoy.</p>
+            </div>
+            <div class="flex gap-3">
+                <button
+                    class="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-gray-50 transition-colors shadow-sm font_outfit">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Exportar
+                </button>
+                <button
+                    class="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white rounded-xl text-sm font-semibold hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20 font_outfit">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Nueva Cita
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card 1 -->
+            <div
+                class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4 group hover:border-teal-300 transition-all">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 bg-teal-50 rounded-xl text-teal-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                    </div>
+                    <span
+                        class="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg font_outfit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        +5%
+                    </span>
+                </div>
+                <div>
+                    <p class="text-slate-600 text-sm font-medium font_outfit">Citas de Hoy</p>
+                    <h3 class="text-3xl font-bold text-slate-900 mt-1 font_outfit">24</h3>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div
+                class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4 group hover:border-teal-300 transition-all">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 bg-purple-50 rounded-xl text-purple-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <span
+                        class="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg font_outfit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        +2
+                    </span>
+                </div>
+                <div>
+                    <p class="text-slate-600 text-sm font-medium font_outfit">Pacientes Nuevos</p>
+                    <h3 class="text-3xl font-bold text-slate-900 mt-1 font_outfit">8</h3>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div
+                class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4 group hover:border-teal-300 transition-all">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 bg-green-50 rounded-xl text-green-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span
+                        class="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg font_outfit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        +12%
+                    </span>
+                </div>
+                <div>
+                    <p class="text-slate-600 text-sm font-medium font_outfit">Ingresos Mensuales</p>
+                    <h3 class="text-3xl font-bold text-slate-900 mt-1 font_outfit">$12,450</h3>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div
+                class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4 group hover:border-teal-300 transition-all">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 bg-orange-50 rounded-xl text-orange-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                    </div>
+                    <span
+                        class="flex items-center gap-1 text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-lg font_outfit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                        </svg>
+                        -1%
+                    </span>
+                </div>
+                <div>
+                    <p class="text-slate-600 text-sm font-medium font_outfit">Gastos Operativos</p>
+                    <h3 class="text-3xl font-bold text-slate-900 mt-1 font_outfit">$4,200</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts & Activity Row -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <!-- Main Chart -->
+            <div class="xl:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 font_outfit">Tendencia de Pacientes</h3>
+                        <p class="text-sm text-slate-600 font_outfit">
+                            @if (selectedPeriod() === 'week') {
+                            Visitas en los últimos 7 días
+                            } @else if (selectedPeriod() === 'month') {
+                            Visitas en las últimas 4 semanas
+                            } @else {
+                            Visitas en los últimos 12 meses
+                            }
+                        </p>
+                    </div>
+                    <select (change)="onPeriodChange($event)"
+                        class="bg-white border border-gray-200 text-sm font-medium rounded-lg text-slate-700 py-2 pl-3 pr-8 focus:ring-2 focus:ring-teal-500 cursor-pointer font_outfit">
+                        <option value="week">Última semana</option>
+                        <option value="month">Último mes</option>
+                        <option value="year">Último año</option>
+                    </select>
+                </div>
+                <div class="flex-1 min-h-[300px] w-full">
+                    @if (chartOptions()) {
+                    <apx-chart [series]="chartOptions().series!" [chart]="chartOptions().chart!"
+                        [xaxis]="chartOptions().xaxis!" [yaxis]="chartOptions().yaxis!"
+                        [dataLabels]="chartOptions().dataLabels!" [stroke]="chartOptions().stroke!"
+                        [grid]="chartOptions().grid!" [tooltip]="chartOptions().tooltip!" [fill]="chartOptions().fill!"
+                        [colors]="chartOptions().colors!"></apx-chart>
+                    }
+                </div>
+            </div>
+
+            <!-- Recent/Upcoming Activity -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-slate-900 font_outfit">Próximas Citas</h3>
+                    <a class="text-sm font-bold text-teal-600 hover:text-teal-700 font_outfit" href="#">Ver todas</a>
+                </div>
+                <div class="flex flex-col gap-4 overflow-y-auto max-h-[340px] pr-2">
+                    @if (recentAppointments().length === 0) {
+                    <div class="text-center py-8">
+                        <p class="text-sm text-slate-500 font_outfit">No hay citas recientes</p>
+                    </div>
+                    }
+                    @for (turno of recentAppointments(); track turno.id; let i = $index) {
+                    <div
+                        class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-white border border-transparent hover:border-gray-200 transition-all cursor-pointer">
+                        <div
+                            [class]="'rounded-lg size-10 flex items-center justify-center font-bold font_outfit ' + getAvatarColor(i)">
+                            {{ getInitials(turno.pacienteNombre, turno.pacienteApellido) }}
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-bold text-slate-900 font_outfit">
+                                {{ turno.pacienteNombre }} {{ turno.pacienteApellido }}
+                            </p>
+                            <p class="text-xs text-slate-600 font_outfit">
+                                {{ turno.motivo }} • {{ turno.hora }}
+                            </p>
+                        </div>
+                        <div [class]="'size-2 rounded-full ' + getStatusColor(turno.estado)"></div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Grid -->
+        <div>
+            <h3 class="text-lg font-bold text-slate-900 mb-4 font_outfit">Accesos Rápidos</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button
+                    class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md hover:border-teal-300 transition-all group text-left">
+                    <div
+                        class="bg-teal-50 w-10 h-10 rounded-lg flex items-center justify-center text-teal-600 mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-bold text-sm text-slate-900 font_outfit">Registrar Paciente</h4>
+                    <p class="text-xs text-slate-600 mt-1 font_outfit">Nuevo ingreso</p>
+                </button>
+                <button
+                    class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md hover:border-teal-300 transition-all group text-left">
+                    <div
+                        class="bg-green-50 w-10 h-10 rounded-lg flex items-center justify-center text-green-600 mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                    </div>
+                    <h4 class="font-bold text-sm text-slate-900 font_outfit">Inventario</h4>
+                    <p class="text-xs text-slate-600 mt-1 font_outfit">Solicitar medicinas</p>
+                </button>
+                <button
+                    class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md hover:border-teal-300 transition-all group text-left">
+                    <div
+                        class="bg-purple-50 w-10 h-10 rounded-lg flex items-center justify-center text-purple-600 mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-bold text-sm text-slate-900 font_outfit">Gestión Personal</h4>
+                    <p class="text-xs text-slate-600 mt-1 font_outfit">Horarios y turnos</p>
+                </button>
+                <button
+                    class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md hover:border-teal-300 transition-all group text-left">
+                    <div
+                        class="bg-orange-50 w-10 h-10 rounded-lg flex items-center justify-center text-orange-600 mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-bold text-sm text-slate-900 font_outfit">Reportes</h4>
+                    <p class="text-xs text-slate-600 mt-1 font_outfit">Imprimir resumen</p>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
